@@ -1,5 +1,5 @@
 import { PageWash } from "@/components/atoms/PageWash";
-import { CursorTrail } from "@/components/organisms/CursorTrail";
+import { CursorGlow } from "@/components/organisms/CursorGlow";
 import { ScrollToTop } from "@/components/organisms/ScrollToTop";
 import { SlideRail } from "@/components/organisms/SlideRail";
 import { SpotlightTracker } from "@/components/organisms/SpotlightTracker";
@@ -51,7 +51,7 @@ export function LandingPage() {
       <LandingFooter />
       <ScrollToTop label={nav.scrollTop} />
       <SpotlightTracker />
-      <CursorTrail />
+      <CursorGlow />
     </div>
   );
 }

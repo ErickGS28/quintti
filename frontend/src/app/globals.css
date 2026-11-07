@@ -494,37 +494,27 @@ body {
 }
 
 /*
- * Cursor: a thin trail of light drawn on a canvas, and a halo that trails behind the pointer
- * (`CursorTrail`). The script draws and moves them; placement lives here. The halo uses `screen`,
- * so it lights the dark chapters and disappears on white ones.
+ * Cursor: a soft light that drifts behind the pointer (`CursorGlow`). The script only moves it.
+ * It blends with `screen`, so it lights the dark chapters and disappears on white ones.
  */
-.cursor-trail,
-.cursor-halo {
+.cursor-glow {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 60;
-  pointer-events: none;
-}
-
-.cursor-trail {
-  width: 100vw;
-  height: 100vh;
-}
-
-.cursor-halo {
-  width: 36rem;
-  height: 36rem;
-  margin: -18rem 0 0 -18rem;
+  width: 38rem;
+  height: 38rem;
+  margin: -19rem 0 0 -19rem;
   border-radius: 999px;
-  background: radial-gradient(closest-side, rgb(166 119 202 / 0.2), rgb(235 95 122 / 0.07) 45%, transparent 75%);
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgb(166 119 202 / 0.24), rgb(235 95 122 / 0.08) 48%, transparent 76%);
   mix-blend-mode: screen;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
   will-change: transform;
 }
 
-.cursor-halo[data-visible="true"] {
+.cursor-glow[data-visible="true"] {
   opacity: 1;
 }
 
