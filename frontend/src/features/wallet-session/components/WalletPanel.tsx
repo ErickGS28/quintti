@@ -38,7 +38,7 @@ export function WalletPanel({ roleNames, variant = "panel" }: WalletPanelProps) 
     return (
       <Button size="md" shape="pill" onClick={() => void connect()} disabled={state.status === "connecting"}>
         {state.status === "connecting" ? <Spinner className="size-4" /> : <Wallet className="size-4" aria-hidden="true" />}
-        {wallet.connect}
+        {wallet.connectShort}
       </Button>
     );
   }

@@ -278,6 +278,7 @@ export const landingCopy = {
     title: "Que la cuota deje de ser un acto de fe.",
     body: "Recorre el ejemplo paso a paso, o revisa el código y el contrato que corren en la red de pruebas.",
     primary: "Ver el ejemplo",
+    app: "Abrir la cuenta de prueba",
     code: "Ver el código",
     contract: "Ver el contrato en la red",
   },

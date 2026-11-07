@@ -24,7 +24,7 @@ export function StatCard({ label, value, hint, icon, children }: StatCardProps) 
           </span>
         )}
       </div>
-      <p className="mt-3 text-[1.75rem] leading-tight font-semibold tracking-[-0.03em] text-ink tabular-nums">{value}</p>
+      <p className="mt-3 text-[length:clamp(1.375rem,4vw,1.75rem)] leading-tight font-semibold tracking-[-0.03em] text-ink tabular-nums">{value}</p>
       {hint && <p className="mt-1 text-sm text-ink-faint">{hint}</p>}
       {children && <div className="mt-auto pt-4">{children}</div>}
     </Card>

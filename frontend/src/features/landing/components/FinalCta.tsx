@@ -30,9 +30,12 @@ export function FinalCta() {
           {final.body}
         </p>
         <div className="reveal mt-11 flex flex-wrap justify-center gap-3">
-          <ButtonLink href={`#${example.id}`} size="lg" shape="pill" variant="light">
-            {final.primary}
+          <ButtonLink href="/app" size="lg" shape="pill" variant="light">
+            {final.app}
             <ArrowRight className="size-5" aria-hidden="true" />
+          </ButtonLink>
+          <ButtonLink href={`#${example.id}`} size="lg" shape="pill" variant="glass">
+            {final.primary}
           </ButtonLink>
           <ButtonLink
             href={REPOSITORY_URL}

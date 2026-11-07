@@ -38,6 +38,7 @@ export const appCopy = {
 
   wallet: {
     connect: "Conectar billetera",
+    connectShort: "Conectar",
     connecting: "Abriendo tu billetera…",
     connectHint: "Solo hace falta para firmar. Para mirar, no.",
     disconnect: "Desconectar billetera",
