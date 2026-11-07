@@ -6,6 +6,7 @@ mod cancellation;
 mod deposits;
 mod handover;
 mod initialization;
+mod invariants;
 mod proposals;
 mod setup;
 mod vendors;
