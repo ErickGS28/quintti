@@ -1,0 +1,25 @@
+# Design decisions
+
+One decision per file, short and with its rationale. If a decision changes, a new one is written and the previous one is marked as superseded.
+
+| # | Decision | Status |
+|---|----------|--------|
+| [0001](0001-name.md) | Name: Quintti | Accepted |
+| [0002](0002-contract-holds-the-funds.md) | The contract holds the funds, not a native multi-signature account | Accepted |
+| [0003](0003-spending-side-first.md) | The prototype covers how money leaves, not how it arrives | Accepted |
+| [0004](0004-assembly-role.md) | An assembly role changes rules but cannot move funds | Accepted for the prototype |
+| [0005](0005-invoice-hash-on-chain.md) | Invoice fingerprint on-chain, file off-chain | Accepted |
+| [0006](0006-final-approval-pays.md) | The approval that reaches the threshold executes the payment | Accepted |
+| [0007](0007-no-backend.md) | No backend in the prototype | Accepted |
+
+## Template
+
+```
+# NNNN. Title
+
+Status: Proposed | Accepted | Superseded by NNNN
+
+## Context
+## Decision
+## Consequences
+```
