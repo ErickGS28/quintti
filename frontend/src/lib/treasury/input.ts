@@ -60,3 +60,17 @@ export function validateInvoice(file: Blob): Blob {
   }
   return file;
 }
+
+const MAX_U32 = 4_294_967_295;
+
+/**
+ * An expense id or any other whole number the contract stores as `u32`.
+ *
+ * Errors: `AppError` of kind `invalid-input`, with the given field name.
+ */
+export function validateWholeNumber(value: number, field: string): number {
+  if (!Number.isInteger(value) || value < 0 || value > MAX_U32) {
+    throw invalid(field, "Expected a whole number from 0 to 4,294,967,295");
+  }
+  return value;
+}
