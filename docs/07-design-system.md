@@ -12,7 +12,7 @@
 4. **Human language.** "Tu cuota", "el consejo", not "stakeholders" or "on-chain".
 5. **Accessible by default.** AA contrast, 44 px touch targets, reduced motion respected.
 
-The interface is light only. There is no dark mode.
+The app screens are light only. The landing page uses colored chapters (see "Chapters and tones" below and [decision 0010](decisions/0010-landing-as-colored-chapters.md)). There is no dark mode switch.
 
 ## Palette
 
@@ -27,7 +27,8 @@ The five brand colors are fixed. Everything else (tints and ink colors) is deriv
 | `coral` | `#EB5F7A` | Fills for the problem side and for a rejected payment. Text on it is `ink` |
 | `royal-strong` | `#34187F` | Hover state of `royal`, the bird in the logo |
 | `royal-soft`, `periwinkle-soft` | `#EFEAFB`, `#ECEAFA` | Tinted backgrounds for purple elements, secondary buttons |
-| `wine-soft`, `coral-soft` | `#FBE7F0`, `#FDE8ED` | Tinted backgrounds for the problem side and rejections |
+| `wine-soft`, `coral-soft` | `#FBE7F0`, `#FDE8ED` | Tinted backgrounds for the problem side and rejections; text on the wine and closing chapters |
+| `wine-deep` | `#5C0735` | Dark end of the wine chapter gradient |
 | `ink`, `ink-soft`, `ink-faint` | `#1D1240`, `#4A4270`, `#5C5486` | Body, supporting and tertiary text |
 | `canvas`, `mist`, `cloud` | `#FFFFFF`, `#F6F3FC`, `#FFFFFF` | Page, tinted bands and inner panels, cards |
 
@@ -35,7 +36,7 @@ Rules:
 
 - **Purple is "good", wine and coral are "the problem or the block".** The palette has no green, so approval, payment and success are shown in purple, always with a check mark or the word, never with color alone.
 - **Bright colors are not text.** `lavender` and `coral` on white are below 4.5:1, so text uses `royal`, `wine` or `ink`. A test asserts this.
-- **Gradients only as quiet washes** behind the top of the page and inside progress bars. Never on controls.
+- **Gradients** are the chapter backgrounds, the quiet wash behind the hero and the fill of progress bars. Never on controls.
 - **Contrast:** every text and background pair the interface uses reaches at least 4.5:1. The pairs are listed in the test and computed from `globals.css`. They have not been audited with an external tool.
 
 ## Typography
@@ -57,20 +58,37 @@ The hummingbird in an open ring is unchanged. Only its colors follow the palette
 
 - **Menu:** a floating rounded bar at the top with the section links centered, no button and no logo. On phones only the two links that fit are shown.
 - **Hero:** minimal and centered: the mark, the name (its letters come into focus one by one), three words, one sentence and two buttons. Sizes follow the window height so everything fits at any zoom level.
-- **The landing page is an argument, in this order:** the problem, the solution, an example, why Stellar, questions, and a closing call to action.
-  - *Problem*: four everyday situations, on a tinted band.
-  - *Solution*: three rules the account enforces, then four steps of an expense with a small illustration each, horizontal on wide screens and vertical on phones.
-  - *Example*: a short walk-through of one building where an expense is proposed, signed twice and paid, and a second one is rejected by the budget rule. It is clickable, and it is a simulation with made-up amounts, labelled as such.
-  - *Why Stellar*: a side-by-side comparison with a normal app, three reasons, and a plain note about what Stellar does not solve.
+- **The landing page is an argument, told as a stack of full-screen chapters, in this order** (see "Chapters and tones"):
+  - *01 The problem* (wine): four everyday situations in frosted cards with a coral icon each.
+  - *02 The solution* (royal purple): three rules the account enforces, then four steps of an expense with a small illustration each, horizontal on wide screens and vertical on phones.
+  - *03 An example* (mist): a short walk-through of one building where an expense is proposed, signed twice and paid, and a second one is rejected by the budget rule. It is clickable, and it is a simulation with made-up amounts, labelled as such.
+  - *04 Why Stellar* (periwinkle): a side-by-side comparison with a normal app, three reasons, and a plain note, on a wine card, about what Stellar does not solve.
+  - *Questions* (white) and the *closing* (royal to wine) with the call to action and links to the code and the contract.
 - **Honesty on the page:** the problem section says its situations are still being validated, the example says it is illustrative, and the footer says it runs on testnet with no real money and no audit.
+
+## Chapters and tones
+
+Everything below the hero is a **chapter** (`Chapter`), a full-width block with its own gradient. A chapter opens with a **title screen** (`TitleSlide`): a chapter number, the chapter name set very large (up to about 150 px), one sentence that states the point, big faint ripple rings and a scroll cue. Content screens (`Slide`) follow, each at least one window tall with the content centered. Chapters overlap with rounded top corners, like sheets. Scrolling settles on screens with `scroll-snap-type: y proximity`, blocks rise in with a scroll-driven CSS animation, and a pager of dots (`SlideRail`) on the right edge shows the current chapter on large screens.
+
+A **tone** is a CSS class in `globals.css` that sets the gradient and the text colors of everything inside:
+
+| Tone | Chapter | Gradient | Title / text / accent |
+|------|---------|----------|-----------------------|
+| `tone-wine` | Problem | `wine-deep` to `wine`, coral and royal glows | white / `wine-soft` / `coral-soft` |
+| `tone-royal` | Solution | `royal` to `royal-strong`, lavender and coral glows | white / `royal-soft` / `periwinkle` |
+| `tone-mist` | Example | `mist` to `periwinkle-soft` | `royal` / `ink-soft` / `wine` |
+| `tone-periwinkle` | Stellar | `periwinkle` to `periwinkle-soft`, lavender glow | `royal-strong` / `ink` / `wine` |
+| `tone-canvas` | Questions | white to `mist` | `royal` / `ink-soft` / `wine` |
+| `tone-finale` | Closing | `royal` to `wine`, lavender and coral glows | white / `royal-soft` / `coral-soft` |
+
+Components read the colors through `text-slide-title`, `text-slide-text`, `text-slide-muted`, `text-slide-accent` and `text-slide-ring`, so they work on any tone. `Card` has three surfaces: `solid` (white, restores the light text colors, readable anywhere), `glass` (frosted, for dark chapters) and `frost` (frosted white, for light colored chapters). The contrast test reads each `.tone-*` block and checks the text colors against both gradient ends.
 
 ## Base components
 
-`components/atoms`: BrandMark, BlurInText, Ripple, Button and ButtonLink, Card, Badge, PageWash. `components/molecules`: FloatingNav, SectionHeading. `components/organisms`: ScrollToTop. Copy lives in `frontend/src/copy/`, not in the components.
-
+`components/atoms`: BrandMark, BlurInText, Ripple, Button and ButtonLink (with `light` and `glass` variants for dark chapters), Card, Badge, PageWash. `components/molecules`: FloatingNav, Chapter, TitleSlide, Slide. `components/organisms`: SlideRail, ScrollToTop. Copy lives in `frontend/src/copy/`, not in the components.
 ## Signature: the ripple
 
-Concentric rings that spread from a point, like a ripple on water or a hovering wing. They echo the open ring of the logo and appear around the mark in the closing section and around the check of a paid receipt. They are decorative, hidden from assistive technology, and become static rings when reduced motion is requested.
+Concentric rings that spread from a point, like a ripple on water or a hovering wing. They echo the open ring of the logo and appear huge and faint behind every chapter title, around the mark in the closing chapter and around the check of a paid receipt. They are decorative, hidden from assistive technology, and become static rings when reduced motion is requested.
 
 ## Not done yet
 

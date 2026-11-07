@@ -4,14 +4,14 @@ Notable changes to Quintti, newest first. The project has no versioned releases 
 
 ## Current state
 
-Updated: 7 November 2026.
+Updated: 7 November 2026 (night).
 
 | Area | State |
 |------|-------|
-| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 9 decisions |
+| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 10 decisions |
 | Treasury contract | Implemented and unit tested (78 tests). Development deployment on Stellar testnet |
-| Web app: non-visual foundation | Built and tested (173 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
-| Web app: landing page | Built (problem, solution, a clickable example, why Stellar, questions). Responsive and checked in a browser at 1440 and 390 px |
+| Web app: non-visual foundation | Built and tested (211 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
+| Web app: landing page | Built as full-screen colored chapters (problem, solution, a clickable example, why Stellar, questions, closing). Responsive and checked in a browser at 1440 and 390 px |
 | Web app: screens of the app | Not built: resident view, council panel, assembly panel. The services and hooks they need exist |
 | Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
 | Real wallet signing | Not tried with a browser wallet extension. Covered only by fakes |
@@ -30,6 +30,21 @@ Development deployment (temporary, the testnet is reset periodically):
 ## Unreleased
 
 Nothing yet.
+
+## 2026-11-07 (night)
+
+### Changed
+- The landing page below the hero was redesigned as a stack of full-screen chapters, each on its own gradient so the whole palette is used: wine for the problem, royal purple for the solution, mist for the example, periwinkle for Stellar, white for the questions and royal to wine for the closing. The hero, the menu and the logo are unchanged.
+- Each chapter opens with a title screen: the chapter name very large and centered (up to about 150 px), one sentence with its point, a chapter number, big faint ripple rings and a scroll cue. Body text and cards are larger.
+- Scrolling settles on screens (CSS scroll snapping, `proximity`), blocks rise in with a scroll-driven animation (no script), and a pager of dots on the right edge shows the current chapter on large screens.
+
+### Added
+- `Chapter`, `TitleSlide`, `Slide` and `SlideRail` components, `light` and `glass` button variants, `glass`, `frost` and `solid` card surfaces, and the `wine-deep` token.
+- Tone variables in `globals.css` and a contrast test that reads every tone and checks the text colors against both ends of its gradient (211 offline tests in total).
+- Decision 0010 and an updated design system document.
+
+### Removed
+- `SectionHeading`, replaced by `TitleSlide`.
 
 ## 2026-11-07 (evening)
 

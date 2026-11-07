@@ -1,6 +1,6 @@
 # 0009. Design direction: light Cupertino in the new purple palette
 
-Status: Accepted
+Status: Accepted. Amended by [0010](0010-landing-as-colored-chapters.md): the landing page uses colored full-screen chapters; the app screens stay light.
 
 ## Context
 

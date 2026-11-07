@@ -47,7 +47,7 @@ quintti/
 │   └── src/
 │       ├── app/                   routes and the query provider, composition only
 │       ├── features/              one folder per capability, each with an index.ts
-│       │   ├── landing/           the presentation page: sections, illustrations and the clickable example
+│       │   ├── landing/           the presentation page: chapters, illustrations and the clickable example
 │       │   ├── public-view/       reads the treasury state for the resident view (services, hooks, types)
 │       │   ├── expenses/          propose, approve and cancel expenses
 │       │   ├── governance/        budget, vendors, administrator and council
@@ -76,7 +76,7 @@ Layer rules, enforced by ESLint (`frontend/eslint.config.mjs`), imports go downw
 - `app` and `components` import a feature only through its `index.ts`.
 - Only `lib/stellar` and `lib/wallet` talk to the SDK or the wallet library.
 
-`components/` holds the shared interface pieces: atoms (BrandMark, Button, Card, Badge, Ripple, BlurInText, PageWash), molecules (FloatingNav, SectionHeading) and an organism (ScrollToTop). Templates are not created yet because only one page exists.
+`components/` holds the shared interface pieces: atoms (BrandMark, Button, Card, Badge, Ripple, BlurInText, PageWash), molecules (FloatingNav, Chapter, TitleSlide, Slide) and organisms (SlideRail, ScrollToTop). Templates are not created yet because only one page exists.
 The visual direction, palette and components are in [07-design-system.md](07-design-system.md). Colors, typography and spacing live in one place, `frontend/src/app/globals.css`, so changing the brand is a change in one file. Styling uses Tailwind 4.3.5 with those tokens, and the Spanish text of the landing page is in `frontend/src/copy/landing.es.ts`.
 
 ## Technical flow of a transaction
