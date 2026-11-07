@@ -17,3 +17,6 @@ out/
 # OS / editor
 .DS_Store
 Thumbs.db
+
+# Soroban test snapshots, regenerated on every test run
+test_snapshots/
