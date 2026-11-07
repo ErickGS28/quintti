@@ -2,12 +2,18 @@
 //! roles as generated addresses.
 
 use soroban_sdk::testutils::Address as _;
-use soroban_sdk::{token, vec, Address, Env, Vec};
+use soroban_sdk::{token, vec, Address, Env, Symbol, Vec};
 
 use crate::{Treasury, TreasuryClient};
 
 /// Approvals needed in the default fixture (2 of 3).
 pub const THRESHOLD: u32 = 2;
+
+/// Distinct category names, enough to exceed `MAX_CATEGORIES`.
+const CATEGORY_NAMES: [&str; 17] = [
+    "c00", "c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
+    "c13", "c14", "c15", "c16",
+];
 
 pub struct Fixture<'a> {
     pub env: Env,
@@ -86,4 +92,31 @@ pub fn council_vec(env: &Env, members: &[Address]) -> Vec<Address> {
         council.push_back(member.clone());
     }
     council
+}
+
+/// A named category, readable in assertions.
+pub fn maintenance(env: &Env) -> Symbol {
+    Symbol::new(env, "maintenance")
+}
+
+/// The n-th of 17 distinct categories.
+pub fn numbered_category(env: &Env, index: usize) -> Symbol {
+    Symbol::new(env, CATEGORY_NAMES[index])
+}
+
+/// A treasury where no authorization is mocked, to prove that privileged calls
+/// fail without the right signature.
+pub fn without_auths<'a>() -> (Env, TreasuryClient<'a>) {
+    let env = Env::default();
+    let council = council_vec(&env, &[Address::generate(&env), Address::generate(&env)]);
+    let id = register(
+        &env,
+        &Address::generate(&env),
+        &Address::generate(&env),
+        &Address::generate(&env),
+        &council,
+        1,
+    );
+    let client = TreasuryClient::new(&env, &id);
+    (env, client)
 }
