@@ -2,11 +2,7 @@ import { CircleCheck, ExternalLink, TriangleAlert } from "lucide-react";
 
 import { Spinner } from "@/components/atoms/Spinner";
 import { classNames } from "@/lib/ui/class-names";
-
-export type TxFeedbackState =
-  | { status: "pending"; message: string }
-  | { status: "success"; message: string; link?: { label: string; href: string } }
-  | { status: "error"; message: string };
+import type { TxFeedbackState } from "@/lib/ui/tx-feedback";
 
 const TONES = {
   pending: "bg-royal-soft text-royal",

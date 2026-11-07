@@ -1,4 +1,4 @@
-import type { AppError, AppErrorKind } from "@/lib/errors/app-error";
+import { AppError, type AppErrorKind } from "@/lib/errors/app-error";
 import type { ContractErrorName } from "@/lib/stellar/contract-errors";
 
 /** What a person sees when the contract rejects a call. One entry per contract error. */
@@ -50,4 +50,9 @@ export function describeError(error: AppError): string {
   }
   const name = error.contractError as ContractErrorName | undefined;
   return (name && contractErrorMessages[name]) || UNKNOWN_CONTRACT_ERROR;
+}
+
+/** The message for anything thrown, whether or not it is already an `AppError`. */
+export function describeAnyError(error: unknown): string {
+  return error instanceof AppError ? describeError(error) : appErrorMessages.unknown;
 }
