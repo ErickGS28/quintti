@@ -80,3 +80,11 @@ pub struct CouncilRotated {
     pub council: Vec<Address>,
     pub threshold: u32,
 }
+
+/// Someone paid tokens into the treasury through `deposit`.
+#[contractevent]
+pub struct Deposited {
+    #[topic]
+    pub from: Address,
+    pub amount: i128,
+}

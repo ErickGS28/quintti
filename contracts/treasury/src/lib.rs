@@ -25,7 +25,7 @@ pub use types::{
 use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, Symbol, Vec};
 
 use events::{
-    AdministratorSet, BudgetSet, CouncilRotated, ExpenseApproved, ExpenseCancelled,
+    AdministratorSet, BudgetSet, CouncilRotated, Deposited, ExpenseApproved, ExpenseCancelled,
     ExpenseProposed, Initialized, VendorSet,
 };
 
@@ -292,6 +292,27 @@ impl Treasury {
             }
         }
         page
+    }
+
+    /// Pays tokens into the treasury and records who paid. A plain token
+    /// transfer to the contract address also works, but leaves no record here.
+    ///
+    /// Auth: the payer. Errors: `InvalidAmount`.
+    pub fn deposit(env: Env, from: Address, amount: i128) -> Result<(), Error> {
+        from.require_auth();
+        let config = storage::read_config(&env)?;
+        if amount <= 0 {
+            return Err(Error::InvalidAmount);
+        }
+
+        token::Client::new(&env, &config.token).transfer(
+            &from,
+            env.current_contract_address(),
+            &amount,
+        );
+        storage::extend_instance(&env);
+        Deposited { from, amount }.publish(&env);
+        Ok(())
     }
 
     /// Replaces the administrator. Pending expenses stay pending; they can be
