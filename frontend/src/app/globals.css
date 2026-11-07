@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
 /*
- * Quintti design tokens. Light only, in the Cupertino spirit: calm surfaces, soft depth, large corners.
+ * Quintti design tokens. Light surfaces in the Cupertino spirit: calm, soft depth, large corners.
  * Brand palette: royal #4525A2 (dark purple), lavender #A677CA, periwinkle #ABA7E3, wine #890C50, coral #EB5F7A.
  * The tints and the ink colors are derived from the palette.
  *
  * Meaning of the colors:
  *   royal      titles, links and the main action. Purple also means "approved" and "paid".
  *   coral/wine the problem side and what the rules block. Coral fills, wine for text.
- *   lavender and periwinkle: quiet decoration, washes, rings and charts. Never small text.
+ *   lavender and periwinkle: decoration, washes, rings and charts. Never small text on white.
+ *
+ * The landing page is told in full-screen chapters, each on a "tone" (see `.tone-*` below): wine for
+ * the problem, royal for the solution, mist for the example, periwinkle for Stellar, white for the
+ * questions and royal-to-wine for the closing. A tone sets the text colors through `--slide-*`
+ * variables, so a component picks `text-slide-title` and works on any tone.
  */
 :root {
   --canvas: #ffffff;
@@ -31,6 +36,7 @@
 
   --wine: #890c50;
   --wine-soft: #fbe7f0;
+  --wine-deep: #5c0735;
 
   --coral: #eb5f7a;
   --coral-soft: #fde8ed;
@@ -38,6 +44,13 @@
 
   --veil: rgb(255 255 255 / 0.82);
   --scrim: rgb(29 18 64 / 0.38);
+
+  /* Text colors of the surface a component sits on. Chapters override them (see `.tone-*`). */
+  --slide-title: var(--royal);
+  --slide-text: var(--ink-soft);
+  --slide-muted: var(--ink-faint);
+  --slide-accent: var(--wine);
+  --slide-ring: var(--lavender);
 
   --elevation-card: 0 0 0 1px rgb(69 37 162 / 0.05), 0 1px 2px rgb(69 37 162 / 0.04), 0 12px 32px -12px rgb(69 37 162 / 0.16);
   --elevation-float: 0 0 0 1px rgb(69 37 162 / 0.06), 0 2px 6px rgb(69 37 162 / 0.06), 0 24px 48px -16px rgb(69 37 162 / 0.28);
@@ -66,6 +79,12 @@
   --color-coral-soft: var(--coral-soft);
   --color-on-coral: var(--on-coral);
   --color-veil: var(--veil);
+  --color-wine-deep: var(--wine-deep);
+  --color-slide-title: var(--slide-title);
+  --color-slide-text: var(--slide-text);
+  --color-slide-muted: var(--slide-muted);
+  --color-slide-accent: var(--slide-accent);
+  --color-slide-ring: var(--slide-ring);
 
   --radius-control: 0.875rem;
   --radius-card: 1.5rem;
@@ -81,10 +100,12 @@
   --animate-spin-once: spin-once 0.9s cubic-bezier(0.45, 0, 0.2, 1);
   --animate-letter-in: letter-in 1s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   --animate-pop: pop 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  --animate-nudge: nudge 1.8s ease-in-out infinite;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
   scrollbar-color: var(--lavender) var(--mist);
 }
 
@@ -97,12 +118,12 @@ body {
 }
 
 @layer base {
-  /* Titles are deep purple; body text keeps the darker ink. */
+  /* Titles take the title color of their surface; body text keeps the darker ink. */
   h1,
   h2,
   h3,
   h4 {
-    color: var(--royal);
+    color: var(--slide-title);
   }
 
   :focus-visible {
@@ -212,9 +233,168 @@ body {
   background: radial-gradient(closest-side, rgb(166 119 202 / 0.34), rgb(171 167 227 / 0.16) 55%, transparent 78%);
 }
 
+/*
+ * Chapters: the full-screen blocks of the landing page. A chapter paints its own gradient with two
+ * soft glows and sets the text colors for everything inside. Only the variables differ per tone.
+ * `palette-contrast.test.ts` reads this block, so every tone is checked against WCAG AA.
+ *   --slide-from / --slide-to   the two ends of the gradient (tokens, used by the contrast test)
+ *   --slide-glow-a / -b         decorative light, never under text on its own
+ */
+.chapter {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--slide-text);
+  background:
+    radial-gradient(54rem 34rem at 92% 2%, var(--slide-glow-a), transparent 70%),
+    radial-gradient(48rem 32rem at 2% 98%, var(--slide-glow-b), transparent 70%),
+    linear-gradient(172deg, var(--slide-from), var(--slide-to));
+}
+
+.chapter :focus-visible {
+  outline-color: var(--slide-title);
+}
+
+.tone-wine {
+  --slide-from: var(--wine-deep);
+  --slide-to: var(--wine);
+  --slide-title: var(--canvas);
+  --slide-text: var(--wine-soft);
+  --slide-muted: var(--coral-soft);
+  --slide-accent: var(--coral-soft);
+  --slide-ring: var(--coral);
+  --slide-glow-a: rgb(235 95 122 / 0.42);
+  --slide-glow-b: rgb(69 37 162 / 0.55);
+}
+
+.tone-royal {
+  --slide-from: var(--royal);
+  --slide-to: var(--royal-strong);
+  --slide-title: var(--canvas);
+  --slide-text: var(--royal-soft);
+  --slide-muted: var(--periwinkle-soft);
+  --slide-accent: var(--periwinkle);
+  --slide-ring: var(--periwinkle);
+  --slide-glow-a: rgb(166 119 202 / 0.6);
+  --slide-glow-b: rgb(235 95 122 / 0.28);
+}
+
+.tone-mist {
+  --slide-from: var(--mist);
+  --slide-to: var(--periwinkle-soft);
+  --slide-title: var(--royal);
+  --slide-text: var(--ink-soft);
+  --slide-muted: var(--ink-faint);
+  --slide-accent: var(--wine);
+  --slide-ring: var(--lavender);
+  --slide-glow-a: rgb(171 167 227 / 0.55);
+  --slide-glow-b: rgb(235 95 122 / 0.14);
+}
+
+.tone-periwinkle {
+  --slide-from: var(--periwinkle);
+  --slide-to: var(--periwinkle-soft);
+  --slide-title: var(--royal-strong);
+  --slide-text: var(--ink);
+  --slide-muted: var(--ink);
+  --slide-accent: var(--wine);
+  --slide-ring: var(--canvas);
+  --slide-glow-a: rgb(166 119 202 / 0.7);
+  --slide-glow-b: rgb(235 95 122 / 0.2);
+}
+
+.tone-canvas {
+  --slide-from: var(--canvas);
+  --slide-to: var(--mist);
+  --slide-title: var(--royal);
+  --slide-text: var(--ink-soft);
+  --slide-muted: var(--ink-faint);
+  --slide-accent: var(--wine);
+  --slide-ring: var(--periwinkle);
+  --slide-glow-a: rgb(171 167 227 / 0.3);
+  --slide-glow-b: rgb(166 119 202 / 0.16);
+}
+
+.tone-finale {
+  --slide-from: var(--royal);
+  --slide-to: var(--wine);
+  --slide-title: var(--canvas);
+  --slide-text: var(--royal-soft);
+  --slide-muted: var(--periwinkle-soft);
+  --slide-accent: var(--coral-soft);
+  --slide-ring: var(--periwinkle);
+  --slide-glow-a: rgb(166 119 202 / 0.55);
+  --slide-glow-b: rgb(235 95 122 / 0.5);
+}
+
+/* Cards put their own surface on top of a chapter, so they restore the light text colors. */
+.card-solid {
+  --slide-title: var(--royal);
+  --slide-text: var(--ink-soft);
+  --slide-muted: var(--ink-faint);
+  --slide-accent: var(--wine);
+  color: var(--slide-text);
+}
+
+/* Frosted glass for cards that sit on a dark chapter: the chapter's text colors stay. */
+.card-glass {
+  background: rgb(255 255 255 / 0.1);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.18),
+    0 24px 48px -24px rgb(0 0 0 / 0.35);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* Frosted white for cards that sit on a light, colored chapter. */
+.card-frost {
+  background: rgb(255 255 255 / 0.55);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.7),
+    0 24px 48px -24px rgb(69 37 162 / 0.3);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* Each block fades and rises as it enters the screen, driven by the scroll position (no script). */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(2.5rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+}
+
+/* The little arrow that invites the reader to keep scrolling. */
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0.5rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  .reveal {
+    animation: none !important;
   }
 
   *,

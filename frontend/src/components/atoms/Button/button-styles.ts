@@ -1,6 +1,6 @@
 import { classNames } from "@/lib/ui/class-names";
 
-export type ButtonVariant = "primary" | "soft" | "accent" | "ghost";
+export type ButtonVariant = "primary" | "soft" | "accent" | "ghost" | "light" | "glass";
 export type ButtonSize = "md" | "lg";
 /** "pill" is for buttons that sit inside a rounded navigation bar or the hero. */
 export type ButtonShape = "control" | "pill";
@@ -13,6 +13,9 @@ const VARIANTS: Record<ButtonVariant, string> = {
   soft: "bg-royal-soft text-royal hover:bg-periwinkle-soft",
   accent: "bg-coral text-on-coral hover:bg-coral/85",
   ghost: "text-ink-soft hover:bg-hairline hover:text-ink",
+  /** For dark chapters: a white button with purple text, and a frosted one. */
+  light: "bg-canvas text-royal hover:bg-royal-soft",
+  glass: "bg-white/15 text-on-royal ring-1 ring-white/35 hover:bg-white/25",
 };
 
 const SIZES: Record<ButtonSize, string> = {

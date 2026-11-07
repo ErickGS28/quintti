@@ -73,3 +73,54 @@ describe("palette contrast", () => {
     expect(token("coral")).toBe("#eb5f7a");
   });
 });
+
+/** Reads a `.tone-*` block of `globals.css` into a map from variable name to the token it points at. */
+function tones(): Map<string, Record<string, string>> {
+  const result = new Map<string, Record<string, string>>();
+  for (const block of css.matchAll(/\.tone-([a-z]+)\s*\{([^}]*)\}/g)) {
+    const variables: Record<string, string> = {};
+    for (const variable of block[2].matchAll(/--(slide-[a-z]+(?:-[a-z]+)?):\s*var\(--([a-z-]+)\)/g)) {
+      variables[variable[1]] = variable[2];
+    }
+    result.set(block[1], variables);
+  }
+  return result;
+}
+
+const LARGE_TEXT = 3;
+
+describe("chapter tones", () => {
+  const all = tones();
+
+  it("defines the six tones the landing page uses", () => {
+    expect([...all.keys()].sort()).toEqual(["canvas", "finale", "mist", "periwinkle", "royal", "wine"]);
+  });
+
+  for (const [name, variables] of all) {
+    // A tone paints a gradient from one token to another, so each text color must read on both ends.
+    describe(name, () => {
+      const surfaces = [variables["slide-from"], variables["slide-to"]];
+
+      it.each(surfaces)("body text and muted text reach 4.5:1 on %s", (surface) => {
+        expect(contrast(token(variables["slide-text"]), token(surface))).toBeGreaterThanOrEqual(AA);
+        expect(contrast(token(variables["slide-muted"]), token(surface))).toBeGreaterThanOrEqual(AA);
+      });
+
+      it.each(surfaces)("the title reaches 4.5:1 on %s", (surface) => {
+        expect(contrast(token(variables["slide-title"]), token(surface))).toBeGreaterThanOrEqual(AA);
+      });
+
+      // The accent colors the large sentence under each title, so the large-text minimum applies.
+      it.each(surfaces)("the accent reaches 3:1 on %s", (surface) => {
+        expect(contrast(token(variables["slide-accent"]), token(surface))).toBeGreaterThanOrEqual(LARGE_TEXT);
+      });
+    });
+  }
+
+  it("keeps the light text colors on white cards and on the dark footer", () => {
+    expect(contrast(token("wine"), token("canvas"))).toBeGreaterThanOrEqual(AA);
+    expect(contrast(token("periwinkle"), token("ink"))).toBeGreaterThanOrEqual(AA);
+    expect(contrast(token("periwinkle-soft"), token("ink"))).toBeGreaterThanOrEqual(AA);
+    expect(contrast(token("wine-soft"), token("wine"))).toBeGreaterThanOrEqual(AA);
+  });
+});

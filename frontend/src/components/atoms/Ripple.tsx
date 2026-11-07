@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import { classNames } from "@/lib/ui/class-names";
 
 type RippleProps = {
-  tone?: "lavender" | "royal" | "coral";
+  tone?: "lavender" | "royal" | "coral" | "current";
   rings?: number;
   className?: string;
 };
@@ -14,6 +14,8 @@ const TONE_CLASSES = {
   lavender: "text-lavender",
   royal: "text-royal",
   coral: "text-coral",
+  /** Takes the color of the parent, for example `text-slide-ring` on a chapter. */
+  current: "",
 };
 
 /**
