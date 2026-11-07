@@ -129,9 +129,9 @@ The command ends with `Error(Contract, #12)`, which is `OverBudget`. The full li
 
 Every call that writes prints a link to the transaction in [stellar.expert](https://stellar.expert/explorer/testnet).
 
-## 4. Web app foundation
+## 4. Web app
 
-The `frontend/` folder holds the web app: the landing page, and the non-visual foundation behind the app's future screens (configuration, the connection to the contract, wallet signing, validation, error messages, and the services and hooks that read and change the treasury). The only page today is the landing page.
+The `frontend/` folder holds the web app: the landing page at `/` and the treasury app at `/app` (overview, expenses, budget, vendors, council and roles, invoice check). Anyone can read everything; connecting a wallet through Stellar Wallets Kit adds the actions of its role.
 
 Requirements: Node 22.12 or newer (developed on Node 24).
 
@@ -144,16 +144,34 @@ npm test
 npm run build
 ```
 
-`npm test` runs offline, with the network, the wallet and the contract replaced by fakes. To see the landing page, copy the example settings and start the development server, then open http://localhost:3000:
+`npm test` runs offline, with the network, the wallet and the contract replaced by fakes. `npm run typecheck` first generates Next.js's route types, so it also works on a fresh clone. To see the app, copy the example settings and start the development server, then open http://localhost:3000 (the landing page) or http://localhost:3000/app (the treasury):
 
 ```
 cp .env.example .env.local        # PowerShell: Copy-Item .env.example .env.local
 npm run dev
 ```
 
-For a production-like run use `npm run build` and then `npx next start`. The settings are optional for the landing page: without a contract ID it only hides the link to the contract in the last section.
+For a production-like run use `npm run build` and then `npx next start`. The landing page works without settings; the app needs a treasury contract ID.
+
+To act in the app, connect a wallet on testnet whose account holds a role: the administrator proposes, council members approve, the assembly changes the rules. With the identities from step 3, import the secret key of `qt-admin` or a council member into a test wallet such as Freighter (`stellar keys show qt-admin` prints it). Use throwaway testnet keys only.
 
 `.env.example` explains each setting. `NEXT_PUBLIC_TREASURY_CONTRACT_ID` must be a treasury you deployed in step 3, or the development one from the README if it still exists. Nothing in an env file is secret: never put keys or seed phrases there.
+
+### Connect Supabase (optional)
+
+Without Supabase the app shows what the contract stores. With it, each expense also gets a description, a vendor name and its invoice file, and addresses can show names. The server writes an invoice only if its SHA-256 matches the fingerprint the contract recorded ([decisions/0013](decisions/0013-offchain-records-in-supabase.md)).
+
+1. Create a Supabase project.
+2. Run the schema: paste `supabase/migrations/20261108000000_offchain_records.sql` into the SQL editor and run it, or, with the Supabase CLI, `supabase link` and `supabase db push`. It creates the three tables, the write-once rule and the private `invoices` bucket in one step.
+3. Optionally run `supabase/seed.sql` to name the development building, after filling in its addresses.
+4. Add to `frontend/.env.local`, from the project's API settings:
+
+```
+SUPABASE_URL=https://<project>.supabase.co
+SUPABASE_SECRET_KEY=<the secret key>
+```
+
+The secret key stays on the server: it is never prefixed with `NEXT_PUBLIC_` and the browser never sees it. Restart `npm run dev`, propose an expense as the administrator, and its description and invoice appear on the expense's page for anyone.
 
 ### Check the code against a real treasury
 
@@ -167,7 +185,7 @@ QUINTTI_LIVE_VENDOR=$(stellar keys address qt-vendor) \
 npx vitest run src/live
 ```
 
-In PowerShell, set the four variables with `$env:NAME = "value"` first, then run `npx vitest run src/live`. The run reads the configuration, the balance, the budget, the paid expense and the full public view, and checks that an over-budget proposal is rejected before any signature is requested.
+In PowerShell, set the four variables with `$env:NAME = "value"` first, then run `npx vitest run src/live`. The run reads the configuration, the balance, the budget, the paid expense and the full public view, checks that an over-budget proposal is rejected before any signature is requested, and reads an expense's invoice fingerprint the way the server does before it accepts a file.
 
 ### Regenerate the contract bindings
 
@@ -191,7 +209,10 @@ This needs the Stellar CLI. It rewrites `src/contracts/generated/index.ts`, whic
 | `Invalid JSON in argument 'council'` | Pass the council with `--council-file-path`, as shown above |
 | `npm install` fails with `ERESOLVE` on `vitest` | Use Node 22.12 or newer, and keep `@types/node` on the same major version as Node |
 | `npm run typecheck` reports old errors after changing `tsconfig.json` | Delete `frontend/tsconfig.tsbuildinfo` and run it again |
+| `Cannot find name 'LayoutProps'` or route type errors | Run `npm run typecheck`, which regenerates the route types (`next typegen`) before checking |
+| The app says the description and invoice will not be saved | Supabase is not connected. See "Connect Supabase" above; the app works without it |
+| `Invalid configuration: SUPABASE_URL is required…` | Set both `SUPABASE_URL` and `SUPABASE_SECRET_KEY`, or neither |
 
 ## 6. What is not here yet
 
-The interface itself: screens for residents, the council and the assembly, and the visual design (the logo and palette are pending). The services and hooks they will use exist and are tested, but signing with a real wallet extension has not been tried yet. The current state is in [../CHANGELOG.md](../CHANGELOG.md).
+Signing with a real wallet extension has not been tried end to end yet: the wallet picker opens and the signing path is covered by fakes. Deployment and demo scripts (`scripts/`) are not built. The current state is in [../CHANGELOG.md](../CHANGELOG.md).

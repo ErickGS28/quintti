@@ -1,6 +1,6 @@
 # 0007. No backend in the prototype
 
-Status: Accepted
+Status: Accepted, amended by [0013](0013-offchain-records-in-supabase.md)
 
 ## Context
 

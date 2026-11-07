@@ -84,7 +84,7 @@ A resident opens the public link and sees, without any account:
 
 ## Screens (functional description)
 
-The visual design is pending (see [README](README.md)). This section describes content and behaviour only.
+These screens are built as one app at `/app` that everyone reads the same way; the connected wallet's role decides which actions appear ([decisions/0012](decisions/0012-one-role-aware-app-with-a-sidebar.md)). The table keeps the functional view by audience.
 
 | Screen | Audience | Content and actions |
 |--------|----------|---------------------|

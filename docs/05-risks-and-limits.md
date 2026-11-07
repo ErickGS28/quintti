@@ -14,6 +14,8 @@ Honesty about limits is part of the product. This document lists what Quintti do
 
 ## Known limits
 
+- **Descriptions and invoice files live off-chain.** They are in Supabase, written by the app's server. An invoice is accepted only if it matches the fingerprint on-chain, and details are written once, but the description is written by whoever first uploads the right file, in practice the administrator. If the database is lost, the treasury and its history stay intact on-chain; only the words and files are gone. See [decisions/0013](decisions/0013-offchain-records-in-supabase.md).
+
 - **The invoice can be false.** The fingerprint proves the file was not swapped afterwards. It does not prove the service was delivered or the price was fair. People still check that.
 - **Fee collection is not built.** Residents pay in local currency. Bringing that money on-chain needs an anchor, which is a next step.
 - **The council can collude.** With a threshold of 2 of 3, two members who agree can approve a bad expense. The protection is that it is recorded and visible, plus the budget and vendor limits.

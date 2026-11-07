@@ -89,12 +89,24 @@ Components read the colors through `text-slide-title`, `text-slide-text`, `text-
 ## Base components
 
 `components/atoms`: BrandMark, BlurInText, Ripple, Button and ButtonLink (with `light` and `glass` variants for dark chapters), Card (with an optional `spotlight`), Badge, Eyebrow (a monospaced label in a hairline pill), PageWash. `components/molecules`: FloatingNav, Chapter, TitleSlide, Slide. `components/organisms`: SlideRail, ScrollToTop, CursorGlow, SpotlightTracker. Pointer math lives in `lib/ui/pointer.ts` and is unit tested. Copy lives in `frontend/src/copy/`, not in the components.
+## App screens
+
+The treasury app at `/app` is light only, as decision 0009 set for the app, on a `mist` page with a soft periwinkle light from the top right (`.app-surface`). One app for every role ([decisions/0012](decisions/0012-one-role-aware-app-with-a-sidebar.md)).
+
+- **Frame** (`AppFrame` template): a white sidebar, 18 rem wide, fixed from large screens up, with the brand, a card for the building and the network, six destinations with icons, and the wallet pinned to the bottom. The active item has a royal tint and a small bar on its left edge. On phones and tablets a frosted top bar with the menu, the brand and a compact wallet button replaces it, and the sidebar opens in a drawer built on the native modal dialog.
+- **Screens** share one structure: a header (`PageHeader`: title, one sentence, the main action on the right), then titled cards (`Panel`), with a narrow right column for context or the role's form. Figures use `StatCard` (monospaced label, large tabular value), two per row on phones.
+- **Lists** are rows with a status disc (royal check for paid, coral cross for cancelled, a clock for pending), the description, the category, vendor and date in one quiet line, and the amount with its state or signatures on the right. A cancelled amount is struck through. The whole row is a link.
+- **Addresses** are never bare: `AddressTag` adds a gradient avatar derived from the address (`lib/format/identicon.ts`, hues from purple to coral), a name when the directory or the role knows it, the shortened address in monospace, and buttons to copy it or open it in the explorer.
+- **Forms** use `FormField` (label, control, hint or error, wired with `aria-describedby`), 48 px controls with a hairline ring that turns royal on focus and wine when invalid. The proposal form shows a live checklist of the rules the contract will apply (approved vendor, fits the budget, invoice attached) before anything is signed.
+- **Transactions** show their state inline (`TxFeedback`: waiting for the wallet and the network, done with a link to the explorer, or the reason in plain words) and raise a toast when confirmed. A closed wallet prompt is not an error.
+- **States:** every screen has a skeleton while the contract is read, an error card with a retry, and an empty state that says what will appear and who makes it appear.
+- **Wallet picker:** Stellar Wallets Kit's modal uses the same colors, radius and font (`lib/wallet/wallet-theme.ts`).
+
 ## Signature: the ripple
 
 Concentric rings that spread from a point, like a ripple on water or a hovering wing. They echo the open ring of the logo and appear huge and faint behind every chapter title, around the mark in the closing chapter and around the check of a paid receipt. They are decorative, hidden from assistive technology, and become static rings when reduced motion is requested.
 
 ## Not done yet
 
-- Screens of the app itself (resident view, council panel, assembly panel). They will reuse these components and tokens.
 - A contrast audit with an external tool and a keyboard and screen-reader pass.
 - The designer's final vector of the logo.

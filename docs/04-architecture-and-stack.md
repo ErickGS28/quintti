@@ -8,9 +8,14 @@
  Assembly ──────┘          │                                                        ▲
                            │                                                        │
  Residents (no wallet) ────┴──── read-only calls (simulation) ─────────────────────┘
+                           │
+                           └──► App server (Next.js route handlers) ──► Supabase (descriptions, names, invoice files)
+                                         └── reads the contract to verify each invoice before saving it
 ```
 
-There is **no custom backend**. The browser talks to the Soroban RPC. State lives in the contract. Invoice files are hashed in the browser, and only the fingerprint goes on-chain ([decisions/0005](decisions/0005-invoice-hash-on-chain.md), [decisions/0007](decisions/0007-no-backend.md)).
+The browser talks to the Soroban RPC for everything that touches money: reads, simulations and signed transactions. State lives in the contract. Invoice files are hashed in the browser, and only the fingerprint goes on-chain ([decisions/0005](decisions/0005-invoice-hash-on-chain.md)).
+
+The only server code is a few route handlers under `/api` that keep the words and files people need to read the treasury (a description per expense, names, the invoice file) in Supabase. They hold the one secret, the Supabase key, and accept an invoice only if its SHA-256 equals the fingerprint the contract recorded ([decisions/0013](decisions/0013-offchain-records-in-supabase.md), which amends [0007](decisions/0007-no-backend.md)). Without Supabase the app works from the contract alone.
 
 ## Components
 
@@ -27,6 +32,7 @@ There is **no custom backend**. The browser talks to the Soroban RPC. State live
 | Invoice fingerprint | Web Crypto API (SHA-256) in the browser | No server involved |
 | Token | Testnet USDC (SAC) or an own test token | One controlled token for the core flow. See limits below |
 | Explorer | stellar.expert | Every flow links to its transactions |
+| Off-chain records | Supabase (Postgres and Storage), called with `fetch` from the server | Optional. One migration in `supabase/migrations/`. No Supabase library |
 | Hosting | Vercel or Netlify | Public URL for the demo |
 
 Verified on 7 November 2026: Rust 1.99.1, `soroban-sdk` 29.0.1 (pinned; the latest stable, the 30 line is still a release candidate), Stellar CLI 30.0.1, and the public testnet RPC at protocol 30. Frontend dependencies are pinned to exact versions in `frontend/package.json`; the ones that matter are listed above.
@@ -45,27 +51,34 @@ quintti/
 ├── frontend/
 │   ├── scripts/                   generate-bindings.mjs
 │   └── src/
-│       ├── app/                   routes and the query provider, composition only
-│       ├── features/              one folder per capability, each with an index.ts
+│       ├── app/                   routes, composition only
+│       │   ├── app/               the treasury app: _shell (session, sidebar) and _screens, one per route
+│       │   └── api/               route handlers for off-chain records (details, invoice files, directory)
+│       ├── features/              one folder per capability, each with an index.ts (and server.ts if it has server code)
 │       │   ├── landing/           the presentation page: chapters, illustrations and the clickable example
-│       │   ├── public-view/       reads the treasury state for the resident view (services, hooks, types)
-│       │   ├── expenses/          propose, approve and cancel expenses
-│       │   ├── governance/        budget, vendors, administrator and council
-│       │   └── wallet-session/    who is connected: a store and a hook
-│       ├── components/            atoms, molecules and organisms shared by every screen
-│       ├── copy/                  Spanish user-facing text (landing page and error messages), isolated from logic
+│       │   ├── public-view/       reads the treasury state: services, hooks, the expense list, budget lines, approvals
+│       │   ├── expenses/          propose, approve and cancel expenses: services, hooks, forms and buttons
+│       │   ├── governance/        budget, vendors, administrator and council: services, hooks and forms
+│       │   ├── wallet-session/    who is connected: a store, a hook and the wallet panel
+│       │   ├── invoice-check/     drop a file and match its fingerprint against the expenses
+│       │   ├── expense-details/   description and invoice file per expense, saved after checking the contract
+│       │   └── directory/         the building's name and names for known addresses
+│       ├── components/            atoms, molecules, organisms and templates shared by every screen
+│       ├── copy/                  Spanish user-facing text (landing, app and error messages), isolated from logic
 │       ├── lib/
 │       │   ├── errors/            AppError, the one error type that leaves lib
 │       │   ├── stellar/           treasury client, transaction service, error mapping, explorer links
 │       │   ├── wallet/            wallet adapter, Wallets Kit implementation, network check
 │       │   ├── treasury/          input validation, the connected-wallet write flow, cache keys, retry policy
 │       │   ├── hash/              invoice SHA-256
-│       │   ├── ui/                class-name helper
-│       │   └── format/            amounts, dates, addresses
+│       │   ├── ui/                class names, pointer math, toasts, transaction feedback
+│       │   ├── supabase/          a small REST and storage client for the server
+│       │   └── format/            amounts, tokens, categories, dates, addresses, identicons
 │       ├── contracts/generated/   bindings, never edited by hand
-│       ├── config/                validated environment and constants
+│       ├── config/                validated environment (public and server-only) and constants
 │       ├── test-support/          fakes shared by tests, never imported by app code
 │       └── live/                  optional tests against a real treasury on testnet
+├── supabase/                      migrations/ (the whole schema in one file) and seed.sql
 └── scripts/                       deployment and demo data (not built yet)
 ```
 
@@ -73,10 +86,11 @@ Layer rules, enforced by ESLint (`frontend/eslint.config.mjs`), imports go downw
 
 - `lib` and `config` cannot import `features`, `app`, `components` or `copy`.
 - A feature cannot import another feature or `app`. Shared code moves to `lib`.
-- `app` and `components` import a feature only through its `index.ts`.
-- Only `lib/stellar` and `lib/wallet` talk to the SDK or the wallet library.
+- `app` and `components` import a feature only through its `index.ts`, or its `server.ts` from a route handler.
+- Browser code (components, feature components and hooks, pages) cannot import `server.ts`, `lib/supabase` or `config/server-env`, which read the secret key.
+- Only `lib/stellar` and `lib/wallet` talk to the SDK or the wallet library; only `lib/supabase` talks to Supabase.
 
-`components/` holds the shared interface pieces: atoms (BrandMark, Button, Card, Badge, Ripple, BlurInText, PageWash), molecules (FloatingNav, Chapter, TitleSlide, Slide) and organisms (SlideRail, ScrollToTop). Templates are not created yet because only one page exists.
+`components/` holds the shared interface pieces, following atomic design: atoms (BrandMark, Button, Card, Badge, Eyebrow, Input, Select, Textarea, Avatar, ProgressBar, Spinner, Skeleton, IconButton, Ripple, BlurInText, PageWash), molecules (FormField, PageHeader, Panel, StatCard, DetailList, AddressTag, FileDrop, SegmentedControl, TxFeedback, EmptyState, ErrorState, FloatingNav, Chapter, TitleSlide, Slide), organisms (Sidebar, MobileBar, Drawer, Toaster, SlideRail, ScrollToTop, CursorGlow, SpotlightTracker) and one template (AppFrame). They receive data and text through props; only features read the copy.
 The visual direction, palette and components are in [07-design-system.md](07-design-system.md). Colors, typography and spacing live in one place, `frontend/src/app/globals.css`, so changing the brand is a change in one file. Styling uses Tailwind 4.3.5 with those tokens, and the Spanish text of the landing page is in `frontend/src/copy/landing.es.ts`.
 
 ## Technical flow of a transaction
@@ -105,7 +119,7 @@ See [decisions/0008](decisions/0008-read-simulation-errors-directly.md) for why 
 The public view calls the contract's read functions through simulation (no signature, no account). `createTreasuryReader` rebuilds the snapshot (balance, budget lines, council, vendors) and the whole expense history from contract **state** (`expense_count`, `get_expenses` in pages of 20), not from events, because RPC event retention is limited (*to verify*). Amounts stay as `bigint` and the invoice fingerprint as hexadecimal.
 ## Technical decisions
 
-- **No backend.** There is nothing that needs a secret in the prototype. A server route is added only if an anchor or relayer key becomes necessary.
+- **A thin server, only for off-chain records.** Route handlers keep descriptions, names and invoice files in Supabase and verify each invoice against the contract (decision 0013). Money and rules never pass through it.
 - **One controlled token.** Testnet assets are fragmented, so the core flow uses a single token. Anything simulated is stated openly.
 - **Several signers in a demo.** The flow needs the administrator and at least two council members. Switching wallet accounts live is fragile, so the demo uses a documented approach: a real wallet for the main signer and throwaway testnet keys for the others, clearly labelled. The final choice is recorded as a decision here once the demo is built.
 - **Prepared demo data.** Funded accounts, a seeded treasury, budget lines and vendors, so the demo does not depend on a faucet at presentation time.
