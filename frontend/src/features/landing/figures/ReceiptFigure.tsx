@@ -16,10 +16,10 @@ export function ReceiptFigure() {
         </span>
       </div>
       <div className="text-center">
-        <p className="text-base font-semibold text-royal">{receipt.title}</p>
-        <p className="text-xs text-ink-faint">{receipt.detail}</p>
+        <p className="text-lg font-bold text-royal">{receipt.title}</p>
+        <p className="text-sm text-ink-faint">{receipt.detail}</p>
       </div>
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-royal-soft px-3 py-1 text-xs font-semibold text-royal">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-royal-soft px-3 py-1 text-sm font-semibold text-royal">
         {receipt.link}
         <ExternalLink className="size-3" />
       </span>

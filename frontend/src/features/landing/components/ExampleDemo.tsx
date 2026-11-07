@@ -37,7 +37,7 @@ function ledgerText(entry: LedgerEntry): string {
 
 function PanelTitle({ icon, children }: { icon: ReactNode; children: ReactNode }) {
   return (
-    <p className="flex items-center gap-2 text-sm font-semibold text-ink-soft">
+    <p className="flex items-center gap-2 text-base font-semibold text-ink-soft">
       <span className="text-royal">{icon}</span>
       {children}
     </p>
@@ -74,7 +74,7 @@ function CouncilAvatars({ approvals }: { approvals: number }) {
           <li key={name} className="flex flex-col items-center gap-1">
             <span
               className={classNames(
-                "relative flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-colors duration-300",
+                "relative flex size-12 items-center justify-center rounded-full text-lg font-semibold transition-colors duration-300",
                 signed ? "bg-royal text-on-royal" : "bg-mist text-ink-soft ring-1 ring-hairline-strong",
               )}
             >
@@ -85,7 +85,7 @@ function CouncilAvatars({ approvals }: { approvals: number }) {
                 </span>
               )}
             </span>
-            <span className="text-xs text-ink-faint">{name}</span>
+            <span className="text-sm text-ink-faint">{name}</span>
             <span className="sr-only">{signed ? example.councilSigned : example.councilPending}</span>
           </li>
         );
@@ -105,9 +105,9 @@ export function ExampleDemo() {
   const last = step === DEMO_STEPS[DEMO_STEPS.length - 1];
 
   return (
-    <Card padding="lg" className="mt-12">
+    <Card padding="lg" className="mt-8 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="flex items-center gap-2 font-semibold text-ink">
+        <p className="flex items-center gap-2 text-lg font-bold text-ink">
           <Building2 className="size-5 text-royal" aria-hidden="true" />
           {example.building}
         </p>
@@ -123,40 +123,40 @@ export function ExampleDemo() {
               />
             ))}
           </ol>
-          <span className="text-sm font-semibold text-ink-soft">
+          <span className="text-base font-semibold text-ink-soft">
             {example.progress} {stepNumber(step)}/{DEMO_STEPS.length}
           </span>
         </div>
       </div>
 
-      <div className="mt-8 grid gap-4 lg:min-h-[26rem] lg:grid-cols-3">
-        <div className="rounded-card bg-mist p-5">
+      <div className="mt-6 grid gap-4 lg:min-h-[21rem] lg:grid-cols-3">
+        <div className="rounded-card bg-mist p-6">
           <PanelTitle icon={<Landmark className="size-4" aria-hidden="true" />}>{example.accountTitle}</PanelTitle>
-          <p className="mt-3 text-sm text-ink-faint">{example.balanceLabel}</p>
-          <p className="text-3xl font-semibold tracking-tight text-royal tabular-nums">{formatPesos(view.balance)}</p>
+          <p className="mt-3 text-base text-ink-faint">{example.balanceLabel}</p>
+          <p className="text-4xl font-bold tracking-tight text-royal tabular-nums">{formatPesos(view.balance)}</p>
 
-          <div className="mt-6 flex items-baseline justify-between gap-2 text-sm">
+          <div className="mt-6 flex items-baseline justify-between gap-2 text-base">
             <span className="font-semibold text-ink">{example.budgetLabel}</span>
             <span className="text-ink-soft tabular-nums">
               {formatPesos(view.spent)} {example.budgetOf} {formatPesos(DEMO_AMOUNTS.budget)}
             </span>
           </div>
           <BudgetBar spent={view.spent} attempted={view.secondExpense === "rejected"} />
-          <p className="mt-2 text-sm text-ink-soft">
+          <p className="mt-2 text-base text-ink-soft">
             {example.remainingLabel}: <span className="font-semibold tabular-nums">{formatPesos(view.remaining)}</span>
           </p>
         </div>
 
-        <div className="rounded-card bg-mist p-5">
+        <div className="rounded-card bg-mist p-6">
           <PanelTitle icon={<FileText className="size-4" aria-hidden="true" />}>{example.expenseTitle}</PanelTitle>
           {view.firstExpense === "none" ? (
-            <p className="mt-4 text-sm text-ink-faint">{example.expenseEmpty}</p>
+            <p className="mt-4 text-base text-ink-faint">{example.expenseEmpty}</p>
           ) : (
             <div key={view.firstExpense} className="mt-4 animate-pop">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-ink">{example.expenseVendor}</p>
-                  <p className="text-xl font-semibold text-royal tabular-nums">
+                  <p className="text-lg font-bold text-ink">{example.expenseVendor}</p>
+                  <p className="text-3xl font-bold text-royal tabular-nums">
                     {formatPesos(DEMO_AMOUNTS.firstExpense)}
                   </p>
                 </div>
@@ -179,23 +179,23 @@ export function ExampleDemo() {
                 <X className="size-4" strokeWidth={3} aria-hidden="true" />
                 {formatPesos(DEMO_AMOUNTS.secondExpense)} · {example.status.rejected}
               </p>
-              <p className="mt-1 text-sm font-semibold text-wine">{example.reject.title}</p>
-              <p className="mt-1 text-sm text-ink-soft">{example.reject.body}</p>
+              <p className="mt-1 text-base font-semibold text-wine">{example.reject.title}</p>
+              <p className="mt-1 text-base text-ink-soft">{example.reject.body}</p>
             </div>
           )}
         </div>
 
-        <div className="rounded-card bg-mist p-5">
+        <div className="rounded-card bg-mist p-6">
           <PanelTitle icon={<ScrollText className="size-4" aria-hidden="true" />}>{example.ledgerTitle}</PanelTitle>
           {view.ledger.length === 0 ? (
-            <p className="mt-4 text-sm text-ink-faint">{example.ledgerEmpty}</p>
+            <p className="mt-4 text-base text-ink-faint">{example.ledgerEmpty}</p>
           ) : (
             <ul className="mt-4 grid gap-2.5">
               {view.ledger.map((entry, index) => (
                 <li
                   key={`${entry.kind}-${index}`}
                   className={classNames(
-                    "flex animate-pop items-start gap-2.5 rounded-control px-3 py-2 text-sm",
+                    "flex animate-pop items-start gap-2.5 rounded-control px-3 py-2 text-base",
                     entry.kind === "rejected" ? "bg-coral-soft text-wine" : "bg-cloud text-ink-soft",
                   )}
                 >
@@ -221,7 +221,7 @@ export function ExampleDemo() {
       </div>
 
       <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-        <p key={step} aria-live="polite" className="max-w-2xl animate-pop text-pretty leading-relaxed text-ink-soft sm:min-h-[4.5rem]">
+        <p key={step} aria-live="polite" className="max-w-2xl animate-pop text-lg leading-relaxed text-pretty text-ink-soft sm:min-h-[6rem] sm:text-xl">
           {text.caption}
         </p>
         <Button size="lg" shape="pill" onClick={() => setStep(nextStep(step))} className="shrink-0">

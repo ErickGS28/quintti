@@ -2,13 +2,14 @@ import { landingCopy } from "@/copy/landing.es";
 
 const { footer } = landingCopy;
 
+/** Deep ink purple closes the page, so the last screen does not end on white. */
 export function LandingFooter() {
   return (
-    <footer className="border-t border-hairline">
-      <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
-        <p className="font-semibold tracking-tight text-royal">Quintti</p>
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink-soft">{footer.line}</p>
-        <p className="mt-1 max-w-3xl text-sm leading-relaxed text-ink-faint">{footer.legal}</p>
+    <footer className="bg-ink text-periwinkle-soft">
+      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+        <p className="text-xl font-bold tracking-tight text-on-royal">Quintti</p>
+        <p className="mt-3 max-w-3xl text-base leading-relaxed">{footer.line}</p>
+        <p className="mt-2 max-w-3xl text-base leading-relaxed text-periwinkle">{footer.legal}</p>
       </div>
     </footer>
   );

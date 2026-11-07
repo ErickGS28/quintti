@@ -11,7 +11,7 @@ export function BudgetFigure() {
     <div aria-hidden="true" className="flex h-full flex-col justify-center gap-3.5">
       {budget.rows.map((row, index) => (
         <div key={row}>
-          <p className="text-xs font-semibold text-ink-soft">{row}</p>
+          <p className="text-sm font-semibold text-ink-soft">{row}</p>
           <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-periwinkle-soft">
             <div
               className="h-full origin-left rounded-full bg-gradient-to-r from-lavender to-royal"

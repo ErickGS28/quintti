@@ -16,12 +16,12 @@ export function ProposalFigure() {
         </span>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-ink">{proposal.vendor}</p>
-          <p className="text-xs text-ink-faint">$8.000.000</p>
+          <p className="text-sm text-ink-faint">$8.000.000</p>
         </div>
       </div>
       <div className="flex items-center gap-2 rounded-control bg-mist px-3 py-2.5">
         <FileText className="size-4 shrink-0 text-royal" />
-        <div className="min-w-0 text-xs">
+        <div className="min-w-0 text-sm">
           <p className="font-semibold text-ink">{proposal.invoice}</p>
           <p className="truncate font-mono text-ink-faint">{proposal.fingerprint}</p>
         </div>

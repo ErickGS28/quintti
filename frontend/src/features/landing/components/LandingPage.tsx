@@ -1,5 +1,6 @@
 import { PageWash } from "@/components/atoms/PageWash";
 import { ScrollToTop } from "@/components/organisms/ScrollToTop";
+import { SlideRail } from "@/components/organisms/SlideRail";
 import { landingCopy } from "@/copy/landing.es";
 
 import { ExampleSection } from "./ExampleSection";
@@ -12,16 +13,30 @@ import { ProblemSection } from "./ProblemSection";
 import { SolutionSection } from "./SolutionSection";
 import { WhyStellarSection } from "./WhyStellarSection";
 
+const { nav, hero, problem, solution, example, why, faq, final } = landingCopy;
+
+/** The chapters in reading order, for the pager on the right edge. */
+const RAIL_ITEMS = [
+  { id: hero.id, label: nav.home },
+  { id: problem.id, label: nav.problem },
+  { id: solution.id, label: nav.solution },
+  { id: example.id, label: nav.example },
+  { id: why.id, label: nav.why },
+  { id: faq.id, label: nav.faq },
+  { id: final.id, label: nav.closing },
+];
+
 /**
- * Presentation page, told as a short argument: the problem, the solution, an example you can click
- * through, and why it needs Stellar. Menu on top, hero right below it. Static apart from the example
- * and the scroll button.
+ * Presentation page, told as a stack of full-screen chapters: the problem, the solution, an example
+ * you can click through, and why it needs Stellar. Menu on top, hero right below it. Static apart
+ * from the example, the pager and the scroll button.
  */
 export function LandingPage() {
   return (
     <div className="relative isolate">
       <PageWash />
       <LandingNav />
+      <SlideRail label={nav.railLabel} items={RAIL_ITEMS} />
       <main>
         <Hero />
         <ProblemSection />
@@ -32,7 +47,7 @@ export function LandingPage() {
         <FinalCta />
       </main>
       <LandingFooter />
-      <ScrollToTop label={landingCopy.nav.scrollTop} />
+      <ScrollToTop label={nav.scrollTop} />
     </div>
   );
 }

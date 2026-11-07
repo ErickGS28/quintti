@@ -1,4 +1,6 @@
-import { SectionHeading } from "@/components/molecules/SectionHeading";
+import { Chapter } from "@/components/molecules/Chapter";
+import { Slide } from "@/components/molecules/Slide";
+import { TitleSlide } from "@/components/molecules/TitleSlide";
 import { landingCopy } from "@/copy/landing.es";
 
 import { ExampleDemo } from "./ExampleDemo";
@@ -8,12 +10,15 @@ const { example } = landingCopy;
 /** One concrete case, told as a walk-through the reader can click through. */
 export function ExampleSection() {
   return (
-    <section id={example.id} className="scroll-mt-28 bg-mist">
-      <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
-        <SectionHeading eyebrow={example.eyebrow} title={example.title} description={example.body} />
+    <Chapter id={example.id} tone="mist">
+      <TitleSlide index="03" title={example.eyebrow} lead={example.title} />
+      <Slide>
+        <p className="reveal mx-auto max-w-3xl text-center text-[length:clamp(1.25rem,2.2vw,1.875rem)] leading-relaxed text-pretty">
+          {example.body}
+        </p>
         <ExampleDemo />
-        <p className="mt-6 text-sm text-ink-faint">{example.note}</p>
-      </div>
-    </section>
+        <p className="mt-6 text-center text-base text-slide-muted">{example.note}</p>
+      </Slide>
+    </Chapter>
   );
 }

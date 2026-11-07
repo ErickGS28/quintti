@@ -1,8 +1,9 @@
 import { ArrowRight, ExternalLink } from "lucide-react";
 
-import { Ripple } from "@/components/atoms/Ripple";
 import { BrandMark } from "@/components/atoms/BrandMark";
 import { ButtonLink } from "@/components/atoms/Button";
+import { Ripple } from "@/components/atoms/Ripple";
+import { Chapter } from "@/components/molecules/Chapter";
 import { landingCopy, REPOSITORY_URL } from "@/copy/landing.es";
 
 import { demoContractUrl } from "../services/contract-link";
@@ -14,31 +15,44 @@ export function FinalCta() {
   const contract = demoContractUrl();
 
   return (
-    <section className="px-5 py-20 sm:px-8 sm:py-28">
-      <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-        <div className="relative flex size-28 items-center justify-center">
-          <Ripple tone="lavender" rings={3} />
-          <BrandMark className="relative size-16" />
+    <Chapter id={final.id} tone="finale">
+      <div className="relative mx-auto flex min-h-dvh max-w-5xl snap-start flex-col items-center justify-center px-5 py-28 text-center sm:px-8">
+        <div className="reveal relative -my-12 flex size-72 items-center justify-center text-slide-ring">
+          <Ripple tone="current" rings={4} />
+          <span className="relative flex size-28 items-center justify-center rounded-full bg-canvas shadow-float">
+            <BrandMark className="size-20" />
+          </span>
         </div>
-        <h2 className="mt-8 text-balance text-3xl font-semibold tracking-tight text-royal sm:text-5xl">{final.title}</h2>
-        <p className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-ink-soft">{final.body}</p>
-        <div className="mt-9 flex flex-wrap justify-center gap-3">
-          <ButtonLink href={`#${example.id}`} size="lg" shape="pill">
+        <h2 className="reveal mt-12 text-[length:clamp(2.5rem,7vw,6.5rem)] leading-[1.02] font-bold tracking-tight text-balance">
+          {final.title}
+        </h2>
+        <p className="reveal mt-7 max-w-2xl text-[length:clamp(1.25rem,2.2vw,1.75rem)] leading-relaxed text-pretty text-slide-text">
+          {final.body}
+        </p>
+        <div className="reveal mt-11 flex flex-wrap justify-center gap-3">
+          <ButtonLink href={`#${example.id}`} size="lg" shape="pill" variant="light">
             {final.primary}
             <ArrowRight className="size-5" aria-hidden="true" />
           </ButtonLink>
-          <ButtonLink href={REPOSITORY_URL} size="lg" shape="pill" variant="soft" target="_blank" rel="noreferrer">
+          <ButtonLink
+            href={REPOSITORY_URL}
+            size="lg"
+            shape="pill"
+            variant="glass"
+            target="_blank"
+            rel="noreferrer"
+          >
             {final.code}
             <ExternalLink className="size-4" aria-hidden="true" />
           </ButtonLink>
           {contract && (
-            <ButtonLink href={contract} size="lg" shape="pill" variant="ghost" target="_blank" rel="noreferrer">
+            <ButtonLink href={contract} size="lg" shape="pill" variant="glass" target="_blank" rel="noreferrer">
               {final.contract}
               <ExternalLink className="size-4" aria-hidden="true" />
             </ButtonLink>
           )}
         </div>
       </div>
-    </section>
+    </Chapter>
   );
 }

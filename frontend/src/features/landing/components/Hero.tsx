@@ -14,7 +14,7 @@ const { hero, solution, example } = landingCopy;
  */
 export function Hero() {
   return (
-    <section className="relative flex min-h-[calc(100dvh-5.5rem)] items-center justify-center overflow-hidden px-5 py-[clamp(2rem,7vh,5rem)] sm:px-8">
+    <section id={hero.id} className="relative flex min-h-[calc(100dvh-5.5rem)] items-center justify-center overflow-hidden px-5 py-[clamp(2rem,7vh,5rem)] sm:px-8">
       <div
         aria-hidden="true"
         className="hero-glow pointer-events-none absolute top-1/2 left-1/2 size-[40rem] -translate-x-1/2 -translate-y-1/2 sm:size-[52rem]"

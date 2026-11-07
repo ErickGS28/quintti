@@ -17,9 +17,13 @@ export const landingCopy = {
     why: "Por qué Stellar",
     faq: "Preguntas",
     scrollTop: "Volver al inicio",
+    railLabel: "Capítulos de la página",
+    home: "Inicio",
+    closing: "Cierre",
   },
 
   hero: {
+    id: "inicio",
     accent: ["Transparente", "Verificable", "Compartida"],
     body: "La cuenta del edificio con las reglas de la asamblea dentro. Nadie gasta fuera del presupuesto y cada vecino ve a dónde va su cuota.",
     primary: "Ver cómo funciona",
@@ -269,6 +273,7 @@ export const landingCopy = {
   },
 
   final: {
+    id: "cierre",
     title: "Que la cuota deje de ser un acto de fe.",
     body: "Recorre el ejemplo paso a paso, o revisa el código y el contrato que corren en la red de pruebas.",
     primary: "Ver el ejemplo",

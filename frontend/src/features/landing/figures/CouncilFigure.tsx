@@ -11,7 +11,7 @@ const SIGNED = 2;
 export function CouncilFigure() {
   return (
     <div aria-hidden="true" className="flex h-full flex-col items-center justify-center gap-4">
-      <p className="text-xs font-semibold tracking-wide text-ink-soft uppercase">{council.title}</p>
+      <p className="text-sm font-semibold tracking-wide text-ink-soft uppercase">{council.title}</p>
       <div className="flex items-center gap-3">
         {MEMBERS.map((member, index) => {
           const signed = index < SIGNED;
@@ -33,7 +33,7 @@ export function CouncilFigure() {
           );
         })}
       </div>
-      <p className="text-sm font-semibold text-royal">{council.progress}</p>
+      <p className="text-base font-semibold text-royal">{council.progress}</p>
     </div>
   );
 }

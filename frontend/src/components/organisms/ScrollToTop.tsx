@@ -37,7 +37,7 @@ export function ScrollToTop({ label, className = "bottom-6 left-6" }: ScrollToTo
       aria-label={label}
       tabIndex={visible ? 0 : -1}
       className={classNames(
-        "fixed z-40 flex size-12 cursor-pointer items-center justify-center rounded-full bg-royal text-on-royal shadow-float transition-all duration-300 hover:bg-royal-strong",
+        "fixed z-40 flex size-12 cursor-pointer items-center justify-center rounded-full bg-royal text-on-royal shadow-float ring-2 ring-white/70 transition-all duration-300 hover:bg-royal-strong",
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0",
         className,
       )}
