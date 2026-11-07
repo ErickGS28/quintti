@@ -43,7 +43,7 @@ export function SolutionSection() {
         <ul className="mt-14 grid gap-5 md:grid-cols-3 lg:gap-6">
           {solution.rules.map((rule, index) => (
             <li key={rule.title} className="reveal">
-              <Card padding="lg" className="h-full sm:p-9">
+              <Card padding="lg" spotlight className="h-full sm:p-9">
                 <span className={`block h-1.5 w-14 rounded-full ${RULE_ACCENTS[index]}`} aria-hidden="true" />
                 <span className="mt-7 flex size-16 items-center justify-center rounded-full bg-gradient-to-br from-lavender to-royal text-on-royal">
                   {RULE_ICONS[index]}
@@ -72,7 +72,7 @@ export function SolutionSection() {
               <span className="relative flex size-14 items-center justify-center rounded-full bg-coral text-2xl font-bold text-on-coral">
                 {index + 1}
               </span>
-              <Card padding="md" className="mt-5 h-52">
+              <Card padding="md" spotlight className="mt-5 h-52">
                 {FIGURES[index]}
               </Card>
               <h4 className="mt-6 text-2xl font-bold tracking-tight">{step.title}</h4>

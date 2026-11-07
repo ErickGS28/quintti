@@ -28,7 +28,7 @@ export function ProblemSection() {
         <ul className="mt-10 grid gap-5 md:grid-cols-2 lg:gap-6">
           {problem.items.map((item, index) => (
             <li key={item.title} className="reveal">
-              <Card surface="glass" padding="lg" className="relative h-full overflow-hidden sm:p-8">
+              <Card surface="glass" padding="lg" spotlight className="relative h-full overflow-hidden sm:p-8">
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute -top-2 right-6 text-[7rem] leading-none font-black text-coral/20 select-none"

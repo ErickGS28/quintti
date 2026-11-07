@@ -39,7 +39,7 @@ export function WhyStellarSection() {
           <ul className="grid gap-4">
             {why.compare.rows.map((row) => (
               <li key={row.question} className="reveal">
-                <Card padding="md" className="grid gap-4 sm:p-8 md:grid-cols-[1.1fr_1fr_1fr] md:items-center md:gap-5">
+                <Card padding="md" spotlight className="grid gap-4 sm:p-8 md:grid-cols-[1.1fr_1fr_1fr] md:items-center md:gap-5">
                   <h3 className="text-xl font-bold tracking-tight sm:text-2xl">{row.question}</h3>
                   <p className="flex items-start gap-3 text-lg">
                     <span className="mt-1 flex size-6 shrink-0 items-center justify-center rounded-full bg-coral text-on-coral">
@@ -70,7 +70,7 @@ export function WhyStellarSection() {
         <ul className="grid gap-5 md:grid-cols-3 lg:gap-6">
           {why.items.map((item, index) => (
             <li key={item.title} className="reveal">
-              <Card surface="frost" padding="lg" className="h-full sm:p-9">
+              <Card surface="frost" padding="lg" spotlight className="h-full sm:p-9">
                 <span className="flex size-16 items-center justify-center rounded-full bg-royal text-on-royal">
                   {ICONS[index]}
                 </span>
