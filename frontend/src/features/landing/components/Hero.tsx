@@ -33,7 +33,7 @@ export function Hero() {
           {hero.accent.join(" · ")}
         </p>
 
-        <p className="animate-rise mt-[clamp(1rem,3.5vh,2rem)] max-w-xl text-pretty text-[length:clamp(1rem,2.3vh,1.25rem)] leading-relaxed text-ink-soft [animation-delay:1050ms]">
+        <p className="animate-rise mt-[clamp(1rem,3.5vh,2rem)] max-w-2xl text-pretty text-[length:clamp(1.125rem,2.8vh,1.5rem)] leading-snug font-medium text-ink [animation-delay:1050ms]">
           {hero.body}
         </p>
 

@@ -34,7 +34,7 @@ const FIGURES: ReactNode[] = [
 export function SolutionSection() {
   return (
     <Chapter id={solution.id} tone="royal">
-      <TitleSlide index="02" title={solution.eyebrow} lead={solution.title} />
+      <TitleSlide index="02" indexLabel={landingCopy.nav.chapter} title={solution.eyebrow} lead={solution.title} />
 
       <Slide>
         <p className="reveal mx-auto max-w-3xl text-center text-[length:clamp(1.25rem,2.2vw,1.875rem)] leading-relaxed text-pretty text-slide-text">

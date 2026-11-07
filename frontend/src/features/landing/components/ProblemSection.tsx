@@ -20,7 +20,7 @@ const ICONS: ReactNode[] = [
 export function ProblemSection() {
   return (
     <Chapter id={problem.id} tone="wine">
-      <TitleSlide index="01" title={problem.eyebrow} lead={problem.title} />
+      <TitleSlide index="01" indexLabel={landingCopy.nav.chapter} title={problem.eyebrow} lead={problem.title} />
       <Slide>
         <p className="reveal mx-auto max-w-3xl text-center text-[length:clamp(1.25rem,2.2vw,1.875rem)] leading-relaxed text-pretty text-slide-text">
           {problem.body}

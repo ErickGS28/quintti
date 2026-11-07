@@ -23,7 +23,7 @@ export function FinalCta() {
             <BrandMark className="size-20" />
           </span>
         </div>
-        <h2 className="reveal mt-12 text-[length:clamp(2.5rem,7vw,6.5rem)] leading-[1.02] font-bold tracking-tight text-balance">
+        <h2 className="reveal mt-12 text-[length:clamp(2.25rem,5.5vw,5rem)] leading-[1.02] font-bold tracking-tight text-balance">
           {final.title}
         </h2>
         <p className="reveal mt-7 max-w-2xl text-[length:clamp(1.25rem,2.2vw,1.75rem)] leading-relaxed text-pretty text-slide-text">

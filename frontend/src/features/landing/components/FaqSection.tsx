@@ -10,7 +10,7 @@ export function FaqSection() {
   return (
     <Chapter id={faq.id} tone="canvas">
       <div className="mx-auto flex min-h-dvh max-w-4xl snap-start flex-col justify-center px-5 py-28 sm:px-8">
-        <h2 className="reveal text-center text-[length:clamp(2.75rem,8vw,7rem)] leading-none font-bold tracking-tight text-balance">
+        <h2 className="reveal text-center text-[length:clamp(2.5rem,6vw,5.5rem)] leading-none font-bold tracking-tight text-balance">
           {faq.eyebrow}
         </h2>
         <p className="reveal mt-5 text-center text-[length:clamp(1.25rem,2.4vw,2rem)] font-semibold text-balance text-slide-accent">

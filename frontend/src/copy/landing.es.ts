@@ -20,6 +20,7 @@ export const landingCopy = {
     railLabel: "Capítulos de la página",
     home: "Inicio",
     closing: "Cierre",
+    chapter: "Capítulo",
   },
 
   hero: {

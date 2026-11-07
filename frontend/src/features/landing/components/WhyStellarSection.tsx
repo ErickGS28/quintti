@@ -23,7 +23,7 @@ const ICONS: ReactNode[] = [
 export function WhyStellarSection() {
   return (
     <Chapter id={why.id} tone="periwinkle">
-      <TitleSlide index="04" title={why.eyebrow} lead={why.title} />
+      <TitleSlide index="04" indexLabel={landingCopy.nav.chapter} title={why.eyebrow} lead={why.title} />
 
       <Slide>
         <p className="reveal mx-auto max-w-3xl text-center text-[length:clamp(1.25rem,2.2vw,1.875rem)] leading-relaxed text-pretty">
