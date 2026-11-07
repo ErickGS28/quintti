@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+/*
+ * Quintti design tokens. Light only, in the Cupertino spirit: calm surfaces, soft depth, large corners.
+ * Brand palette: royal #4525A2 (dark purple), lavender #A677CA, periwinkle #ABA7E3, wine #890C50, coral #EB5F7A.
+ * The tints and the ink colors are derived from the palette.
+ *
+ * Meaning of the colors:
+ *   royal      titles, links and the main action. Purple also means "approved" and "paid".
+ *   coral/wine the problem side and what the rules block. Coral fills, wine for text.
+ *   lavender and periwinkle: quiet decoration, washes, rings and charts. Never small text.
+ */
+:root {
+  --canvas: #ffffff;
+  --mist: #f6f3fc;
+  --cloud: #ffffff;
+  --ink: #1d1240;
+  --ink-soft: #4a4270;
+  --ink-faint: #5c5486;
+  --hairline: rgb(69 37 162 / 0.12);
+  --hairline-strong: rgb(69 37 162 / 0.22);
+
+  --royal: #4525a2;
+  --royal-strong: #34187f;
+  --royal-soft: #efeafb;
+  --on-royal: #ffffff;
+
+  --lavender: #a677ca;
+  --periwinkle: #aba7e3;
+  --periwinkle-soft: #eceafa;
+
+  --wine: #890c50;
+  --wine-soft: #fbe7f0;
+
+  --coral: #eb5f7a;
+  --coral-soft: #fde8ed;
+  --on-coral: #1d1240;
+
+  --veil: rgb(255 255 255 / 0.82);
+  --scrim: rgb(29 18 64 / 0.38);
+
+  --elevation-card: 0 0 0 1px rgb(69 37 162 / 0.05), 0 1px 2px rgb(69 37 162 / 0.04), 0 12px 32px -12px rgb(69 37 162 / 0.16);
+  --elevation-float: 0 0 0 1px rgb(69 37 162 / 0.06), 0 2px 6px rgb(69 37 162 / 0.06), 0 24px 48px -16px rgb(69 37 162 / 0.28);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-mist: var(--mist);
+  --color-cloud: var(--cloud);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-royal: var(--royal);
+  --color-royal-strong: var(--royal-strong);
+  --color-royal-soft: var(--royal-soft);
+  --color-on-royal: var(--on-royal);
+  --color-lavender: var(--lavender);
+  --color-periwinkle: var(--periwinkle);
+  --color-periwinkle-soft: var(--periwinkle-soft);
+  --color-wine: var(--wine);
+  --color-wine-soft: var(--wine-soft);
+  --color-coral: var(--coral);
+  --color-coral-soft: var(--coral-soft);
+  --color-on-coral: var(--on-coral);
+  --color-veil: var(--veil);
+
+  --radius-control: 0.875rem;
+  --radius-card: 1.5rem;
+  --radius-sheet: 2rem;
+
+  --shadow-card: var(--elevation-card);
+  --shadow-float: var(--elevation-float);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
+
+  --animate-ripple: ripple 5.4s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  --animate-rise: rise 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  --animate-spin-once: spin-once 0.9s cubic-bezier(0.45, 0, 0.2, 1);
+  --animate-letter-in: letter-in 1s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  --animate-pop: pop 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: var(--lavender) var(--mist);
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  /* Titles are deep purple; body text keeps the darker ink. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--royal);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--royal);
+    outline-offset: 2px;
+  }
+}
+
+::selection {
+  background: var(--periwinkle);
+  color: var(--ink);
+}
+
+/* Purple scrollbar for browsers that only understand the WebKit syntax. */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--mist);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--lavender);
+    border: 3px solid var(--mist);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--royal);
+  }
+}
+
+/* Signature: concentric rings that spread from a point, like a ripple on water or a hovering wing. */
+@keyframes ripple {
+  0% {
+    transform: scale(0.35);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin-once {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Each letter starts blurred, transparent and slightly low, then comes into focus. */
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(0.32em) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* A small, friendly entrance for things that appear after a click. */
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Quiet wash of periwinkle, lavender and a touch of coral behind the top of the landing page. */
+.page-wash {
+  background:
+    radial-gradient(52rem 26rem at 88% 0%, rgb(171 167 227 / 0.4), transparent 70%),
+    radial-gradient(48rem 28rem at 6% 14%, rgb(166 119 202 / 0.2), transparent 70%),
+    radial-gradient(32rem 22rem at 55% 40%, rgb(235 95 122 / 0.08), transparent 70%);
+}
+
+/* Soft glow behind the hero, in the spirit of a single spotlight. */
+.hero-glow {
+  background: radial-gradient(closest-side, rgb(166 119 202 / 0.34), rgb(171 167 227 / 0.16) 55%, transparent 78%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .ripple-ring {
+    opacity: 0.22 !important;
+    transform: scale(var(--ring-scale, 1)) !important;
+  }
+}
