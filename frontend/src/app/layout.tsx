@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 
+import { landingCopy } from "@/copy/landing.es";
+
+import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Quintti",
-  description: "La cuenta del edificio con las reglas de la asamblea.",
+  title: landingCopy.meta.title,
+  description: landingCopy.meta.description,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
