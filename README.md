@@ -62,6 +62,19 @@ The contract is `contracts/treasury/`. Its rules, entry points, errors and tests
 
 This README is updated with run instructions for the web app and the deployed contract address when they exist.
 
+## Testnet deployment (development)
+
+A development deployment used to exercise the full cycle from the command line. It will be replaced by the demo deployment, and the testnet is reset periodically, so treat this address as temporary.
+
+| | |
+|---|---|
+| Network | Stellar testnet |
+| Contract | `CAQ6YXC6L3G2YVBWW52IPDNVBRCDMUO3S463MQL5HD2KGNDCOT5NCHDA` ([stellar.expert](https://stellar.expert/explorer/testnet/contract/CAQ6YXC6L3G2YVBWW52IPDNVBRCDMUO3S463MQL5HD2KGNDCOT5NCHDA)) |
+| Token | Native XLM through its Stellar Asset Contract, `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
+| Council | 3 members, threshold 2 |
+
+Verified on testnet: setting a budget and an approved vendor, a deposit, a proposal, one approval that leaves the expense pending, a second approval that pays the vendor, and two rejections (a proposal above the category limit fails with error 12, and a non-council approval fails with error 15). The transactions are linked from the explorer page of the contract.
+
 ## Name
 
 Quintti comes from the Quechua *qinti*, hummingbird: small, fast and precise. See [docs/decisions/0001-name.md](docs/decisions/0001-name.md).
