@@ -2,6 +2,7 @@ import type { Networks } from "@creit.tech/stellar-wallets-kit/types";
 
 import type { WalletAdapter } from "./wallet-adapter";
 import { toWalletError } from "./wallet-errors";
+import { QUINTTI_WALLET_THEME } from "./wallet-theme";
 
 /** The part of Stellar Wallets Kit this adapter uses. The real kit satisfies it. */
 export interface WalletsKit {
@@ -19,16 +20,20 @@ export interface WalletsKit {
 export type KitLoader = (networkPassphrase: string) => Promise<WalletsKit>;
 
 /**
- * Loads Stellar Wallets Kit on demand. The kit touches the browser's
- * `window`, so it is imported only when a wallet action runs, which only
- * happens on the client.
+ * Loads Stellar Wallets Kit on demand, in Quintti's colors. The kit touches
+ * the browser's `window`, so it is imported only when a wallet action runs,
+ * which only happens on the client.
  */
 export const loadWalletsKit: KitLoader = async (networkPassphrase) => {
   const [{ StellarWalletsKit }, { defaultModules }] = await Promise.all([
     import("@creit.tech/stellar-wallets-kit/sdk"),
     import("@creit.tech/stellar-wallets-kit/modules/utils"),
   ]);
-  StellarWalletsKit.init({ modules: defaultModules(), network: networkPassphrase as Networks });
+  StellarWalletsKit.init({
+    modules: defaultModules(),
+    network: networkPassphrase as Networks,
+    theme: QUINTTI_WALLET_THEME,
+  });
   return StellarWalletsKit;
 };
 
