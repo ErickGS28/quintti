@@ -24,7 +24,9 @@ pub use types::{
 
 use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, Symbol, Vec};
 
-use events::{BudgetSet, ExpenseApproved, ExpenseProposed, Initialized, VendorSet};
+use events::{
+    BudgetSet, ExpenseApproved, ExpenseCancelled, ExpenseProposed, Initialized, VendorSet,
+};
 
 #[contract]
 pub struct Treasury;
@@ -235,6 +237,33 @@ impl Treasury {
             return Ok(());
         }
         payment::execute(&env, &config, &council, expense)
+    }
+
+    /// Cancels a pending expense, for example one that can no longer be paid.
+    /// A cancelled expense is final.
+    ///
+    /// Auth: the administrator or the assembly. Errors: `NotAuthorized`,
+    /// `ExpenseNotFound`, `ExpenseNotPending`.
+    pub fn cancel_expense(env: Env, caller: Address, id: u32) -> Result<(), Error> {
+        caller.require_auth();
+        let config = storage::read_config(&env)?;
+        if caller != config.administrator && caller != config.assembly {
+            return Err(Error::NotAuthorized);
+        }
+        let mut expense = storage::read_expense(&env, id).ok_or(Error::ExpenseNotFound)?;
+        if expense.status != ExpenseStatus::Pending {
+            return Err(Error::ExpenseNotPending);
+        }
+
+        expense.status = ExpenseStatus::Cancelled;
+        storage::write_expense(&env, &expense);
+        storage::extend_instance(&env);
+        ExpenseCancelled {
+            id,
+            cancelled_by: caller,
+        }
+        .publish(&env);
+        Ok(())
     }
 
     /// Returns how many expenses have been proposed. Ids go from 0 to this

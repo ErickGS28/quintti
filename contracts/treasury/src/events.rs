@@ -58,3 +58,11 @@ pub struct ExpensePaid {
     pub vendor: Address,
     pub amount: i128,
 }
+
+/// A pending expense was cancelled.
+#[contractevent]
+pub struct ExpenseCancelled {
+    #[topic]
+    pub id: u32,
+    pub cancelled_by: Address,
+}
