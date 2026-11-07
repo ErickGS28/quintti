@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { classNames } from "@/lib/ui/class-names";
 
-export type ChapterTone = "night" | "wine" | "royal" | "mist" | "periwinkle" | "canvas" | "finale";
+export type ChapterTone = "wine" | "royal" | "mist" | "periwinkle" | "canvas" | "finale";
 
 type ChapterProps = {
   id?: string;
@@ -12,7 +12,6 @@ type ChapterProps = {
 };
 
 const TONES: Record<ChapterTone, string> = {
-  night: "tone-night",
   wine: "tone-wine",
   royal: "tone-royal",
   mist: "tone-mist",
