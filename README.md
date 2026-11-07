@@ -2,7 +2,7 @@
 
 A shared treasury for residential buildings, with the assembly's rules built into the account. Built on Stellar and Soroban.
 
-> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested, and the web app has its non-visual foundation (wallet, contract connection, validation, services). The interface and visual design are not built yet. Testnet only, unaudited, not for real funds.
+> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested, and the web app has its non-visual foundation (wallet, contract connection, validation, services). The landing page is built in the new visual design; the screens of the app itself are not. Testnet only, unaudited, not for real funds.
 
 ## The problem
 
@@ -37,6 +37,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 | [docs/04-architecture-and-stack.md](docs/04-architecture-and-stack.md) | Components, stack and repository structure |
 | [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md) | Known limits, risks and common objections |
 | [docs/06-getting-started.md](docs/06-getting-started.md) | Build, test and deploy your own copy on testnet |
+| [docs/07-design-system.md](docs/07-design-system.md) | Visual direction, palette, components and the landing page |
 | [CHANGELOG.md](CHANGELOG.md) | Current state and history of changes |
 | [docs/decisions/](docs/decisions/README.md) | Design decisions and their rationale |
 
@@ -45,7 +46,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 ```
 docs/          product, design and architecture documents
 contracts/     Soroban treasury contract (Rust)
-frontend/      web app (Next.js, TypeScript): services, hooks and tests, no interface yet
+frontend/      web app (Next.js, TypeScript): landing page, services, hooks and tests
 scripts/       deployment and demo data, not built yet
 ```
 

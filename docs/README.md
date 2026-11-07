@@ -9,6 +9,7 @@
 | 4 | [04-architecture-and-stack.md](04-architecture-and-stack.md) | Components, stack and repository structure |
 | 5 | [05-risks-and-limits.md](05-risks-and-limits.md) | Known limits, risks and common objections |
 | 6 | [06-getting-started.md](06-getting-started.md) | Build, test and deploy your own copy on testnet |
+| 7 | [07-design-system.md](07-design-system.md) | Visual direction, palette, components and the landing page |
 | — | [../CHANGELOG.md](../CHANGELOG.md) | Current state and history of changes |
 | — | [decisions/](decisions/README.md) | Design decisions and their rationale |
 
@@ -23,4 +24,4 @@ Recommended reading order: 0 → 1 → 2 → 3.
 
 ## Not written yet
 
-- **Visual design:** the logo and palette are pending. A design document is added when they are defined. Until then the interface is built on neutral, centralized tokens so the brand can be applied later without rework.
+- **Visual design:** the direction and palette are in [07-design-system.md](07-design-system.md). The logo is still a traced vector, to be replaced by the designer's file.

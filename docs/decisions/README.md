@@ -12,6 +12,7 @@ One decision per file, short and with its rationale. If a decision changes, a ne
 | [0006](0006-final-approval-pays.md) | The approval that reaches the threshold executes the payment | Accepted |
 | [0007](0007-no-backend.md) | No backend in the prototype | Accepted |
 | [0008](0008-read-simulation-errors-directly.md) | Read simulation errors directly to keep the contract error code | Accepted |
+| [0009](0009-design-direction.md) | Design direction: light Cupertino in the new purple palette | Accepted |
 
 ## Template
 

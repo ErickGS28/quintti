@@ -8,11 +8,12 @@ Updated: 7 November 2026.
 
 | Area | State |
 |------|-------|
-| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, 8 decisions |
+| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 9 decisions |
 | Treasury contract | Implemented and unit tested (78 tests). Development deployment on Stellar testnet |
-| Web app: non-visual foundation | Built and tested (135 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
-| Web app: interface | Not built. There are no screens, only a placeholder page |
-| Visual design | Pending (logo and palette). The interface will take its values from one tokens file |
+| Web app: non-visual foundation | Built and tested (173 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
+| Web app: landing page | Built (problem, solution, a clickable example, why Stellar, questions). Responsive and checked in a browser at 1440 and 390 px |
+| Web app: screens of the app | Not built: resident view, council panel, assembly panel. The services and hooks they need exist |
+| Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
 | Real wallet signing | Not tried with a browser wallet extension. Covered only by fakes |
 | Audit | None. Testnet only, not for real funds |
 
@@ -29,6 +30,19 @@ Development deployment (temporary, the testnet is reset periodically):
 ## Unreleased
 
 Nothing yet.
+
+## 2026-11-07 (evening)
+
+### Added
+- Landing page (`features/landing`), told as an argument: the problem in four everyday situations, the solution as three rules and four illustrated steps, a clickable example (a building where an expense is proposed, signed twice and paid, and a second one is rejected by the budget rule), a side-by-side comparison with a normal app, three reasons for Stellar, an honest note about what Stellar does not solve, questions, and a closing call to action with links to the code and the contract.
+- Design system: Tailwind 4.3.5, tokens in `globals.css`, base components (`BrandMark`, `Button`, `Card`, `Badge`, `Ripple`, `FloatingNav`, `SectionHeading`, `ScrollToTop`) and the favicon. The logo keeps its shape and takes the new palette.
+- A test that computes the contrast of every text and background pair from `globals.css` and fails below 4.5:1.
+- A tested state machine behind the example, which applies the same budget rule as the contract.
+- Design document `docs/07-design-system.md` and decision 0009.
+
+### Notes
+- The example on the page is a simulation with made-up amounts and says so. The problem section says its situations are still being validated with administrators and residents.
+- The page makes no network request. The link to the contract appears only when a contract ID is configured.
 
 ## 2026-11-07
 

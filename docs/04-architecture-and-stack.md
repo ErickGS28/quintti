@@ -23,6 +23,7 @@ There is **no custom backend**. The browser talks to the Soroban RPC. State live
 | Wallet | `@creit.tech/stellar-wallets-kit` 2.8.0 | Multi-wallet connection and signing, loaded on demand in the browser. The kit lists Freighter under its new name, Varial. Not yet tried with a real wallet extension |
 | Client SDK | `@stellar/stellar-sdk` 17.4.0 and generated contract bindings | Simulate, sign, submit, read state |
 | Data and tests | `@tanstack/react-query` 5.107.1, Vitest 5.1.0, ESLint 9.39.5 | Cached reads and mutations. Unit tests run offline |
+| Styling and icons | Tailwind CSS 4.3.5 (PostCSS), `lucide-react` 1.70.0 | Tokens in `globals.css`. Icons are SVG, never emoji |
 | Invoice fingerprint | Web Crypto API (SHA-256) in the browser | No server involved |
 | Token | Testnet USDC (SAC) or an own test token | One controlled token for the core flow. See limits below |
 | Explorer | stellar.expert | Every flow links to its transactions |
@@ -46,17 +47,20 @@ quintti/
 │   └── src/
 │       ├── app/                   routes and the query provider, composition only
 │       ├── features/              one folder per capability, each with an index.ts
+│       │   ├── landing/           the presentation page: sections, illustrations and the clickable example
 │       │   ├── public-view/       reads the treasury state for the resident view (services, hooks, types)
 │       │   ├── expenses/          propose, approve and cancel expenses
 │       │   ├── governance/        budget, vendors, administrator and council
 │       │   └── wallet-session/    who is connected: a store and a hook
-│       ├── copy/                  Spanish user-facing messages, isolated from logic
+│       ├── components/            atoms, molecules and organisms shared by every screen
+│       ├── copy/                  Spanish user-facing text (landing page and error messages), isolated from logic
 │       ├── lib/
 │       │   ├── errors/            AppError, the one error type that leaves lib
 │       │   ├── stellar/           treasury client, transaction service, error mapping, explorer links
 │       │   ├── wallet/            wallet adapter, Wallets Kit implementation, network check
 │       │   ├── treasury/          input validation, the connected-wallet write flow, cache keys, retry policy
 │       │   ├── hash/              invoice SHA-256
+│       │   ├── ui/                class-name helper
 │       │   └── format/            amounts, dates, addresses
 │       ├── contracts/generated/   bindings, never edited by hand
 │       ├── config/                validated environment and constants
@@ -72,8 +76,8 @@ Layer rules, enforced by ESLint (`frontend/eslint.config.mjs`), imports go downw
 - `app` and `components` import a feature only through its `index.ts`.
 - Only `lib/stellar` and `lib/wallet` talk to the SDK or the wallet library.
 
-`components/` (atoms, molecules, organisms, templates) is not created yet because there is no interface to put in it.
-Visual design is pending. Colors, typography and spacing will live in one tokens file from the first screen, so applying the brand later is a change in one place. No tokens file exists yet because there is no screen.
+`components/` holds the shared interface pieces: atoms (BrandMark, Button, Card, Badge, Ripple, BlurInText, PageWash), molecules (FloatingNav, SectionHeading) and an organism (ScrollToTop). Templates are not created yet because only one page exists.
+The visual direction, palette and components are in [07-design-system.md](07-design-system.md). Colors, typography and spacing live in one place, `frontend/src/app/globals.css`, so changing the brand is a change in one file. Styling uses Tailwind 4.3.5 with those tokens, and the Spanish text of the landing page is in `frontend/src/copy/landing.es.ts`.
 
 ## Technical flow of a transaction
 

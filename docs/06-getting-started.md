@@ -131,7 +131,7 @@ Every call that writes prints a link to the transaction in [stellar.expert](http
 
 ## 4. Web app foundation
 
-The `frontend/` folder holds the non-visual foundation of the web app: configuration, the connection to the contract, wallet signing, validation, error messages, and the services and hooks that read and change the treasury. There is no interface yet, so the only page is a placeholder.
+The `frontend/` folder holds the web app: the landing page, and the non-visual foundation behind the app's future screens (configuration, the connection to the contract, wallet signing, validation, error messages, and the services and hooks that read and change the treasury). The only page today is the landing page.
 
 Requirements: Node 22.12 or newer (developed on Node 24).
 
@@ -144,11 +144,14 @@ npm test
 npm run build
 ```
 
-`npm test` runs offline, with the network, the wallet and the contract replaced by fakes. To start the app, copy the example settings first and then run the development server (`npm run dev`):
+`npm test` runs offline, with the network, the wallet and the contract replaced by fakes. To see the landing page, copy the example settings and start the development server, then open http://localhost:3000:
 
 ```
 cp .env.example .env.local        # PowerShell: Copy-Item .env.example .env.local
+npm run dev
 ```
+
+For a production-like run use `npm run build` and then `npx next start`. The settings are optional for the landing page: without a contract ID it only hides the link to the contract in the last section.
 
 `.env.example` explains each setting. `NEXT_PUBLIC_TREASURY_CONTRACT_ID` must be a treasury you deployed in step 3, or the development one from the README if it still exists. Nothing in an env file is secret: never put keys or seed phrases there.
 
