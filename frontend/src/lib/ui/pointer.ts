@@ -9,9 +9,6 @@ export interface Point {
  */
 export const FINE_POINTER_QUERY = "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
 
-/** Elements the cursor ring reacts to, because clicking them does something. */
-export const INTERACTIVE_SELECTOR = "a, button, summary, label, select, [role='button']";
-
 /** Duration of one frame at 60 frames per second, the rate the follow factors are tuned for. */
 const FRAME_MS = 1000 / 60;
 

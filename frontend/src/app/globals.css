@@ -494,58 +494,22 @@ body {
 }
 
 /*
- * Cursor: a ring that follows the pointer and a halo of light behind it (`CursorFollower`). The
- * script only moves them; size and color live here. The halo uses `screen`, so it lights dark
- * chapters and disappears on white ones.
+ * Cursor: a thin trail of light drawn on a canvas, and a halo that trails behind the pointer
+ * (`CursorTrail`). The script draws and moves them; placement lives here. The halo uses `screen`,
+ * so it lights the dark chapters and disappears on white ones.
  */
-.cursor-ring,
+.cursor-trail,
 .cursor-halo {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  will-change: transform;
 }
 
-.cursor-ring[data-visible="true"],
-.cursor-halo[data-visible="true"] {
-  opacity: 1;
-}
-
-.cursor-ring > span {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2.25rem;
-  height: 2.25rem;
-  margin: -1.125rem 0 0 -1.125rem;
-  border-radius: 999px;
-  border: 1.5px solid rgb(166 119 202 / 0.9);
-  box-shadow:
-    0 0 0 1px rgb(255 255 255 / 0.28),
-    0 0 1.25rem rgb(166 119 202 / 0.35);
-  transition:
-    width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-    height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-    margin 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    transform 0.18s ease;
-}
-
-.cursor-ring[data-hover="true"] > span {
-  width: 3.5rem;
-  height: 3.5rem;
-  margin: -1.75rem 0 0 -1.75rem;
-  border-color: rgb(235 95 122 / 0.95);
-  background-color: rgb(166 119 202 / 0.14);
-}
-
-.cursor-ring[data-press="true"] > span {
-  transform: scale(0.8);
+.cursor-trail {
+  width: 100vw;
+  height: 100vh;
 }
 
 .cursor-halo {
@@ -555,6 +519,13 @@ body {
   border-radius: 999px;
   background: radial-gradient(closest-side, rgb(166 119 202 / 0.2), rgb(235 95 122 / 0.07) 45%, transparent 75%);
   mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+
+.cursor-halo[data-visible="true"] {
+  opacity: 1;
 }
 
 /* The dot of a live status: a soft ping around a solid center. */
