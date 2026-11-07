@@ -8,6 +8,8 @@
 | 3 | [03-contract-design.md](03-contract-design.md) | Contract state, entry points, rules, errors and tests |
 | 4 | [04-architecture-and-stack.md](04-architecture-and-stack.md) | Components, stack and repository structure |
 | 5 | [05-risks-and-limits.md](05-risks-and-limits.md) | Known limits, risks and common objections |
+| 6 | [06-getting-started.md](06-getting-started.md) | Build, test and deploy your own copy on testnet |
+| — | [../CHANGELOG.md](../CHANGELOG.md) | Current state and history of changes |
 | — | [decisions/](decisions/README.md) | Design decisions and their rationale |
 
 Recommended reading order: 0 → 1 → 2 → 3.

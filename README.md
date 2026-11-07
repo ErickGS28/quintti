@@ -36,6 +36,8 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 | [docs/03-contract-design.md](docs/03-contract-design.md) | Contract state, entry points, rules, errors, tests |
 | [docs/04-architecture-and-stack.md](docs/04-architecture-and-stack.md) | Components, stack and repository structure |
 | [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md) | Known limits, risks and common objections |
+| [docs/06-getting-started.md](docs/06-getting-started.md) | Build, test and deploy your own copy on testnet |
+| [CHANGELOG.md](CHANGELOG.md) | Current state and history of changes |
 | [docs/decisions/](docs/decisions/README.md) | Design decisions and their rationale |
 
 ## Repository layout
@@ -47,22 +49,20 @@ frontend/      web app (Next.js, TypeScript), not built yet
 scripts/       deployment and demo data, not built yet
 ```
 
-## Build and test the contract
+## Quick start
 
-Requirements: Rust (the toolchain and the `wasm32v1-none` target are set by `rust-toolchain.toml`) and the [Stellar CLI](https://developers.stellar.org/docs/tools/cli).
+You only need [Rust](https://rustup.rs) and the [Stellar CLI](https://developers.stellar.org/docs/tools/cli) to build and test the contract. No network or accounts are involved.
 
 ```
-cargo fmt --check
-cargo clippy --all-targets -- -D warnings
+git clone https://github.com/ErickGS28/quintti.git
+cd quintti
 cargo test
 stellar contract build
 ```
 
+To deploy your own copy on testnet and run a full expense (budget, vendor, deposit, proposal, two council approvals, payment, and a rejected payment), follow [docs/06-getting-started.md](docs/06-getting-started.md). The current state of the project is in [CHANGELOG.md](CHANGELOG.md).
+
 The contract is `contracts/treasury/`. Its rules, entry points, errors and tests are described in [docs/03-contract-design.md](docs/03-contract-design.md). Versions used: `soroban-sdk` 29.0.1, Rust 1.99.1, Stellar CLI 30.0.1.
-
-This README is updated with run instructions for the web app and the deployed contract address when they exist.
-
-## Testnet deployment (development)
 
 A development deployment used to exercise the full cycle from the command line. It will be replaced by the demo deployment, and the testnet is reset periodically, so treat this address as temporary.
 
