@@ -93,9 +93,32 @@ pub fn without_vendor(mut vendors: Vec<Address>, vendor: &Address) -> Vec<Addres
 ///
 /// Errors: `OverBudget`, `Overflow`.
 pub fn check_budget(line: &BudgetLine, amount: i128) -> Result<(), Error> {
-    let total = line.spent.checked_add(amount).ok_or(Error::Overflow)?;
-    if total > line.limit {
+    after_payment(line, amount).map(|_| ())
+}
+
+/// Counts the approvals that come from addresses currently on the council.
+/// Approvals from members who were removed since they signed do not count.
+pub fn count_valid_approvals(approvals: &Vec<Address>, council: &Vec<Address>) -> u32 {
+    let mut count = 0;
+    for approver in approvals.iter() {
+        if council.contains(&approver) {
+            count += 1;
+        }
+    }
+    count
+}
+
+/// Returns the budget line after paying `amount`, or an error if the payment
+/// would exceed the limit.
+///
+/// Errors: `OverBudget`, `Overflow`.
+pub fn after_payment(line: &BudgetLine, amount: i128) -> Result<BudgetLine, Error> {
+    let spent = line.spent.checked_add(amount).ok_or(Error::Overflow)?;
+    if spent > line.limit {
         return Err(Error::OverBudget);
     }
-    Ok(())
+    Ok(BudgetLine {
+        limit: line.limit,
+        spent,
+    })
 }

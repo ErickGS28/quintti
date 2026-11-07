@@ -82,6 +82,18 @@ impl<'a> Fixture<'a> {
             &invoice_hash(&self.env),
         )
     }
+
+    /// Puts tokens in the treasury, as fees would.
+    pub fn fund(&self, amount: i128) {
+        self.token_admin.mint(&self.treasury.address, &amount);
+    }
+
+    /// Gets `approvals` council members to approve, in council order.
+    pub fn approve(&self, id: u32, approvals: usize) {
+        for member in self.council.iter().take(approvals) {
+            self.treasury.approve_expense(member, &id);
+        }
+    }
 }
 
 /// Registers a treasury with explicit constructor arguments.

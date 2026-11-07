@@ -39,3 +39,22 @@ pub struct ExpenseProposed {
     pub amount: i128,
     pub invoice_hash: BytesN<32>,
 }
+
+/// A council member approved an expense. `approvals` counts the current
+/// council members who have approved so far.
+#[contractevent]
+pub struct ExpenseApproved {
+    #[topic]
+    pub id: u32,
+    pub approver: Address,
+    pub approvals: u32,
+}
+
+/// An expense reached the threshold and the vendor was paid.
+#[contractevent]
+pub struct ExpensePaid {
+    #[topic]
+    pub id: u32,
+    pub vendor: Address,
+    pub amount: i128,
+}

@@ -9,6 +9,7 @@
 mod errors;
 mod events;
 mod logic;
+mod payment;
 mod storage;
 mod types;
 
@@ -23,7 +24,7 @@ pub use types::{
 
 use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, Symbol, Vec};
 
-use events::{BudgetSet, ExpenseProposed, Initialized, VendorSet};
+use events::{BudgetSet, ExpenseApproved, ExpenseProposed, Initialized, VendorSet};
 
 #[contract]
 pub struct Treasury;
@@ -193,6 +194,47 @@ impl Treasury {
         }
         .publish(&env);
         Ok(id)
+    }
+
+    /// Records a council member's approval. The approval that brings the number
+    /// of current council members who approved to the threshold also pays the
+    /// vendor, in the same transaction. If any rule fails at that moment the
+    /// whole call reverts, including this approval.
+    ///
+    /// Auth: the approving council member. Errors: `NotCouncilMember`,
+    /// `ExpenseNotFound`, `ExpenseNotPending`, `AlreadyApproved`, and when
+    /// paying `VendorNotApproved`, `VendorIsInsider`, `UnknownCategory`,
+    /// `OverBudget`, `InsufficientBalance`.
+    pub fn approve_expense(env: Env, approver: Address, id: u32) -> Result<(), Error> {
+        approver.require_auth();
+        let config = storage::read_config(&env)?;
+        let council = storage::read_council(&env);
+        if !council.contains(&approver) {
+            return Err(Error::NotCouncilMember);
+        }
+        let mut expense = storage::read_expense(&env, id).ok_or(Error::ExpenseNotFound)?;
+        if expense.status != ExpenseStatus::Pending {
+            return Err(Error::ExpenseNotPending);
+        }
+        if expense.approvals.contains(&approver) {
+            return Err(Error::AlreadyApproved);
+        }
+
+        expense.approvals.push_back(approver.clone());
+        let approvals = logic::count_valid_approvals(&expense.approvals, &council);
+        ExpenseApproved {
+            id,
+            approver,
+            approvals,
+        }
+        .publish(&env);
+
+        if approvals < config.threshold {
+            storage::write_expense(&env, &expense);
+            storage::extend_instance(&env);
+            return Ok(());
+        }
+        payment::execute(&env, &config, &council, expense)
     }
 
     /// Returns how many expenses have been proposed. Ids go from 0 to this
