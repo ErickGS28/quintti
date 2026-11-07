@@ -40,7 +40,7 @@ Pending ──(approvals reach threshold, rules still hold)──► Paid
 
 ### 1. Set up the building (assembly)
 
-1. Deploy the treasury with the token, the assembly address, the administrator, the council and the threshold.
+1. Deploy the treasury with the token, the assembly address, the administrator, the council and the threshold. The rules are fixed at deployment by the contract's constructor.
 2. Load the budget lines (category and limit).
 3. Approve vendors.
 

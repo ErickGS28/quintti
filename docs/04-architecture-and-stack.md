@@ -16,8 +16,8 @@ There is **no custom backend**. The browser talks to the Soroban RPC. State live
 
 | Component | Technology | Notes |
 |-----------|-----------|-------|
-| Contract | Rust + `soroban-sdk` | See [03-contract-design.md](03-contract-design.md) |
-| Access control and utilities | OpenZeppelin Stellar Contracts, if it fits | Evaluate before writing our own. The role model here is small, so a hand-written check may be simpler. Decide and record it when scaffolding |
+| Contract | Rust + `soroban-sdk` 29.0.1 (pinned) | See [03-contract-design.md](03-contract-design.md) |
+| Access control and utilities | None: two stored roles checked with `require_auth` | OpenZeppelin Stellar Contracts was evaluated and not used. The role model is two addresses plus a council, so a library would add more surface than it removes |
 | CLI and deployment | Stellar CLI | Build, deploy and invoke on testnet |
 | Frontend | TypeScript (strict) + Next.js (App Router) | Per `toolkit/playbooks/frontend.md` |
 | Wallet | Stellar Wallets Kit, with Freighter as the main wallet | Multi-wallet connection and signing. Verify current API and supported wallets |
@@ -27,7 +27,7 @@ There is **no custom backend**. The browser talks to the Soroban RPC. State live
 | Explorer | stellar.expert | Every flow links to its transactions |
 | Hosting | Vercel or Netlify | Public URL for the demo |
 
-Versions are pinned when the project is scaffolded and recorded in this table. Until then, confirm them at `developers.stellar.org`.
+Verified on 7 November 2026: Rust 1.99.1, `soroban-sdk` 29.0.1 (pinned; the latest stable, the 30 line is still a release candidate), Stellar CLI 30.0.1, and the public testnet RPC at protocol 30. Frontend versions are pinned and recorded here when the frontend is scaffolded.
 
 ## Repository structure
 
@@ -39,7 +39,7 @@ quintti/
 ├── docs/                          this documentation
 │   └── decisions/                 design decisions
 ├── contracts/
-│   └── treasury/src/              lib.rs · types.rs · errors.rs · events.rs · storage.rs · logic.rs · test.rs
+│   └── treasury/src/              lib.rs · types.rs · errors.rs · events.rs · storage.rs · logic.rs · payment.rs · test/
 ├── frontend/src/
 │   ├── app/                       routes, composition only
 │   ├── features/

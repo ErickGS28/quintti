@@ -2,7 +2,7 @@
 
 A shared treasury for residential buildings, with the assembly's rules built into the account. Built on Stellar and Soroban.
 
-> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). Documentation stage: this repository currently holds the product and architecture documents. Testnet only, unaudited, not for real funds.
+> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested; the web app is not built yet. Testnet only, unaudited, not for real funds.
 
 ## The problem
 
@@ -38,16 +38,29 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 | [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md) | Known limits, risks and common objections |
 | [docs/decisions/](docs/decisions/README.md) | Design decisions and their rationale |
 
-## Planned repository layout
+## Repository layout
 
 ```
 docs/          product, design and architecture documents
 contracts/     Soroban treasury contract (Rust)
-frontend/      web app (Next.js, TypeScript)
-scripts/       deployment and demo data
+frontend/      web app (Next.js, TypeScript), not built yet
+scripts/       deployment and demo data, not built yet
 ```
 
-Only `docs/` exists today. The other folders are added as they are built, and this README is updated with run instructions when they exist.
+## Build and test the contract
+
+Requirements: Rust (the toolchain and the `wasm32v1-none` target are set by `rust-toolchain.toml`) and the [Stellar CLI](https://developers.stellar.org/docs/tools/cli).
+
+```
+cargo fmt --check
+cargo clippy --all-targets -- -D warnings
+cargo test
+stellar contract build
+```
+
+The contract is `contracts/treasury/`. Its rules, entry points, errors and tests are described in [docs/03-contract-design.md](docs/03-contract-design.md). Versions used: `soroban-sdk` 29.0.1, Rust 1.99.1, Stellar CLI 30.0.1.
+
+This README is updated with run instructions for the web app and the deployed contract address when they exist.
 
 ## Name
 
