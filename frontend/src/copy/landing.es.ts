@@ -20,6 +20,9 @@ export const landingCopy = {
     railLabel: "Capítulos de la página",
     home: "Inicio",
     closing: "Cierre",
+    brandLabel: "Quintti, volver al inicio",
+    cta: "Ver el ejemplo",
+    chapter: "Capítulo",
   },
 
   hero: {
