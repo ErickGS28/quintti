@@ -34,3 +34,19 @@ export const INVOICE_MAX_BYTES = 20 * 1024 * 1024;
 
 /** Largest value the contract accepts for an amount (`i128`). */
 export const MAX_AMOUNT = 2n ** 127n - 1n;
+
+/**
+ * Largest invoice the app uploads for residents to download. Hosting platforms cap request bodies
+ * at about 4.5 MB, so larger files are still fingerprinted on-chain but not uploaded.
+ */
+export const INVOICE_UPLOAD_MAX_BYTES = 4 * 1024 * 1024;
+
+/** Invoice formats the app stores, with the extension used in storage paths. */
+export const INVOICE_TYPES = {
+  "application/pdf": "pdf",
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+} as const;
+
+export type InvoiceType = keyof typeof INVOICE_TYPES;
