@@ -1,0 +1,17 @@
+[package]
+name = "quintti-treasury"
+description = "Shared treasury for residential buildings: budget limits, approved vendors and council approvals enforced by the contract."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
