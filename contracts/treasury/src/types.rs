@@ -9,7 +9,9 @@ pub const MAX_VENDORS: u32 = 64;
 /// Maximum page size for `get_expenses`.
 pub const MAX_PAGE: u32 = 20;
 
-/// Fixed configuration set when the contract is deployed.
+/// Token and roles. The token never changes. The assembly can replace the
+/// administrator and the threshold, and the contract keeps the assembly itself
+/// fixed.
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Config {

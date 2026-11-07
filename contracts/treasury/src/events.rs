@@ -66,3 +66,17 @@ pub struct ExpenseCancelled {
     pub id: u32,
     pub cancelled_by: Address,
 }
+
+/// The assembly replaced the administrator.
+#[contractevent]
+pub struct AdministratorSet {
+    #[topic]
+    pub administrator: Address,
+}
+
+/// The assembly replaced the council and the approval threshold.
+#[contractevent]
+pub struct CouncilRotated {
+    pub council: Vec<Address>,
+    pub threshold: u32,
+}

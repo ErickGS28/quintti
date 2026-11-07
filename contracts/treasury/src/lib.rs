@@ -25,7 +25,8 @@ pub use types::{
 use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, Symbol, Vec};
 
 use events::{
-    BudgetSet, ExpenseApproved, ExpenseCancelled, ExpenseProposed, Initialized, VendorSet,
+    AdministratorSet, BudgetSet, CouncilRotated, ExpenseApproved, ExpenseCancelled,
+    ExpenseProposed, Initialized, VendorSet,
 };
 
 #[contract]
@@ -291,6 +292,43 @@ impl Treasury {
             }
         }
         page
+    }
+
+    /// Replaces the administrator. Pending expenses stay pending; they can be
+    /// cancelled by the new administrator or the assembly.
+    ///
+    /// Auth: assembly. Errors: `AdministratorInCouncil`.
+    pub fn set_administrator(env: Env, administrator: Address) -> Result<(), Error> {
+        let mut config = storage::read_config(&env)?;
+        config.assembly.require_auth();
+
+        let council = storage::read_council(&env);
+        logic::validate_governance(&administrator, &council, config.threshold)?;
+
+        config.administrator = administrator.clone();
+        storage::write_config(&env, &config);
+        storage::extend_instance(&env);
+        AdministratorSet { administrator }.publish(&env);
+        Ok(())
+    }
+
+    /// Replaces the council and the approval threshold. Approvals already given
+    /// by members who leave the council stop counting.
+    ///
+    /// Auth: assembly. Errors: `InvalidCouncil`, `InvalidThreshold`,
+    /// `AdministratorInCouncil`.
+    pub fn rotate_council(env: Env, council: Vec<Address>, threshold: u32) -> Result<(), Error> {
+        let mut config = storage::read_config(&env)?;
+        config.assembly.require_auth();
+
+        logic::validate_governance(&config.administrator, &council, threshold)?;
+
+        config.threshold = threshold;
+        storage::write_config(&env, &config);
+        storage::write_council(&env, &council);
+        storage::extend_instance(&env);
+        CouncilRotated { council, threshold }.publish(&env);
+        Ok(())
     }
 
     /// Returns the budget categories, in creation order.

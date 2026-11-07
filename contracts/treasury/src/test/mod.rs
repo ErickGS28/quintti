@@ -3,6 +3,7 @@
 mod approvals;
 mod budget;
 mod cancellation;
+mod handover;
 mod initialization;
 mod proposals;
 mod setup;
