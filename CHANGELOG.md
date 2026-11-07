@@ -8,10 +8,10 @@ Updated: 7 November 2026 (night).
 
 | Area | State |
 |------|-------|
-| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 10 decisions |
+| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 11 decisions |
 | Treasury contract | Implemented and unit tested (78 tests). Development deployment on Stellar testnet |
-| Web app: non-visual foundation | Built and tested (211 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
-| Web app: landing page | Built as full-screen colored chapters (problem, solution, a clickable example, why Stellar, questions, closing). Responsive and checked in a browser at 1440 and 390 px |
+| Web app: non-visual foundation | Built and tested (218 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
+| Web app: landing page | Built as full-screen colored chapters (problem, solution, a clickable example, why Stellar, questions, closing), in Geist, with a light that follows the pointer. The hero fits the first screen and nothing scrolls sideways at 1280x720, 1366x768, 1707x960, 1920x1080 and 390x844 |
 | Web app: screens of the app | Not built: resident view, council panel, assembly panel. The services and hooks they need exist |
 | Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
 | Real wallet signing | Not tried with a browser wallet extension. Covered only by fakes |
@@ -29,7 +29,15 @@ Development deployment (temporary, the testnet is reset periodically):
 
 ## Unreleased
 
-Nothing yet.
+### Added
+- Geist and Geist Mono, served from the repository through `next/font/local` with their license.
+- A soft light that drifts behind the pointer and lights the dark chapters, and cards that light up under the pointer with a lit edge. Mouse and trackpad only, off with reduced motion.
+- A faint film grain on every chapter, an `Eyebrow` label and unit tests for the pointer math.
+- Decision 0011.
+
+### Changed
+- The hero's sentence that says what Quintti is is larger and darker, so the promise reads right after the name. The hero, the menu and the logo keep their design (decision 0010).
+- Chapter openings show a labelled chip ("Capítulo 01"), a title up to about 104 px instead of 150 px, and take about three quarters of a screen, so the page is shorter.
 
 ## 2026-11-07 (night)
 

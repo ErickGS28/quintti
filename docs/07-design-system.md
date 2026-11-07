@@ -41,14 +41,17 @@ Rules:
 
 ## Typography
 
-The system font stack: `-apple-system`, `BlinkMacSystemFont`, `SF Pro Text`, `Segoe UI`, `Roboto`, `system-ui`. No web font is downloaded, so there is nothing to wait for and nothing to fail offline. Large titles, few sizes, tabular figures for money.
+Geist for everything and Geist Mono for labels, chapter numbers, fingerprints and figures that line up (SIL Open Font License). The files are in `frontend/src/app/fonts/` and load through `next/font/local`, so nothing is fetched from a font service and the build works offline; the system stack only shows while the font loads. Large titles with tight tracking, few sizes, tabular figures for money.
 
 ## Shape, depth and motion
 
 - Large soft corners: `rounded-card` (24 px), `rounded-control` (14 px), pills for navigation and the hero buttons.
 - One surface for cards: white, no border, a soft diffuse shadow. A tinted `mist` inner panel for grouped data.
 - Short transitions (150 to 500 ms) on color, opacity and transforms. Budget bars grow with a scale transform, not by resizing.
-- `prefers-reduced-motion` turns animations off.
+- A faint film grain (`.grain`) on every chapter, so gradients feel printed rather than flat.
+- **Spotlight:** cards marked `spotlight` light up under the pointer, a soft fill and a lit 1px edge that follow it (`SpotlightTracker` writes the position, `.spotlight` draws it).
+- **Pointer light:** a soft lavender glow drifts behind the pointer (`CursorGlow`). It blends with `screen`, so it shows on dark chapters and disappears on white ones. Nothing is drawn on the cursor itself.
+- Pointer effects run only with a mouse or trackpad. `prefers-reduced-motion` turns them and every animation off.
 
 ## Logo
 
@@ -68,7 +71,7 @@ The hummingbird in an open ring is unchanged. Only its colors follow the palette
 
 ## Chapters and tones
 
-Everything below the hero is a **chapter** (`Chapter`), a full-width block with its own gradient. A chapter opens with a **title screen** (`TitleSlide`): a chapter number, the chapter name set very large (up to about 150 px), one sentence that states the point, big faint ripple rings and a scroll cue. Content screens (`Slide`) follow, each at least one window tall with the content centered. Chapters overlap with rounded top corners, like sheets. Scrolling settles on screens with `scroll-snap-type: y proximity`, blocks rise in with a scroll-driven CSS animation, and a pager of dots (`SlideRail`) on the right edge shows the current chapter on large screens.
+Everything below the hero is a **chapter** (`Chapter`), a full-width block with its own gradient. A chapter opens with a **title screen** (`TitleSlide`): a labelled chip with the chapter number ("Capítulo 01"), the chapter name set large (up to about 104 px), one sentence that states the point, big faint ripple rings and a scroll cue. It takes about three quarters of the window, so the next screen already peeks in (decision 0011). Content screens (`Slide`) follow, each at least one window tall with the content centered. Chapters overlap with rounded top corners, like sheets. Scrolling settles on screens with `scroll-snap-type: y proximity`, blocks rise in with a scroll-driven CSS animation, and a pager of dots (`SlideRail`) on the right edge shows the current chapter on large screens.
 
 A **tone** is a CSS class in `globals.css` that sets the gradient and the text colors of everything inside:
 
@@ -85,7 +88,7 @@ Components read the colors through `text-slide-title`, `text-slide-text`, `text-
 
 ## Base components
 
-`components/atoms`: BrandMark, BlurInText, Ripple, Button and ButtonLink (with `light` and `glass` variants for dark chapters), Card, Badge, PageWash. `components/molecules`: FloatingNav, Chapter, TitleSlide, Slide. `components/organisms`: SlideRail, ScrollToTop. Copy lives in `frontend/src/copy/`, not in the components.
+`components/atoms`: BrandMark, BlurInText, Ripple, Button and ButtonLink (with `light` and `glass` variants for dark chapters), Card (with an optional `spotlight`), Badge, Eyebrow (a monospaced label in a hairline pill), PageWash. `components/molecules`: FloatingNav, Chapter, TitleSlide, Slide. `components/organisms`: SlideRail, ScrollToTop, CursorGlow, SpotlightTracker. Pointer math lives in `lib/ui/pointer.ts` and is unit tested. Copy lives in `frontend/src/copy/`, not in the components.
 ## Signature: the ripple
 
 Concentric rings that spread from a point, like a ripple on water or a hovering wing. They echo the open ring of the logo and appear huge and faint behind every chapter title, around the mark in the closing chapter and around the check of a paid receipt. They are decorative, hidden from assistive technology, and become static rings when reduced motion is requested.

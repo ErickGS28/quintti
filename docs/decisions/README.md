@@ -13,7 +13,8 @@ One decision per file, short and with its rationale. If a decision changes, a ne
 | [0007](0007-no-backend.md) | No backend in the prototype | Accepted |
 | [0008](0008-read-simulation-errors-directly.md) | Read simulation errors directly to keep the contract error code | Accepted |
 | [0009](0009-design-direction.md) | Design direction: light Cupertino in the new purple palette | Accepted, amended by 0010 |
-| [0010](0010-landing-as-colored-chapters.md) | The landing page as full-screen chapters in all five colors | Accepted |
+| [0010](0010-landing-as-colored-chapters.md) | The landing page as full-screen chapters in all five colors | Accepted, amended by 0011 |
+| [0011](0011-landing-polish.md) | Landing polish: Geist, texture, a light that follows the pointer, lighter chapter openings | Accepted |
 
 ## Template
 
