@@ -2,9 +2,31 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
+// Imports go one way: app → features → components/copy → lib → contracts/generated.
+// See docs/04-architecture-and-stack.md.
+const layer = (files, group, message) => ({
+  files,
+  rules: { "no-restricted-imports": ["error", { patterns: [{ group, message }] }] },
+});
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  layer(
+    ["src/lib/**", "src/config/**"],
+    ["@/features/*", "@/app/*", "@/components/*", "@/copy/*"],
+    "lib and config sit below features, components, copy and app, so they cannot import them",
+  ),
+  layer(
+    ["src/features/**"],
+    ["@/features/*", "@/app/*"],
+    "A feature never imports another feature or the app layer. Share code through lib or components",
+  ),
+  layer(
+    ["src/app/**", "src/components/**"],
+    ["@/features/*/*"],
+    "Import a feature through its index.ts, not its internals",
+  ),
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
