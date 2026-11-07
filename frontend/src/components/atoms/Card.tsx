@@ -10,6 +10,8 @@ type CardProps = HTMLAttributes<HTMLDivElement> & {
    * "frost" is frosted white for light, colored chapters.
    */
   surface?: "solid" | "glass" | "frost";
+  /** A soft light and a lit edge follow the pointer over the card (see `SpotlightTracker`). */
+  spotlight?: boolean;
 };
 
 const PADDING = {
@@ -25,6 +27,18 @@ const SURFACES = {
 };
 
 /** The one surface of the app: soft depth, large corners, no border. */
-export function Card({ padding = "md", surface = "solid", className, ...rest }: CardProps) {
-  return <div className={classNames("rounded-card", SURFACES[surface], PADDING[padding], className)} {...rest} />;
+export function Card({ padding = "md", surface = "solid", spotlight = false, className, ...rest }: CardProps) {
+  return (
+    <div
+      data-spotlight={spotlight ? "" : undefined}
+      className={classNames(
+        "rounded-card",
+        SURFACES[surface],
+        PADDING[padding],
+        spotlight && "spotlight transition-transform duration-300 hover:-translate-y-0.5",
+        className,
+      )}
+      {...rest}
+    />
+  );
 }

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { classNames } from "@/lib/ui/class-names";
 
-export type ChapterTone = "wine" | "royal" | "mist" | "periwinkle" | "canvas" | "finale";
+export type ChapterTone = "night" | "wine" | "royal" | "mist" | "periwinkle" | "canvas" | "finale";
 
 type ChapterProps = {
   id?: string;
@@ -12,6 +12,7 @@ type ChapterProps = {
 };
 
 const TONES: Record<ChapterTone, string> = {
+  night: "tone-night",
   wine: "tone-wine",
   royal: "tone-royal",
   mist: "tone-mist",
@@ -30,7 +31,7 @@ export function Chapter({ id, tone, children, className }: ChapterProps) {
     <section
       id={id}
       className={classNames(
-        "chapter -mt-10 rounded-t-[2.5rem] sm:-mt-14 sm:rounded-t-[3.5rem]",
+        "chapter grain -mt-10 rounded-t-[2.5rem] sm:-mt-14 sm:rounded-t-[3.5rem]",
         TONES[tone],
         className,
       )}

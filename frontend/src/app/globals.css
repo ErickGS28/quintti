@@ -10,8 +10,8 @@
  *   coral/wine the problem side and what the rules block. Coral fills, wine for text.
  *   lavender and periwinkle: decoration, washes, rings and charts. Never small text on white.
  *
- * The landing page is told in full-screen chapters, each on a "tone" (see `.tone-*` below): wine for
- * the problem, royal for the solution, mist for the example, periwinkle for Stellar, white for the
+ * The landing page is told in full-screen chapters, each on a "tone" (see `.tone-*` below): night
+ * for the opening, wine for the problem, royal for the solution, mist for the example, periwinkle for Stellar, white for the
  * questions and royal-to-wine for the closing. A tone sets the text colors through `--slide-*`
  * variables, so a component picks `text-slide-title` and works on any tone.
  */
@@ -41,6 +41,10 @@
   --coral: #eb5f7a;
   --coral-soft: #fde8ed;
   --on-coral: #1d1240;
+
+  /* The deepest surface: the hero, the menu glass and the footer. Purple so it stays on brand. */
+  --night: #0f0a2a;
+  --night-glass: rgb(15 10 42 / 0.72);
 
   --veil: rgb(255 255 255 / 0.82);
   --scrim: rgb(29 18 64 / 0.38);
@@ -80,6 +84,8 @@
   --color-on-coral: var(--on-coral);
   --color-veil: var(--veil);
   --color-wine-deep: var(--wine-deep);
+  --color-night: var(--night);
+  --color-night-glass: var(--night-glass);
   --color-slide-title: var(--slide-title);
   --color-slide-text: var(--slide-text);
   --color-slide-muted: var(--slide-muted);
@@ -103,6 +109,7 @@
   --animate-letter-in: letter-in 1s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   --animate-pop: pop 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   --animate-nudge: nudge 1.8s ease-in-out infinite;
+  --animate-ping-soft: ping-soft 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 html {
@@ -257,6 +264,19 @@ body {
   outline-color: var(--slide-title);
 }
 
+/* Night: the opening of the page. Deep purple with arches of light, the product shown in front. */
+.tone-night {
+  --slide-from: var(--night);
+  --slide-to: var(--royal-strong);
+  --slide-title: var(--canvas);
+  --slide-text: var(--periwinkle-soft);
+  --slide-muted: var(--periwinkle);
+  --slide-accent: var(--coral);
+  --slide-ring: var(--lavender);
+  --slide-glow-a: rgb(235 95 122 / 0.3);
+  --slide-glow-b: rgb(166 119 202 / 0.32);
+}
+
 .tone-wine {
   --slide-from: var(--wine-deep);
   --slide-to: var(--wine);
@@ -335,27 +355,155 @@ body {
   --slide-text: var(--ink-soft);
   --slide-muted: var(--ink-faint);
   --slide-accent: var(--wine);
+  --spotlight-fill: rgb(166 119 202 / 0.12);
+  --spotlight-edge: rgb(69 37 162 / 0.55);
   color: var(--slide-text);
 }
 
 /* Frosted glass for cards that sit on a dark chapter: the chapter's text colors stay. */
 .card-glass {
-  background: rgb(255 255 255 / 0.1);
+  --spotlight-fill: rgb(255 255 255 / 0.09);
+  --spotlight-edge: rgb(255 255 255 / 0.6);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.06));
   box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 0.18),
-    0 24px 48px -24px rgb(0 0 0 / 0.35);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    inset 0 0 0 1px rgb(255 255 255 / 0.12),
+    0 24px 48px -24px rgb(0 0 0 / 0.45);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 /* Frosted white for cards that sit on a light, colored chapter. */
 .card-frost {
+  --spotlight-fill: rgb(255 255 255 / 0.5);
+  --spotlight-edge: rgb(69 37 162 / 0.5);
   background: rgb(255 255 255 / 0.55);
   box-shadow:
     inset 0 0 0 1px rgb(255 255 255 / 0.7),
     0 24px 48px -24px rgb(69 37 162 / 0.3);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
+}
+
+/*
+ * Spotlight: a soft light and a lit edge that follow the pointer over a card. `SpotlightTracker`
+ * writes the pointer position into `--mx` and `--my`; without it (touch screens, reduced motion)
+ * nothing shows. The fill sits under the content, the edge is a 1px ring masked out of the middle.
+ */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+
+.spotlight::before,
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.spotlight::before {
+  z-index: -1;
+  background: radial-gradient(24rem circle at var(--mx, 50%) var(--my, 50%), var(--spotlight-fill), transparent 62%);
+}
+
+.spotlight::after {
+  padding: 1px;
+  background: radial-gradient(18rem circle at var(--mx, 50%) var(--my, 50%), var(--spotlight-edge), transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+.spotlight[data-lit="true"]::before,
+.spotlight[data-lit="true"]::after {
+  opacity: 1;
+}
+
+/* Film grain: a faint noise over a surface so flat gradients feel printed, not rendered. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* A fine grid that fades out from the middle, like drafting paper under the product. */
+.grid-lines {
+  background-image:
+    linear-gradient(to right, rgb(171 167 227 / 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(171 167 227 / 0.09) 1px, transparent 1px);
+  background-size: 4.5rem 4.5rem;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, #000 20%, transparent 75%);
+}
+
+/*
+ * Arches of light, from the palette's reference image: tall rounded doorways lit from below in
+ * coral and wine, fading into purple. "line" is only the outline of a doorway.
+ */
+.arch {
+  position: absolute;
+  bottom: 0;
+  border-radius: 999px 999px 0 0;
+}
+
+.arch-light {
+  background: linear-gradient(
+    to top,
+    rgb(235 95 122 / 0.7),
+    rgb(137 12 80 / 0.5) 30%,
+    rgb(69 37 162 / 0.28) 62%,
+    transparent 92%
+  );
+  -webkit-mask-image: linear-gradient(to top, transparent, #000 18%);
+  mask-image: linear-gradient(to top, transparent, #000 18%);
+}
+
+.arch-line {
+  border: 1px solid rgb(171 167 227 / 0.2);
+  border-bottom: 0;
+  -webkit-mask-image: linear-gradient(to top, transparent, #000 30%);
+  mask-image: linear-gradient(to top, transparent, #000 30%);
+}
+
+/* A beam of light that rises from the floor of an arch. */
+.arch-beam {
+  background: radial-gradient(ellipse 50% 100% at 50% 100%, rgb(235 95 122 / 0.55), transparent 70%);
+  filter: blur(24px);
+}
+
+/* Text lit by the palette: periwinkle to coral. Only for large titles on night. */
+.text-lit {
+  background: linear-gradient(100deg, var(--periwinkle) 10%, var(--lavender) 45%, var(--coral) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* The dot of a live status: a soft ping around a solid center. */
+@keyframes ping-soft {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
 }
 
 /* Each block fades and rises as it enters the screen, driven by the scroll position (no script). */

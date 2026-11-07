@@ -53,6 +53,11 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ["wine", "wine-soft"],
   ["wine", "coral-soft"],
   ["on-coral", "coral"],
+  // The menu glass, the hero and the footer sit on night.
+  ["canvas", "night"],
+  ["periwinkle-soft", "night"],
+  ["periwinkle", "night"],
+  ["coral", "night"],
 ];
 
 describe("palette contrast", () => {
@@ -92,8 +97,8 @@ const LARGE_TEXT = 3;
 describe("chapter tones", () => {
   const all = tones();
 
-  it("defines the six tones the landing page uses", () => {
-    expect([...all.keys()].sort()).toEqual(["canvas", "finale", "mist", "periwinkle", "royal", "wine"]);
+  it("defines the seven tones the landing page uses", () => {
+    expect([...all.keys()].sort()).toEqual(["canvas", "finale", "mist", "night", "periwinkle", "royal", "wine"]);
   });
 
   for (const [name, variables] of all) {
