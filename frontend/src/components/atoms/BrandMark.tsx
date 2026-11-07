@@ -7,42 +7,26 @@ import { LOGO_BIRD_PATHS, LOGO_RING_PATHS, LOGO_VIEW_BOX } from "./brand-mark-pa
 type BrandMarkProps = {
   /** Size comes from the caller, for example "size-12". */
   className: string;
-  /**
-   * "light" for white surfaces: a lavender-to-royal ring and a deep purple bird.
-   * "night" for dark surfaces: a periwinkle-to-coral ring and a white bird.
-   */
-  tone?: "light" | "night";
-};
-
-const RING_STOPS = {
-  light: ["var(--lavender)", "var(--royal)"],
-  night: ["var(--periwinkle)", "var(--coral)"],
-};
-
-const BIRD = {
-  light: "text-royal-strong",
-  night: "text-canvas",
 };
 
 /**
- * The Quintti hummingbird inside its open ring. The mark spins once when it, or the group it
- * belongs to, is hovered.
+ * The Quintti hummingbird inside its open ring. The ring is a gradient from lavender to royal purple and
+ * the bird is deep purple. The mark spins once when it, or the group it belongs to, is hovered.
  */
-export function BrandMark({ className, tone = "light" }: BrandMarkProps) {
+export function BrandMark({ className }: BrandMarkProps) {
   const gradientId = `ring-${useId().replace(/:/g, "")}`;
-  const [from, to] = RING_STOPS[tone];
 
   return (
     <svg
-      className={classNames(BIRD[tone], "hover:animate-spin-once group-hover:animate-spin-once", className)}
+      className={classNames("text-royal-strong hover:animate-spin-once group-hover:animate-spin-once", className)}
       viewBox={LOGO_VIEW_BOX}
       fill="none"
       aria-hidden="true"
     >
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor={from} />
-          <stop offset="1" stopColor={to} />
+          <stop offset="0" stopColor="var(--lavender)" />
+          <stop offset="1" stopColor="var(--royal)" />
         </linearGradient>
       </defs>
       {LOGO_RING_PATHS.map((path) => (

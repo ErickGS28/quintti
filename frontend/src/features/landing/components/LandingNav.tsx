@@ -1,57 +1,35 @@
-import { ArrowRight } from "lucide-react";
-
-import { BrandMark } from "@/components/atoms/BrandMark";
-import { ButtonLink } from "@/components/atoms/Button";
 import { FloatingNav } from "@/components/molecules/FloatingNav";
 import { landingCopy } from "@/copy/landing.es";
+import { classNames } from "@/lib/ui/class-names";
 
-const { nav, hero, problem, solution, example, why, faq } = landingCopy;
+const { nav, problem, solution, example, why, faq } = landingCopy;
 
+/** On phones only two links fit; the rest appear from medium screens up. */
 const LINKS = [
-  { id: problem.id, label: nav.problem },
-  { id: solution.id, label: nav.solution },
-  { id: example.id, label: nav.example },
-  { id: why.id, label: nav.why },
-  { id: faq.id, label: nav.faq },
+  { id: problem.id, label: nav.problem, onPhone: false },
+  { id: solution.id, label: nav.solution, onPhone: true },
+  { id: example.id, label: nav.example, onPhone: true },
+  { id: why.id, label: nav.why, onPhone: false },
+  { id: faq.id, label: nav.faq, onPhone: false },
 ];
 
-/**
- * Floating dark-glass menu: the brand on the left, the chapters in the middle and one action on the
- * right. On phones and tablets only the brand and the action fit; the pager and the page itself
- * lead the way there.
- */
+/** Floating, rounded menu with the section links centered. The logo lives in the hero, not here. */
 export function LandingNav() {
   return (
-    <FloatingNav label={nav.menuLabel} placement="top" width="full" surface="night" className="-mb-14">
-      <div className="flex w-full items-center justify-between gap-2">
-        <a
-          href={`#${hero.id}`}
-          aria-label={nav.brandLabel}
-          className="group flex min-h-11 items-center gap-2.5 rounded-full pr-4 pl-2.5 transition-colors duration-200 hover:bg-white/6"
-        >
-          <BrandMark tone="night" className="size-8" />
-          <span className="text-[1.0625rem] font-semibold tracking-tight text-canvas">Quintti</span>
-        </a>
-
-        <div className="hidden items-center gap-0.5 lg:flex">
-          {LINKS.map((link) => (
-            <a
-              key={link.id}
-              href={`#${link.id}`}
-              className="flex min-h-11 items-center rounded-full px-4 text-[0.9375rem] font-medium text-periwinkle-soft transition-colors duration-200 hover:bg-white/8 hover:text-canvas"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-
-        <ButtonLink href={`#${example.id}`} shape="pill" variant="light" className="group/cta min-h-11 px-5">
-          {nav.cta}
-          <ArrowRight
-            className="size-4 transition-transform duration-300 group-hover/cta:translate-x-0.5"
-            aria-hidden="true"
-          />
-        </ButtonLink>
+    <FloatingNav label={nav.menuLabel} placement="top" width="fit">
+      <div className="flex items-center justify-center gap-1 sm:gap-2">
+        {LINKS.map((link) => (
+          <a
+            key={link.id}
+            href={`#${link.id}`}
+            className={classNames(
+              "min-h-11 items-center rounded-full px-4 text-sm font-semibold text-ink-soft transition-colors duration-200 hover:bg-royal-soft hover:text-royal sm:px-5 sm:text-[0.9375rem]",
+              link.onPhone ? "flex" : "hidden md:flex",
+            )}
+          >
+            {link.label}
+          </a>
+        ))}
       </div>
     </FloatingNav>
   );
