@@ -1,6 +1,6 @@
 //! Events for every state change a client must observe.
 
-use soroban_sdk::{contractevent, Address, Symbol, Vec};
+use soroban_sdk::{contractevent, Address, BytesN, Symbol, Vec};
 
 /// Published once, when the contract is deployed.
 #[contractevent]
@@ -27,4 +27,15 @@ pub struct VendorSet {
     #[topic]
     pub vendor: Address,
     pub allowed: bool,
+}
+
+/// The administrator proposed an expense.
+#[contractevent]
+pub struct ExpenseProposed {
+    #[topic]
+    pub id: u32,
+    pub category: Symbol,
+    pub vendor: Address,
+    pub amount: i128,
+    pub invoice_hash: BytesN<32>,
 }

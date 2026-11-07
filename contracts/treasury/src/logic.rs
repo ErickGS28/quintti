@@ -88,3 +88,14 @@ pub fn without_vendor(mut vendors: Vec<Address>, vendor: &Address) -> Vec<Addres
     }
     vendors
 }
+
+/// Checks that paying `amount` keeps the category within its limit.
+///
+/// Errors: `OverBudget`, `Overflow`.
+pub fn check_budget(line: &BudgetLine, amount: i128) -> Result<(), Error> {
+    let total = line.spent.checked_add(amount).ok_or(Error::Overflow)?;
+    if total > line.limit {
+        return Err(Error::OverBudget);
+    }
+    Ok(())
+}

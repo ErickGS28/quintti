@@ -6,7 +6,7 @@
 use soroban_sdk::{Address, Env, Symbol, Vec};
 
 use crate::errors::Error;
-use crate::types::{BudgetLine, Config, DataKey};
+use crate::types::{BudgetLine, Config, DataKey, Expense};
 
 /// Ledgers close about every 5 seconds.
 const LEDGERS_PER_DAY: u32 = 17_280;
@@ -86,4 +86,25 @@ pub fn read_vendors(env: &Env) -> Vec<Address> {
 pub fn write_vendors(env: &Env, vendors: &Vec<Address>) {
     env.storage().persistent().set(&DataKey::Vendors, vendors);
     extend_persistent(env, &DataKey::Vendors);
+}
+
+pub fn read_expense_count(env: &Env) -> u32 {
+    env.storage()
+        .instance()
+        .get(&DataKey::ExpenseCount)
+        .unwrap_or(0)
+}
+
+pub fn write_expense_count(env: &Env, count: u32) {
+    env.storage().instance().set(&DataKey::ExpenseCount, &count);
+}
+
+pub fn read_expense(env: &Env, id: u32) -> Option<Expense> {
+    env.storage().persistent().get(&DataKey::Expense(id))
+}
+
+pub fn write_expense(env: &Env, expense: &Expense) {
+    let key = DataKey::Expense(expense.id);
+    env.storage().persistent().set(&key, expense);
+    extend_persistent(env, &key);
 }

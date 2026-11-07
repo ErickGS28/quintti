@@ -2,5 +2,6 @@
 
 mod budget;
 mod initialization;
+mod proposals;
 mod setup;
 mod vendors;

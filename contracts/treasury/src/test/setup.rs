@@ -2,7 +2,7 @@
 //! roles as generated addresses.
 
 use soroban_sdk::testutils::Address as _;
-use soroban_sdk::{token, vec, Address, Env, Symbol, Vec};
+use soroban_sdk::{token, vec, Address, BytesN, Env, Symbol, Vec};
 
 use crate::{Treasury, TreasuryClient};
 
@@ -63,6 +63,25 @@ impl<'a> Fixture<'a> {
             treasury,
         }
     }
+
+    /// Opens a `maintenance` budget line with `limit` and approves one vendor.
+    /// Returns the vendor.
+    pub fn prepare(&self, limit: i128) -> Address {
+        let vendor = Address::generate(&self.env);
+        self.treasury.set_budget(&maintenance(&self.env), &limit);
+        self.treasury.set_vendor(&vendor, &true);
+        vendor
+    }
+
+    /// Proposes an expense in `maintenance` and returns its id.
+    pub fn propose(&self, vendor: &Address, amount: i128) -> u32 {
+        self.treasury.propose_expense(
+            &maintenance(&self.env),
+            vendor,
+            &amount,
+            &invoice_hash(&self.env),
+        )
+    }
 }
 
 /// Registers a treasury with explicit constructor arguments.
@@ -92,6 +111,11 @@ pub fn council_vec(env: &Env, members: &[Address]) -> Vec<Address> {
         council.push_back(member.clone());
     }
     council
+}
+
+/// A fixed invoice fingerprint.
+pub fn invoice_hash(env: &Env) -> BytesN<32> {
+    BytesN::from_array(env, &[7u8; 32])
 }
 
 /// A named category, readable in assertions.

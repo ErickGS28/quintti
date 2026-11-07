@@ -21,9 +21,9 @@ pub use types::{
     MAX_VENDORS,
 };
 
-use soroban_sdk::{contract, contractimpl, token, Address, Env, Symbol, Vec};
+use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, Symbol, Vec};
 
-use events::{BudgetSet, Initialized, VendorSet};
+use events::{BudgetSet, ExpenseProposed, Initialized, VendorSet};
 
 #[contract]
 pub struct Treasury;
@@ -134,6 +134,92 @@ impl Treasury {
         storage::extend_instance(&env);
         VendorSet { vendor, allowed }.publish(&env);
         Ok(())
+    }
+
+    /// Proposes a payment to an approved vendor, with the SHA-256 fingerprint of
+    /// its invoice. Nothing is reserved: money moves only when the council
+    /// approves. The proposal is rejected early if it already breaks a rule.
+    ///
+    /// Auth: administrator. Errors: `InvalidAmount`, `UnknownCategory`,
+    /// `VendorNotApproved`, `VendorIsInsider`, `OverBudget`, `Overflow`.
+    pub fn propose_expense(
+        env: Env,
+        category: Symbol,
+        vendor: Address,
+        amount: i128,
+        invoice_hash: BytesN<32>,
+    ) -> Result<u32, Error> {
+        let config = storage::read_config(&env)?;
+        config.administrator.require_auth();
+
+        if amount <= 0 {
+            return Err(Error::InvalidAmount);
+        }
+        let line = storage::read_budget(&env, &category).ok_or(Error::UnknownCategory)?;
+        if !storage::read_vendors(&env).contains(&vendor) {
+            return Err(Error::VendorNotApproved);
+        }
+        let council = storage::read_council(&env);
+        if logic::is_insider(&vendor, &config.assembly, &config.administrator, &council) {
+            return Err(Error::VendorIsInsider);
+        }
+        logic::check_budget(&line, amount)?;
+
+        let id = storage::read_expense_count(&env);
+        let next = id.checked_add(1).ok_or(Error::Overflow)?;
+        storage::write_expense(
+            &env,
+            &Expense {
+                id,
+                category: category.clone(),
+                vendor: vendor.clone(),
+                amount,
+                invoice_hash: invoice_hash.clone(),
+                approvals: Vec::new(&env),
+                status: ExpenseStatus::Pending,
+                created_at: env.ledger().timestamp(),
+                paid_at: None,
+            },
+        );
+        storage::write_expense_count(&env, next);
+        storage::extend_instance(&env);
+
+        ExpenseProposed {
+            id,
+            category,
+            vendor,
+            amount,
+            invoice_hash,
+        }
+        .publish(&env);
+        Ok(id)
+    }
+
+    /// Returns how many expenses have been proposed. Ids go from 0 to this
+    /// number minus one.
+    pub fn expense_count(env: Env) -> u32 {
+        storage::read_expense_count(&env)
+    }
+
+    /// Returns one expense.
+    ///
+    /// Errors: `ExpenseNotFound`.
+    pub fn get_expense(env: Env, id: u32) -> Result<Expense, Error> {
+        storage::read_expense(&env, id).ok_or(Error::ExpenseNotFound)
+    }
+
+    /// Returns up to `limit` expenses starting at id `from`, in id order. The
+    /// page size is capped at `MAX_PAGE`.
+    pub fn get_expenses(env: Env, from: u32, limit: u32) -> Vec<Expense> {
+        let count = storage::read_expense_count(&env);
+        let end = from.saturating_add(limit.min(MAX_PAGE)).min(count);
+        let mut page = Vec::new(&env);
+        for id in from..end {
+            if let Some(expense) = storage::read_expense(&env, id) {
+                page.push_back(expense);
+            }
+        }
+        page
     }
 
     /// Returns the budget categories, in creation order.
