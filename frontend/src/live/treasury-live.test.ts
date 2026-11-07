@@ -10,9 +10,10 @@
 import { describe, expect, it } from "vitest";
 
 import { parseConfig } from "@/config/env";
+import { createTreasuryReader } from "@/features/public-view/services/treasury-reader";
 
-import { createTreasuryClient } from "./treasury-client";
-import { CALL_OPTIONS, readResult, readValue } from "./transaction-service";
+import { createTreasuryClient } from "@/lib/stellar/treasury-client";
+import { CALL_OPTIONS, readResult, readValue } from "@/lib/stellar/transaction-service";
 
 const live = process.env.QUINTTI_LIVE === "1";
 
@@ -53,6 +54,27 @@ describe.skipIf(!live)("treasury on testnet (live)", { timeout: 60_000 }, () => 
 
     expect(expense.status.tag).toBe("Paid");
     expect(expense.amount).toBe(800_000_000n);
+  });
+
+  it("builds the public view from the contract's state", async () => {
+    const { client } = setup();
+    const reader = createTreasuryReader(client);
+
+    const snapshot = await reader.snapshot();
+    const expenses = await reader.expenses();
+
+    expect(snapshot.council).toHaveLength(3);
+    expect(snapshot.threshold).toBe(2);
+    expect(snapshot.balance).toBe(4_200_000_000n);
+    expect(snapshot.budgets).toEqual([
+      { category: "maintenance", limit: 10_000_000_000n, spent: 800_000_000n, remaining: 9_200_000_000n },
+    ]);
+    expect(snapshot.vendors).toHaveLength(1);
+    expect(expenses).toHaveLength(1);
+    expect(expenses[0]).toMatchObject({ id: 0, status: "paid", amount: 800_000_000n });
+    expect(expenses[0].invoiceHash).toBe("5359aa4f547c5c12e8a10a98b3e43675ff8a39a147e065784a277ed8f4845aa8");
+    expect(expenses[0].approvals).toHaveLength(2);
+    expect(expenses[0].paidAt).not.toBeNull();
   });
 
   it("reports an unknown expense as a contract error", async () => {
