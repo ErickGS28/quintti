@@ -5,6 +5,8 @@
 export type AppErrorKind =
   /** The contract rejected the call. `contractError` says which rule. */
   | "contract"
+  /** Something the person typed cannot be used. `field` says which input. */
+  | "invalid-input"
   /** The person closed or refused the wallet prompt. A normal outcome, not a failure. */
   | "wallet-rejected"
   /** No wallet is connected, or it cannot sign right now. */
@@ -26,13 +28,17 @@ export class AppError extends Error {
     options: {
       /** Name of the contract error, when `kind` is `"contract"`. */
       contractError?: string;
+      /** Name of the input, when `kind` is `"invalid-input"`. */
+      field?: string;
       cause?: unknown;
     } = {},
   ) {
     super(message, { cause: options.cause });
     this.name = "AppError";
     this.contractError = options.contractError;
+    this.field = options.field;
   }
 
   readonly contractError: string | undefined;
+  readonly field: string | undefined;
 }

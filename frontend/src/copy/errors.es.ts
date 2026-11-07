@@ -28,6 +28,7 @@ export const contractErrorMessages: Record<ContractErrorName, string> = {
 
 /** What a person sees for failures that do not come from a contract rule. */
 export const appErrorMessages: Record<Exclude<AppErrorKind, "contract">, string> = {
+  "invalid-input": "Revisa los datos que ingresaste.",
   "wallet-rejected": "Cancelaste la firma. No se hizo ningún cambio.",
   "wallet-unavailable":
     "No hay una billetera conectada o no pudo firmar. Conéctala e inténtalo de nuevo.",

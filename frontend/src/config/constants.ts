@@ -28,3 +28,9 @@ export const TRANSACTION_CONFIRMATION_TIMEOUT_MS = 60_000;
 
 /** How long read queries stay fresh before they are fetched again. */
 export const QUERY_STALE_TIME_MS = 5_000;
+
+/** Largest invoice file accepted. The file is hashed in the browser, so this bounds memory. */
+export const INVOICE_MAX_BYTES = 20 * 1024 * 1024;
+
+/** Largest value the contract accepts for an amount (`i128`). */
+export const MAX_AMOUNT = 2n ** 127n - 1n;
