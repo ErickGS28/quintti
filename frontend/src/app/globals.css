@@ -446,6 +446,34 @@ body {
   opacity: 1;
 }
 
+/* The page behind the app screens: mist with a soft periwinkle light from the top right. */
+.app-surface {
+  background:
+    radial-gradient(64rem 28rem at 92% -6%, rgb(171 167 227 / 0.32), transparent 70%),
+    radial-gradient(40rem 22rem at 30% -10%, rgb(166 119 202 / 0.12), transparent 70%),
+    var(--mist);
+}
+
+/* The mobile drawer: slides in from the left over a dimmed, blurred page. */
+.drawer::backdrop {
+  background: rgb(29 18 64 / 0.38);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.drawer[open] {
+  animation: drawer-in 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 /* The dot of a live status: a soft ping around a solid center. */
 @keyframes ping-soft {
   0% {
