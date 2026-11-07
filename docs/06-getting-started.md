@@ -129,7 +129,54 @@ The command ends with `Error(Contract, #12)`, which is `OverBudget`. The full li
 
 Every call that writes prints a link to the transaction in [stellar.expert](https://stellar.expert/explorer/testnet).
 
-## 4. Troubleshooting
+## 4. Web app foundation
+
+The `frontend/` folder holds the non-visual foundation of the web app: configuration, the connection to the contract, wallet signing, validation, error messages, and the services and hooks that read and change the treasury. There is no interface yet, so the only page is a placeholder.
+
+Requirements: Node 22.12 or newer (developed on Node 24).
+
+```
+cd frontend
+npm install
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+`npm test` runs offline, with the network, the wallet and the contract replaced by fakes. To start the app, copy the example settings first and then run the development server (`npm run dev`):
+
+```
+cp .env.example .env.local        # PowerShell: Copy-Item .env.example .env.local
+```
+
+`.env.example` explains each setting. `NEXT_PUBLIC_TREASURY_CONTRACT_ID` must be a treasury you deployed in step 3, or the development one from the README if it still exists. Nothing in an env file is secret: never put keys or seed phrases there.
+
+### Check the code against a real treasury
+
+The tests in `frontend/src/live/` read a treasury on testnet. They are skipped unless you opt in, and they expect the state that step 3.3 leaves behind: a `maintenance` budget of 1,000 XLM, one paid expense of 80 XLM, and 420 XLM in the treasury. In bash:
+
+```
+QUINTTI_LIVE=1 \
+NEXT_PUBLIC_TREASURY_CONTRACT_ID=<your contract ID> \
+QUINTTI_LIVE_ADMIN=$(stellar keys address qt-admin) \
+QUINTTI_LIVE_VENDOR=$(stellar keys address qt-vendor) \
+npx vitest run src/live
+```
+
+In PowerShell, set the four variables with `$env:NAME = "value"` first, then run `npx vitest run src/live`. The run reads the configuration, the balance, the budget, the paid expense and the full public view, and checks that an over-budget proposal is rejected before any signature is requested.
+
+### Regenerate the contract bindings
+
+After changing the contract and deploying it:
+
+```
+npm run bindings -- <CONTRACT_ID>
+```
+
+This needs the Stellar CLI. It rewrites `src/contracts/generated/index.ts`, which is never edited by hand. A test compares the contract's error list with the interface's messages, so adding or renumbering an error in the contract makes `npm test` fail until the messages are updated.
+
+## 5. Troubleshooting
 
 | Symptom | Likely cause |
 |---------|--------------|
@@ -139,7 +186,9 @@ Every call that writes prints a link to the transaction in [stellar.expert](http
 | Account not found on testnet | The identity was not funded. Run `stellar keys fund <identity> --network testnet` |
 | Everything stopped working after some weeks | The testnet is reset periodically. Create new identities and deploy again |
 | `Invalid JSON in argument 'council'` | Pass the council with `--council-file-path`, as shown above |
+| `npm install` fails with `ERESOLVE` on `vitest` | Use Node 22.12 or newer, and keep `@types/node` on the same major version as Node |
+| `npm run typecheck` reports old errors after changing `tsconfig.json` | Delete `frontend/tsconfig.tsbuildinfo` and run it again |
 
-## 5. What is not here yet
+## 6. What is not here yet
 
-The web app is not built yet, so there is no UI to run. The development plan and the current state are in [../CHANGELOG.md](../CHANGELOG.md).
+The interface itself: screens for residents, the council and the assembly, and the visual design (the logo and palette are pending). The services and hooks they will use exist and are tested, but signing with a real wallet extension has not been tried yet. The current state is in [../CHANGELOG.md](../CHANGELOG.md).

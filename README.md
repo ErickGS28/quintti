@@ -2,7 +2,7 @@
 
 A shared treasury for residential buildings, with the assembly's rules built into the account. Built on Stellar and Soroban.
 
-> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested; the web app is not built yet. Testnet only, unaudited, not for real funds.
+> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested, and the web app has its non-visual foundation (wallet, contract connection, validation, services). The interface and visual design are not built yet. Testnet only, unaudited, not for real funds.
 
 ## The problem
 
@@ -45,7 +45,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 ```
 docs/          product, design and architecture documents
 contracts/     Soroban treasury contract (Rust)
-frontend/      web app (Next.js, TypeScript), not built yet
+frontend/      web app (Next.js, TypeScript): services, hooks and tests, no interface yet
 scripts/       deployment and demo data, not built yet
 ```
 
@@ -58,6 +58,14 @@ git clone https://github.com/ErickGS28/quintti.git
 cd quintti
 cargo test
 stellar contract build
+```
+
+The web app foundation is tested the same way, from `frontend/` (Node 22.12 or newer):
+
+```
+cd frontend
+npm install
+npm run lint && npm run typecheck && npm test && npm run build
 ```
 
 To deploy your own copy on testnet and run a full expense (budget, vendor, deposit, proposal, two council approvals, payment, and a rejected payment), follow [docs/06-getting-started.md](docs/06-getting-started.md). The current state of the project is in [CHANGELOG.md](CHANGELOG.md).
