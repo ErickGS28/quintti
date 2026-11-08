@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es" className={`${geist.variable} ${geistMono.variable}`}>
-      <body>
+      {/* Some browser extensions (ColorZilla, password managers) add attributes to <body> before React loads. */}
+      <body suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>
