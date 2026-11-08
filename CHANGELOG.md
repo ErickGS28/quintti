@@ -15,8 +15,8 @@ Updated: 8 November 2026 (night).
 | Web app: treasury app | Three screens at `/app`, checked in a browser against the development treasury on testnet: Resumen, Gastos (list, detail with approvals and invoice check, propose, approve, cancel) and Reglas (budget, vendors, who decides). Same flow for every role; the connected wallet decides the buttons |
 | Manual | A hidden page at `/hiw`: the contract's rules, each role with what it can and cannot do, the flow of an expense, a map of the screens, a guide to testing with a wallet and a live panel of who holds each role in the deployed contract |
 | Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
-| Real wallet signing | The Stellar Wallets Kit picker opens in the app, themed. Signing with a browser extension not tried end to end yet. Covered by fakes. **This and the testnet evidence are all that remains before the demo** |
-| Contract evidence on testnet | Development walkthrough done (hashes linked from the contract's explorer page). A final demo deployment with its own data and transactions is still to prepare |
+| Real wallet signing | Done with Varial (Freighter) on testnet: connect, propose, approve and pay with real signatures. The picker is themed |
+| Contract evidence on testnet | Done: a demo deployment with Spanish categories and a full paid expense, seeded by `scripts/seed-demo.ps1`, with every transaction linked from the README |
 | Audit | None. Testnet only, not for real funds |
 
 What works today, verified on testnet:
@@ -26,8 +26,8 @@ What works today, verified on testnet:
 
 Known limits are in [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md). How to run everything is in [docs/06-getting-started.md](docs/06-getting-started.md).
 
-Development deployment (temporary, the testnet is reset periodically):
-`CAQ6YXC6L3G2YVBWW52IPDNVBRCDMUO3S463MQL5HD2KGNDCOT5NCHDA`.
+Demo deployment (temporary, the testnet is reset periodically; its transactions are linked from the README):
+`CA67PF3REYJWLXK7WE2OKEJMX42A76LCUQWL4PAU2TV2IRO5BSFLWZKR`.
 
 ## Unreleased
 

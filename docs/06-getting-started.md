@@ -199,11 +199,16 @@ This needs the Stellar CLI. It rewrites `src/contracts/generated/index.ts`, whic
 | `npm run typecheck` reports old errors after changing `tsconfig.json` | Delete `frontend/tsconfig.tsbuildinfo` and run it again |
 | `Cannot find name 'LayoutProps'` or route type errors | Run `npm run typecheck`, which regenerates the route types (`next typegen`) before checking |
 
-## 6. What is not here yet
+## 6. The demo deployment
 
-Two things remain before the demo:
+`scripts/seed-demo.ps1` deploys a fresh demo treasury on testnet and loads it: budget lines (mantenimiento, vigilancia, aseo), one approved vendor, a funded treasury and one complete expense paid with the invoice in `scripts/demo/factura-ascensor.pdf`. It reuses the identities from step 3, prints the contract ID and the explorer link of every transaction, and can be rerun before each recording. Put the printed contract ID in `frontend/.env.local`.
 
-1. **Sign with a real wallet extension, end to end.** The wallet picker opens and the signing path is covered by fakes, but a browser wallet (Freighter) has not signed a proposal and an approval yet. The `/hiw` page lists the steps.
-2. **Evidence of the contract on testnet.** A final deployment with the demo data and the transactions visible in [stellar.expert](https://stellar.expert/explorer/testnet). The development walkthrough already has a full cycle on testnet; the demo needs its own, repeatable with a script (`scripts/` is not built).
+```powershell
+./scripts/seed-demo.ps1
+`
 
-The current state is in [../CHANGELOG.md](../CHANGELOG.md).
+The other two PDFs in `scripts/demo/` are for the recording: `factura-ascensor-modificada.pdf` (the same invoice with a changed total, which must not match) and `factura-vigilancia.pdf` (the invoice for the expense proposed live).
+
+## 7. What is not here yet
+
+A browser wallet (Varial, the new name of Freighter) has signed a full cycle on testnet. What remains is the recording and, optionally, a public URL. The current state is in [../CHANGELOG.md](../CHANGELOG.md).

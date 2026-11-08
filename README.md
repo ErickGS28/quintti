@@ -2,7 +2,7 @@
 
 A shared treasury for residential buildings, with the assembly's rules built into the account. Built on Stellar and Soroban.
 
-> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested. The web app has the landing page and the treasury app: overview, expenses (propose, approve, cancel, check the invoice) and rules (budget and vendors), with Stellar Wallets Kit for signing, and a hidden manual at `/hiw`. What is left before the demo is signing with a real wallet extension and having the evidence of the contract on testnet. Testnet only, unaudited, not for real funds.
+> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested. The web app has the landing page and the treasury app: overview, expenses (propose, approve, cancel, check the invoice) and rules (budget and vendors), with Stellar Wallets Kit for signing, and a hidden manual at `/hiw`. A browser wallet has signed a full cycle on testnet and the demo deployment, with its transactions, is linked below. Testnet only, unaudited, not for real funds.
 
 ## The problem
 
@@ -73,17 +73,31 @@ To deploy your own copy on testnet and run a full expense (budget, vendor, depos
 
 The contract is `contracts/treasury/`. Its rules, entry points, errors and tests are described in [docs/03-contract-design.md](docs/03-contract-design.md). Versions used: `soroban-sdk` 29.0.1, Rust 1.99.1, Stellar CLI 30.0.1.
 
-A development deployment used to exercise the full cycle from the command line. It will be replaced by the demo deployment, and the testnet is reset periodically, so treat this address as temporary.
+The demo deployment, created by [scripts/seed-demo.ps1](scripts/seed-demo.ps1) (it can be rerun at any time to start from the same state; the testnet is reset periodically, so treat the address as temporary).
 
 | | |
 |---|---|
 | Network | Stellar testnet |
-| Contract | `CAQ6YXC6L3G2YVBWW52IPDNVBRCDMUO3S463MQL5HD2KGNDCOT5NCHDA` ([stellar.expert](https://stellar.expert/explorer/testnet/contract/CAQ6YXC6L3G2YVBWW52IPDNVBRCDMUO3S463MQL5HD2KGNDCOT5NCHDA)) |
+| Contract | `CA67PF3REYJWLXK7WE2OKEJMX42A76LCUQWL4PAU2TV2IRO5BSFLWZKR` ([stellar.expert](https://stellar.expert/explorer/testnet/contract/CA67PF3REYJWLXK7WE2OKEJMX42A76LCUQWL4PAU2TV2IRO5BSFLWZKR)) |
 | Token | Native XLM through its Stellar Asset Contract, `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
 | Council | 3 members, threshold 2 |
+| Budget | mantenimiento 1,000 XLM, vigilancia 600 XLM, aseo 300 XLM |
 
-Verified on testnet: setting a budget and an approved vendor, a deposit, a proposal, one approval that leaves the expense pending, a second approval that pays the vendor, and two rejections (a proposal above the category limit fails with error 12, and a non-council approval fails with error 15). The transactions are linked from the explorer page of the contract.
+Transactions of the seed run, each visible in stellar.expert:
 
+| Step | Transaction |
+|------|-------------|
+| Deploy | [2d5ab488…0135](https://stellar.expert/explorer/testnet/tx/2d5ab488c72d07e4c2ae13bb78c799c042eed2a46b23e8b266ea2907ff310135) |
+| Budget mantenimiento | [135c8fd5…b15d](https://stellar.expert/explorer/testnet/tx/135c8fd56c1802c088ecc14e4d09dd5568cd76ed1d967afe3a2e71c7fac5b15d) |
+| Budget vigilancia | [49f0263a…585e](https://stellar.expert/explorer/testnet/tx/49f0263a8c45cd7b1aabdf25cb7a94e43a4c0e7d3ca50bac7b7709430c01585e) |
+| Budget aseo | [26a29b23…b63c](https://stellar.expert/explorer/testnet/tx/26a29b23de98f97208696ca0f1b55065143d02043f38a5852b06b69c7f9ab63c) |
+| Vendor approved | [95f898b5…58d5](https://stellar.expert/explorer/testnet/tx/95f898b557c09cbadc1ab4d1eb8bb27e09ce2fce95694481fb3991d1e54c58d5) |
+| Deposit 500 XLM | [15a10853…a33b](https://stellar.expert/explorer/testnet/tx/15a108532fd4f3b6cb182a4edaabdd0019fcbbce3eb6ff50b3e08072fd8aa33b) |
+| Propose 80 XLM | [3c199115…08dc](https://stellar.expert/explorer/testnet/tx/3c19911529c35a90fd48dc48f87e8b0b6977d9a82b0e2ba8bad0dfe1103708dc) |
+| First approval (pending) | [0fe281d1…4591](https://stellar.expert/explorer/testnet/tx/0fe281d162545a410c2e4477d689634e678408c0947991fe01db5a8aea814591) |
+| Second approval (pays the vendor) | [9ca8ed13…8166](https://stellar.expert/explorer/testnet/tx/9ca8ed136a9c246831204a6f8a554fd109c0c8537eddd9a94305efe7c78e8166) |
+
+After the run the expense is `Paid`, the budget shows 80 of 1,000 XLM spent and the treasury holds 420 XLM. Verified on testnet in the earlier development deployment: a proposal above the category limit fails with error 12, and an approval by a non-council account fails with error 15. The demo invoices used by the seed and the recording are in [scripts/demo/](scripts/demo/).
 ## Name
 
 Quintti comes from the Quechua *qinti*, hummingbird: small, fast and precise. See [docs/decisions/0001-name.md](docs/decisions/0001-name.md).
