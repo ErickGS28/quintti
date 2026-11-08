@@ -36,7 +36,6 @@ export function ExpensesScreen() {
     <div className="grid gap-8">
       <PageHeader
         title={copy.title}
-        description={copy.description}
         actions={
           permissions.canPropose && (
             <Link href={appRoutes.propose} className={buttonStyles({ size: "lg", shape: "pill" })}>

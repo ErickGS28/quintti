@@ -3,7 +3,6 @@
 import { ArrowLeft, FileQuestion } from "lucide-react";
 import Link from "next/link";
 
-import { buttonStyles } from "@/components/atoms/Button";
 import { Card } from "@/components/atoms/Card";
 import { AddressTag } from "@/components/molecules/AddressTag";
 import { DetailList } from "@/components/molecules/DetailList";
@@ -119,13 +118,7 @@ export function ExpenseScreen({ idText }: { idText: string }) {
           </Panel>
 
           <Panel title={copy.invoiceTitle}>
-            <p className="mb-5 text-sm leading-relaxed text-ink-soft">{copy.invoiceMissing}</p>
-            <InvoiceCheck
-              single
-              candidates={[
-                { id: expense.id, invoiceHash: expense.invoiceHash, title: listCopy.number(expense.id) },
-              ]}
-            />
+            <InvoiceCheck expectedHash={expense.invoiceHash} />
           </Panel>
         </div>
 
@@ -162,9 +155,6 @@ export function ExpenseScreen({ idText }: { idText: string }) {
             )}
           </Panel>
 
-          <Link href={appRoutes.verify} className={buttonStyles({ variant: "ghost", className: "justify-self-start" })}>
-            {appCopy.nav.verify}
-          </Link>
         </div>
       </div>
     </div>

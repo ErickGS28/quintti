@@ -16,7 +16,7 @@ export const hiwCopy = {
   header: {
     eyebrow: "Manual",
     title: "Cómo funciona Quintti",
-    body: "Quintti es la cuenta compartida de un edificio. El dinero vive en un contrato en Stellar y las reglas que fijó la asamblea están dentro de ese contrato, no en la buena voluntad de nadie. Esta página explica quién hace qué y cómo se mueve un gasto de principio a fin.",
+    body: "Quintti es la cuenta compartida de un edificio. El dinero vive en un contrato en Stellar y las reglas de la asamblea están dentro del contrato. Aquí: quién hace qué y cómo viaja un gasto.",
   },
 
   toc: [
@@ -32,7 +32,7 @@ export const hiwCopy = {
   rules: {
     id: "reglas",
     title: "Las reglas que aplica el contrato",
-    body: "Estas cuatro reglas no dependen de la interfaz. Aunque alguien intentara saltarse la página, el contrato las vuelve a revisar en cada operación y rechaza lo que no cumpla.",
+    body: "El contrato las revisa en cada operación, aunque alguien se salte la página.",
     items: [
       {
         title: "Solo proveedores aprobados",
@@ -40,15 +40,15 @@ export const hiwCopy = {
       },
       {
         title: "Tope por categoría",
-        body: "Un gasto no puede superar lo que queda del presupuesto de su categoría. Si lo supera, el contrato lo rechaza antes de que nadie firme.",
+        body: "Un gasto no puede superar lo que queda de su categoría. Si lo supera, se rechaza antes de firmar.",
       },
       {
         title: "Firmas del consejo",
-        body: "Un gasto se paga cuando firman suficientes miembros del consejo, por ejemplo 2 de 3. La firma que completa el número paga en la misma operación.",
+        body: "Se paga cuando firman suficientes consejeros, por ejemplo 2 de 3. La firma que completa el número paga en la misma operación.",
       },
       {
         title: "Papeles separados",
-        body: "La administración no puede estar en el consejo, y un proveedor no puede ser la asamblea, la administración ni parte del consejo. Nadie se aprueba a sí mismo.",
+        body: "La administración no puede estar en el consejo, ni un proveedor ser asamblea, administración o consejo. Nadie se aprueba a sí mismo.",
       },
     ],
   },
@@ -56,7 +56,7 @@ export const hiwCopy = {
   roles: {
     id: "papeles",
     title: "Los papeles",
-    body: "Cualquiera puede mirar todo, sin cuenta. Para actuar hace falta conectar una billetera: la aplicación muestra las acciones del papel que tenga esa cuenta en el contrato.",
+    body: "Cualquiera mira todo, sin cuenta. Para actuar se conecta una billetera y la app muestra las acciones de su papel.",
     can: "Puede",
     cannot: "No puede",
     items: [
@@ -92,7 +92,6 @@ export const hiwCopy = {
         can: [
           "Fijar el tope de cada categoría",
           "Aprobar o quitar proveedores",
-          "Cambiar la administración y renovar el consejo",
           "Cancelar un gasto pendiente",
         ],
         cannot: ["Mover dinero", "Aprobar gastos"],
@@ -120,7 +119,7 @@ export const hiwCopy = {
       {
         who: "Administración",
         title: "Propone el gasto",
-        body: "En Gastos → Proponer gasto elige la categoría, un proveedor aprobado y el monto, y adjunta la factura. El navegador calcula la huella digital de la factura y solo esa huella viaja a la red. Una lista en vivo avisa si algo incumple las reglas antes de pedir la firma.",
+        body: "En Gastos → Proponer gasto elige categoría, proveedor aprobado y monto, y adjunta la factura. Solo su huella digital viaja a la red. Una lista en vivo avisa si algo incumple las reglas antes de firmar.",
       },
       {
         who: "Consejo",
@@ -135,14 +134,13 @@ export const hiwCopy = {
       {
         who: "Todos",
         title: "Lo ven y lo comprueban",
-        body: "El gasto pasa a Pagado y tiene un enlace a la transacción en stellar.expert. Cualquiera puede arrastrar la factura a Verificar factura: si el archivo es el mismo, la huella coincide; si alguien lo cambió, no.",
+        body: "El gasto pasa a Pagado, con un enlace a su transacción en stellar.expert. En el detalle, cualquiera puede arrastrar la factura: si es la misma, la huella coincide; si la cambiaron, no.",
       },
     ],
     notes: {
       title: "Casos que conviene conocer",
       items: [
-        "Cancelar: la administración o la asamblea pueden cancelar un gasto mientras esté pendiente. Un gasto cancelado no se reabre.",
-        "Si el consejo cambia, las firmas de quien salió dejan de contar. El detalle del gasto las marca como \"no cuentan\".",
+        "Cancelar: la administración o la asamblea pueden cancelar un gasto mientras esté pendiente. No se reabre.",
         "Si un gasto supera lo que queda de su categoría, el contrato lo rechaza y la aplicación muestra el motivo antes de pedir la firma.",
       ],
     },
@@ -151,14 +149,11 @@ export const hiwCopy = {
   screens: {
     id: "pantallas",
     title: "Las pantallas",
-    body: "Todo está en la app, en una barra lateral. Lo que cambia según tu papel son los botones.",
+    body: "Tres pantallas. Según tu papel cambian los botones.",
     items: [
-      { name: "Resumen", body: "Saldo, presupuesto usado, gastos por aprobar y firmas necesarias. Aquí aparece \"Tu papel\" cuando conectas la billetera." },
-      { name: "Gastos", body: "La lista de gastos con su estado. Al abrir uno ves la huella, las firmas y las acciones que te tocan." },
-      { name: "Presupuesto", body: "El tope, lo pagado y lo que queda de cada categoría. La asamblea ve aquí el formulario para cambiarlo." },
-      { name: "Proveedores", body: "Las cuentas que pueden recibir pagos y lo que ha recibido cada una." },
-      { name: "Consejo y roles", body: "Quién es la asamblea, la administración y el consejo, y cuántas firmas se necesitan." },
-      { name: "Verificar factura", body: "Compara un archivo con las huellas guardadas. El archivo no sale de tu navegador." },
+      { name: "Resumen", body: "Saldo, presupuesto usado, gastos por aprobar y firmas necesarias. Aquí aparece 'Tu papel'." },
+      { name: "Gastos", body: "La lista y el detalle de cada gasto: huella, firmas, acciones y comprobación de la factura. Aquí se propone un gasto." },
+      { name: "Reglas", body: "El presupuesto por categoría, los proveedores aprobados y quién decide. La asamblea ve aquí los formularios para cambiarlos." },
     ],
   },
 
@@ -207,10 +202,11 @@ export const hiwCopy = {
   limits: {
     id: "limites",
     title: "Lo que aún no hace",
-    body: "Es un prototipo de hackathon. Para no engañar a nadie:",
+    body: "Es un prototipo. Para no engañar a nadie:",
     items: [
       "Funciona solo en la red de pruebas, sin dinero real y sin auditoría.",
       "La asamblea es una sola cuenta. Una versión real necesitaría un mecanismo colectivo, como la firma de varios representantes.",
+      "Cambiar la administración o renovar el consejo existe en el contrato, pero la app todavía no lo ofrece.",
       "No cobra las cuotas: cubre cómo sale el dinero, no cómo entra.",
       "La factura no se sube a ningún servidor: la huella queda en la red y el archivo lo conserva la administración.",
       "Es una herramienta de transparencia y control interno; no sustituye a la asamblea ni a la ley.",

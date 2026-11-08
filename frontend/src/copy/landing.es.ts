@@ -35,19 +35,19 @@ export const landingCopy = {
     items: [
       {
         title: "¿En qué se gastó mi cuota?",
-        body: "Las cuentas llegan semanas después, en un PDF o una hoja de cálculo. Preguntar se siente como acusar.",
+        body: "Las cuentas llegan semanas después, en un PDF. Preguntar se siente como acusar.",
       },
       {
         title: "El presupuesto es solo una sugerencia",
-        body: "La asamblea aprueba un monto, pero nada impide gastar más o gastarlo en otra cosa.",
+        body: "La asamblea aprueba un monto, pero nada impide gastar más o en otra cosa.",
       },
       {
         title: "Una sola mano en la cuenta",
-        body: "El dinero sale con la decisión de una persona. El consejo se entera cuando ya ocurrió.",
+        body: "El dinero sale con la decisión de una persona. El consejo se entera después.",
       },
       {
         title: "Se pierde la historia",
-        body: "Si cambia la administración, llegan cajas de papeles y desconfianza, no un registro que se pueda consultar.",
+        body: "Si cambia la administración, queda desconfianza en vez de un registro.",
       },
     ],
   },
@@ -56,19 +56,19 @@ export const landingCopy = {
     id: "solucion",
     eyebrow: "La solución",
     title: "Las reglas de la asamblea, dentro de la cuenta.",
-    lead: "El dinero solo sale si se cumplen las reglas que la asamblea aprobó. No depende de la buena voluntad de nadie, y todos ven lo mismo.",
+    lead: "El dinero solo sale si se cumplen las reglas de la asamblea. Todos ven lo mismo.",
     rules: [
       {
         title: "Tope por categoría",
-        body: "Cada rubro tiene un límite. Si un gasto lo supera, la cuenta lo rechaza.",
+        body: "Si un gasto lo supera, la cuenta lo rechaza.",
       },
       {
         title: "Solo proveedores aprobados",
-        body: "El dinero únicamente puede ir a quienes la asamblea autorizó.",
+        body: "El dinero solo va a quienes la asamblea autorizó.",
       },
       {
         title: "Firmas del consejo",
-        body: "Un gasto se paga cuando suficientes consejeros lo aprueban, por ejemplo 2 de 3.",
+        body: "Se paga cuando suficientes consejeros aprueban, por ejemplo 2 de 3.",
       },
     ],
     stepsEyebrow: "Cómo funciona",
@@ -76,19 +76,19 @@ export const landingCopy = {
     steps: [
       {
         title: "La asamblea fija las reglas",
-        body: "Carga el presupuesto por categoría y la lista de proveedores aprobados.",
+        body: "Carga el presupuesto y los proveedores aprobados.",
       },
       {
         title: "La administración propone",
-        body: "Registra el gasto con su factura. Solo se guarda la huella digital del archivo.",
+        body: "Registra el gasto con su factura. Solo se guarda su huella digital.",
       },
       {
         title: "El consejo aprueba",
-        body: "Cada consejero firma con su billetera. Al llegar al número necesario, el pago sale solo.",
+        body: "Cada consejero firma. Al llegar al número necesario, el pago sale solo.",
       },
       {
         title: "Todos lo ven",
-        body: "El proveedor recibe el pago y cualquier vecino verifica el recibo, sin crear una cuenta.",
+        body: "El proveedor recibe el pago y cualquier vecino lo verifica, sin cuenta.",
       },
     ],
   },
@@ -118,7 +118,7 @@ export const landingCopy = {
     id: "ejemplo",
     eyebrow: "Un ejemplo",
     title: "Torres del Parque, un martes.",
-    lead: "Se daña el ascensor. Recorre el caso y mira qué pasa cuando un gasto rompe las reglas.",
+    lead: "Se daña el ascensor. Mira qué pasa cuando un gasto rompe las reglas.",
     note: "Simulación con valores ilustrativos",
     building: "Torres del Parque · 40 apartamentos",
     accountTitle: "Cuenta del edificio",
@@ -178,7 +178,7 @@ export const landingCopy = {
     id: "stellar",
     eyebrow: "Por qué Stellar",
     title: "Lo que una app normal no puede prometer.",
-    lead: "Una app de contabilidad te pide confiar en su empresa. Aquí las reglas viven en la misma cuenta que guarda el dinero, sobre una red pública que nadie controla.",
+    lead: "Una app te pide confiar en su empresa. Aquí las reglas viven en la cuenta que guarda el dinero, sobre una red pública.",
     compare: {
       headers: ["", "Una app normal", "Con Stellar"],
       rows: [
@@ -214,15 +214,15 @@ export const landingCopy = {
     items: [
       {
         title: "Reglas que nadie se salta",
-        body: "El tope y la lista de proveedores están en el contrato. Ni la administración ni nosotros podemos esquivarlos.",
+        body: "El tope y los proveedores están en el contrato. Nadie puede esquivarlos.",
       },
       {
         title: "Un registro que cualquiera verifica",
-        body: "Cada propuesta, firma y pago queda público. Un vecino lo revisa sin cuenta y sin pedir acceso.",
+        body: "Cada propuesta, firma y pago es público. Un vecino lo revisa sin cuenta.",
       },
       {
         title: "Pagos en segundos y casi sin costo",
-        body: "Registrar un gasto cuesta una fracción de centavo, así que no hay razón para dejar nada fuera.",
+        body: "Registrar un gasto cuesta una fracción de centavo.",
       },
     ],
   },

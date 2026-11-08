@@ -1,11 +1,9 @@
 "use client";
 
-import { ArrowRight, Clock3, FileCheck2, Landmark, Plus, ReceiptText, ShieldCheck, Wallet } from "lucide-react";
+import { ArrowRight, Clock3, Landmark, Plus, ReceiptText, ShieldCheck, Wallet } from "lucide-react";
 import Link from "next/link";
 
 import { buttonStyles } from "@/components/atoms/Button";
-import { Card } from "@/components/atoms/Card";
-import { Eyebrow } from "@/components/atoms/Eyebrow";
 import { ProgressBar } from "@/components/atoms/ProgressBar";
 import { AddressTag } from "@/components/molecules/AddressTag";
 import { EmptyState } from "@/components/molecules/EmptyState";
@@ -14,7 +12,7 @@ import { Panel } from "@/components/molecules/Panel";
 import { StatCard } from "@/components/molecules/StatCard";
 import { getConfig } from "@/config/env";
 import { appCopy } from "@/copy/app.es";
-import { BudgetLines, ExpenseList } from "@/features/public-view";
+import { ExpenseList } from "@/features/public-view";
 import { formatTokenAmount } from "@/lib/format/token";
 import { accountUrl } from "@/lib/stellar/explorer";
 import { spentShare } from "@/lib/treasury/approvals";
@@ -25,22 +23,13 @@ import { ReadError, ScreenSkeleton } from "./states";
 
 const RECENT = 5;
 
-function MoreLink({ href, label }: { href: string; label: string }) {
-  return (
-    <Link href={href} className="inline-flex items-center gap-1 text-sm font-semibold text-royal hover:underline">
-      {label}
-      <ArrowRight className="size-3.5" aria-hidden="true" />
-    </Link>
-  );
-}
-
 /** What the connected account can do here, and the shortest way to do it. */
 function RolePanel() {
   const { address, permissions } = useSession();
   const { role } = appCopy;
 
   const content = permissions.canManageRules
-    ? { ...role.assembly, href: appRoutes.budget }
+    ? { ...role.assembly, href: appRoutes.rules }
     : permissions.canPropose
       ? { ...role.administrator, href: appRoutes.propose }
       : permissions.canApprove
@@ -68,7 +57,7 @@ function RolePanel() {
   );
 }
 
-/** The building at a glance: money, budget, what waits for signatures and who decides. */
+/** The building at a glance: money, what waits for signatures, the latest expenses and who decides. */
 export function OverviewScreen() {
   const { snapshot, expenses, permissions, nameFor } = useSession();
   const { overview, roles, address: addressCopy } = appCopy;
@@ -89,35 +78,19 @@ export function OverviewScreen() {
   return (
     <div className="grid gap-8">
       <PageHeader
-        eyebrow={
-          <span className="text-royal">
-            <Eyebrow dot="live">{overview.eyebrow}</Eyebrow>
-          </span>
-        }
         title={appCopy.building.fallbackName}
-        description={overview.description}
         actions={
-          permissions.canPropose ? (
+          permissions.canPropose && (
             <Link href={appRoutes.propose} className={buttonStyles({ size: "lg", shape: "pill" })}>
               <Plus className="size-4" aria-hidden="true" />
               {appCopy.expenses.propose}
-            </Link>
-          ) : (
-            <Link href={appRoutes.verify} className={buttonStyles({ variant: "soft", size: "lg", shape: "pill" })}>
-              <FileCheck2 className="size-4" aria-hidden="true" />
-              {overview.verifyAction}
             </Link>
           )
         }
       />
 
       <section className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4" aria-label={overview.balance}>
-        <StatCard
-          label={overview.balance}
-          value={formatTokenAmount(treasury.balance)}
-          hint={overview.balanceHint}
-          icon={<Wallet className="size-4" />}
-        />
+        <StatCard label={overview.balance} value={formatTokenAmount(treasury.balance)} icon={<Wallet className="size-4" />} />
         <StatCard
           label={overview.used}
           value={formatTokenAmount(totals.spent)}
@@ -126,54 +99,45 @@ export function OverviewScreen() {
         >
           <ProgressBar value={spentShare(totals)} />
         </StatCard>
-        <StatCard
-          label={overview.pending}
-          value={pending}
-          hint={overview.pendingHint}
-          icon={<Clock3 className="size-4" />}
-        />
+        <StatCard label={overview.pending} value={pending} icon={<Clock3 className="size-4" />} />
         <StatCard
           label={overview.threshold}
           value={overview.thresholdValue(treasury.threshold, treasury.council.length)}
-          hint={overview.thresholdHint}
           icon={<ShieldCheck className="size-4" />}
         />
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
-        <div className="grid min-w-0 content-start gap-6">
-          <Panel title={overview.budgetTitle} action={<MoreLink href={appRoutes.budget} label={overview.budgetLink} />}>
-            {treasury.budgets.length ? (
-              <BudgetLines budgets={treasury.budgets} />
-            ) : (
-              <EmptyState
-                icon={<Landmark className="size-6" />}
-                title={appCopy.budget.emptyTitle}
-                body={appCopy.budget.emptyBody}
-              />
-            )}
-          </Panel>
-
-          <Panel
-            title={overview.recentTitle}
-            action={list.length > 0 && <MoreLink href={appRoutes.expenses} label={overview.recentLink} />}
-          >
-            {recent.length ? (
-              <ExpenseList
-                expenses={recent}
-                council={treasury.council}
-                threshold={treasury.threshold}
-                hrefFor={appRoutes.expense}
-              />
-            ) : (
-              <EmptyState
-                icon={<ReceiptText className="size-6" />}
-                title={appCopy.expenses.emptyTitle}
-                body={appCopy.expenses.emptyBody}
-              />
-            )}
-          </Panel>
-        </div>
+        <Panel
+          title={overview.recentTitle}
+          className="min-w-0 self-start"
+          action={
+            list.length > 0 && (
+              <Link
+                href={appRoutes.expenses}
+                className="inline-flex items-center gap-1 text-sm font-semibold text-royal hover:underline"
+              >
+                {overview.recentLink}
+                <ArrowRight className="size-3.5" aria-hidden="true" />
+              </Link>
+            )
+          }
+        >
+          {recent.length ? (
+            <ExpenseList
+              expenses={recent}
+              council={treasury.council}
+              threshold={treasury.threshold}
+              hrefFor={appRoutes.expense}
+            />
+          ) : (
+            <EmptyState
+              icon={<ReceiptText className="size-6" />}
+              title={appCopy.expenses.emptyTitle}
+              body={appCopy.expenses.emptyBody}
+            />
+          )}
+        </Panel>
 
         <div className="grid content-start gap-6">
           <RolePanel />
@@ -201,17 +165,6 @@ export function OverviewScreen() {
               })}
             </ul>
           </Panel>
-
-          <Card padding="md" spotlight>
-            <span aria-hidden="true" className="flex size-10 items-center justify-center rounded-full bg-royal-soft text-royal">
-              <FileCheck2 className="size-5" />
-            </span>
-            <p className="mt-4 font-semibold text-ink">{overview.verifyTitle}</p>
-            <p className="mt-1 text-sm leading-relaxed text-pretty text-ink-soft">{overview.verifyBody}</p>
-            <Link href={appRoutes.verify} className={buttonStyles({ variant: "soft", className: "mt-4" })}>
-              {overview.verifyAction}
-            </Link>
-          </Card>
         </div>
       </div>
     </div>

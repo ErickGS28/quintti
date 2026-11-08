@@ -1,6 +1,6 @@
 "use client";
 
-import { FileCheck2, LayoutDashboard, PieChart, ReceiptText, Store, UsersRound } from "lucide-react";
+import { LayoutDashboard, ReceiptText, Scale } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 
@@ -48,10 +48,7 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
       // The count matters to whoever has to sign; everyone else sees the list without a badge.
       count: permissions.canApprove ? pending : undefined,
     },
-    { href: appRoutes.budget, label: nav.budget, icon: <PieChart className={ICON} /> },
-    { href: appRoutes.vendors, label: nav.vendors, icon: <Store className={ICON} /> },
-    { href: appRoutes.council, label: nav.council, icon: <UsersRound className={ICON} /> },
-    { href: appRoutes.verify, label: nav.verify, icon: <FileCheck2 className={ICON} /> },
+    { href: appRoutes.rules, label: nav.rules, icon: <Scale className={ICON} /> },
   ];
 
   return (

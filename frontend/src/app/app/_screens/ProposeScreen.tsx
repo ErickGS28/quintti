@@ -30,7 +30,7 @@ export function ProposeScreen() {
         <ArrowLeft className="size-4" aria-hidden="true" />
         {appCopy.detail.back}
       </Link>
-      <PageHeader title={copy.title} description={copy.description} />
+      <PageHeader title={copy.title} />
     </>
   );
 
