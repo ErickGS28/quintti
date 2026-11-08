@@ -1,5 +1,6 @@
-import { Check, Eye, Landmark, Timer, X } from "lucide-react";
-import type { ReactNode } from "react";
+import { Check, X } from "lucide-react";
+// import { Eye, Landmark, Timer } from "lucide-react";
+// import type { ReactNode } from "react";
 
 import { Card } from "@/components/atoms/Card";
 import { Chapter } from "@/components/molecules/Chapter";
@@ -10,15 +11,16 @@ import { classNames } from "@/lib/ui/class-names";
 const { why } = landingCopy;
 const [, webHeader, stellarHeader] = why.compare.headers;
 
-const ICONS: ReactNode[] = [
-  <Landmark key="rules" className="size-6" aria-hidden="true" />,
-  <Eye key="ledger" className="size-6" aria-hidden="true" />,
-  <Timer key="speed" className="size-6" aria-hidden="true" />,
-];
+// Icons of the "Lo que cambia" screen, commented out with it (see below).
+// const ICONS: ReactNode[] = [
+//   <Landmark key="rules" className="size-6" aria-hidden="true" />,
+//   <Eye key="ledger" className="size-6" aria-hidden="true" />,
+//   <Timer key="speed" className="size-6" aria-hidden="true" />,
+// ];
 
 /**
- * Why this needs Stellar and not a normal app, in two screens: a side-by-side comparison, then the
- * three reasons.
+ * Why this needs Stellar and not a normal app: a side-by-side comparison. A second screen with the
+ * three reasons ("Lo que cambia") exists but is commented out for now.
  */
 export function WhyStellarSection() {
   return (
@@ -62,6 +64,7 @@ export function WhyStellarSection() {
         </div>
       </Chapter>
 
+      {/* The "Lo que cambia" screen is off for now to keep the walkthrough short. Restore it by uncommenting.
       <Chapter tone="lilac">
         <ScreenHeading eyebrow={why.itemsEyebrow} title={why.itemsTitle} />
         <ul className="mt-[clamp(1.5rem,5vh,3rem)] grid gap-4 md:grid-cols-3">
@@ -78,6 +81,7 @@ export function WhyStellarSection() {
           ))}
         </ul>
       </Chapter>
+      */}
     </>
   );
 }

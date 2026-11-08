@@ -32,8 +32,11 @@ Demo deployment (temporary, the testnet is reset periodically; its transactions 
 
 ## Unreleased
 
+### Changed
+- The landing page is cut to three screens for the recorded walkthrough: the hero, the problem and why Stellar (the comparison). The solution (rules and flow), the clickable example and the "Lo que cambia" screen are commented out in `LandingPage`, `LandingNav` and `WhyStellarSection`, not deleted. `/negocio` keeps two screens, income and plan; the model and follow-up screens are in the history (commit `44237e0`).
+
 ### Added
-- A hidden page at `/negocio` for the business model and the plan after the hackathon, in the landing page's style (four one-window screens): what a building pays against what it moves (a $2.000 per apartment subscription against $12.000.000 a month, under 1 %), the three sources of income, the four steps of the plan (validate, pilot, complete, production) and what is done first and how it is measured. The figures are illustrative and the page says so. Not linked from the landing, `noindex`. Its text is in `copy/negocio.es.ts`, with a test of the arithmetic behind the sentences.
+- A hidden page at `/negocio` for the business model and the plan after the hackathon, in the landing page's style (one-window screens): what a building pays against what it moves (a $2.000 per apartment subscription against $12.000.000 a month, under 1 %), the three sources of income, the four steps of the plan (validate, pilot, complete, production) and what is done first and how it is measured. The figures are illustrative and the page says so. Not linked from the landing, `noindex`. Its text is in `copy/negocio.es.ts`, with a test of the arithmetic behind the sentences.
 
 ## 2026-11-08 (recording day)
 
