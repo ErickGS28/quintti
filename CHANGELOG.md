@@ -36,7 +36,7 @@ Nothing yet.
 ## 2026-11-08 (recording day)
 
 ### Fixed
-- The proposal form now also checks that the treasury holds the amount (a fourth item, \"Hay saldo en la cuenta\", and a message if it does not). Before, a proposal could fit its category's budget but exceed the balance, and the contract only rejected it at the second approval, when it tried to pay.
+- The proposal form now also checks that the treasury holds the amount (a fourth item, "Hay saldo en la cuenta", and a message if it does not). Before, a proposal could fit its category's budget but exceed the balance, and the contract only rejected it at the second approval, when it tried to pay.
 
 ### Changed
 - A fresh demo treasury was seeded for the final recording (see the README); the previous one stays for rehearsals.
