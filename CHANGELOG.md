@@ -27,11 +27,19 @@ What works today, verified on testnet:
 Known limits are in [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md). How to run everything is in [docs/06-getting-started.md](docs/06-getting-started.md).
 
 Demo deployment (temporary, the testnet is reset periodically; its transactions are linked from the README):
-`CA67PF3REYJWLXK7WE2OKEJMX42A76LCUQWL4PAU2TV2IRO5BSFLWZKR`.
+`CA7DWVPW2JWFZ7KSVGLCLFDXD7HZOY7HL7274UZW4ZQZBJCQSHQ4U237`.
 
 ## Unreleased
 
 Nothing yet.
+
+## 2026-11-08 (recording day)
+
+### Fixed
+- The proposal form now also checks that the treasury holds the amount (a fourth item, \"Hay saldo en la cuenta\", and a message if it does not). Before, a proposal could fit its category's budget but exceed the balance, and the contract only rejected it at the second approval, when it tried to pay.
+
+### Changed
+- A fresh demo treasury was seeded for the final recording (see the README); the previous one stays for rehearsals.
 
 ## 2026-11-08 (night)
 
