@@ -26,6 +26,8 @@ import { txFeedbackFor } from "@/lib/ui/tx-feedback";
 import { useExpenseActions } from "../hooks/use-expense-actions";
 
 type ProposeExpenseFormProps = {
+  /** What the treasury holds, so a proposal that could never be paid is caught before it is signed. */
+  balance: bigint;
   budgets: ReadonlyArray<{ category: string; remaining: bigint }>;
   vendors: readonly string[];
   expenseHref: (id: number) => string;
@@ -49,7 +51,7 @@ function readAmount(text: string): bigint | null {
  * invoice's fingerprint, and a live checklist shows the rules the contract will apply, so a proposal
  * that would be rejected is caught before anyone is asked to sign.
  */
-export function ProposeExpenseForm({ budgets, vendors, expenseHref }: ProposeExpenseFormProps) {
+export function ProposeExpenseForm({ balance, budgets, vendors, expenseHref }: ProposeExpenseFormProps) {
   const { propose: copy, tx } = appCopy;
   const { propose } = useExpenseActions();
 
@@ -63,6 +65,7 @@ export function ProposeExpenseForm({ budgets, vendors, expenseHref }: ProposeExp
   const line = budgets.find((budget) => budget.category === category);
   const amount = readAmount(amountText);
   const fits = line && amount !== null && amount > 0n ? amount <= line.remaining : null;
+  const funded = amount !== null && amount > 0n ? amount <= balance : null;
 
   async function chooseFile(chosen: File) {
     setFile(chosen);
@@ -82,6 +85,7 @@ export function ProposeExpenseForm({ budgets, vendors, expenseHref }: ProposeExp
     if (!vendor) found.vendor = copy.vendorPlaceholder;
     if (amount === null || amount <= 0n) found.amount = copy.amountHint;
     else if (fits === false) found.amount = copy.overBudget;
+    else if (funded === false) found.amount = copy.noFunds;
     if (!file) found.invoice = copy.invoicePrompt;
     return found;
   }
@@ -151,6 +155,7 @@ export function ProposeExpenseForm({ budgets, vendors, expenseHref }: ProposeExp
   const checks = [
     { label: copy.checks.vendor, ok: vendor ? true : null },
     { label: copy.checks.budget, ok: fits },
+    { label: copy.checks.funds, ok: funded },
     { label: copy.checks.invoice, ok: fingerprint ? true : null },
   ];
 

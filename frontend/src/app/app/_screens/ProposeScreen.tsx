@@ -53,6 +53,7 @@ export function ProposeScreen() {
     <div className="grid gap-8">
       {header}
       <ProposeExpenseForm
+        balance={snapshot.data.balance}
         budgets={snapshot.data.budgets}
         vendors={snapshot.data.vendors}
         expenseHref={appRoutes.expense}
