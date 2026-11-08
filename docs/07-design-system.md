@@ -57,9 +57,9 @@ The hummingbird in an open ring is unchanged. Only its colors follow the palette
 ## Page structure
 
 - **Menu:** a floating rounded bar at the top with the section links centered, no button and no logo. On phones only the two links that fit are shown.
-- **Hero:** minimal and centered: the mark, the name (its letters come into focus one by one), three words, one sentence and two buttons. Sizes follow the window height so everything fits at any zoom level.
+- **Hero:** minimal and centered: the mark, the name (its letters come into focus one by one), three words, a sentence that says what Quintti is ("the shared account of your building"), two buttons and a "Powered by Stellar" tag. Sizes follow the window height so everything fits at any zoom level.
 - **The landing page is a presentation: one idea per screen** (see "Chapters and tones"). A label, one statement and a supporting sentence, centered, then the content:
-  - *The problem* (rose): four everyday situations, one card each.
+  - *The problem* (rose): a worked example of how much money one building moves, four things a resident thinks (one card each) and a closing line.
   - *The solution* (deep purple), two screens: the three rules the account enforces, then the four steps of an expense with a small illustration each.
   - *An example* (mist): a short walk-through of one building where an expense is proposed, signed twice and paid, and a second one is rejected by the budget rule. It is clickable and labelled "Simulación con valores ilustrativos".
   - *Why Stellar* (lilac), two screens: a side-by-side comparison with a normal app, then three reasons.

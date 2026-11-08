@@ -39,6 +39,8 @@ Nothing yet.
 - The proposal form now also checks that the treasury holds the amount (a fourth item, "Hay saldo en la cuenta", and a message if it does not). Before, a proposal could fit its category's budget but exceed the balance, and the contract only rejected it at the second approval, when it tried to pay.
 
 ### Changed
+- The landing hero now says what Quintti is ("Quintti es la cuenta compartida de tu edificio…") and carries a "Powered by Stellar" tag.
+- The problem screen gives context instead of loose words: a worked example (a $300.000 fee in a 40-apartment building is $12.000.000 a month in one account), titles written as what a resident thinks, and a closing line. It keeps its supporting sentence on short windows, and every screen still fits at 1440x900, 1280x720 and 1366x650.
 - A fresh demo treasury was seeded for the final recording (see the README); the previous one stays for rehearsals.
 
 ## 2026-11-08 (night)

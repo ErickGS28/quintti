@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 import { BlurInText } from "@/components/atoms/BlurInText";
 import { BrandMark } from "@/components/atoms/BrandMark";
@@ -46,6 +46,11 @@ export function Hero() {
             {hero.secondary}
           </ButtonLink>
         </div>
+
+        <p className="animate-rise mt-[clamp(1.25rem,4vh,2.25rem)] inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-royal shadow-card [animation-delay:1350ms]">
+          <Sparkles className="size-4" aria-hidden="true" />
+          {hero.poweredBy}
+        </p>
       </div>
     </section>
   );

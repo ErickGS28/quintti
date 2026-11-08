@@ -10,6 +10,8 @@ type ScreenHeadingProps = {
   lead?: string;
   /** Drops the label on short windows, for the screens with the most content. */
   compact?: boolean;
+  /** Keeps the supporting sentence on short windows, for a screen whose context is the point. */
+  keepLead?: boolean;
   className?: string;
 };
 
@@ -17,7 +19,7 @@ type ScreenHeadingProps = {
  * The top of a landing screen, centered: a small label, one clear statement, one supporting
  * sentence. Colors come from the screen's tone.
  */
-export function ScreenHeading({ eyebrow, title, lead, compact = false, className }: ScreenHeadingProps) {
+export function ScreenHeading({ eyebrow, title, lead, compact = false, keepLead = false, className }: ScreenHeadingProps) {
   return (
     <header className={classNames("mx-auto flex max-w-4xl flex-col items-center text-center", className)}>
       <div className={classNames("reveal text-slide-accent", compact && "short:hidden")}>
@@ -27,7 +29,12 @@ export function ScreenHeading({ eyebrow, title, lead, compact = false, className
         {title}
       </h2>
       {lead && (
-        <p className="reveal mt-4 max-w-2xl text-[length:clamp(1.0625rem,1.5vw,1.3125rem)] short:hidden leading-relaxed text-pretty text-slide-text">
+        <p
+          className={classNames(
+            "reveal mt-4 max-w-2xl text-[length:clamp(1.0625rem,1.5vw,1.3125rem)] leading-relaxed text-pretty text-slide-text",
+            !keepLead && "short:hidden",
+          )}
+        >
           {lead}
         </p>
       )}

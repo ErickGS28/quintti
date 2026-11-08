@@ -6,7 +6,7 @@ export const landingCopy = {
   meta: {
     title: "Quintti: la cuenta del edificio con las reglas de la asamblea",
     description:
-      "Una cuenta compartida donde nadie gasta fuera del presupuesto aprobado y cada vecino ve a dónde va su cuota. Construida sobre Stellar.",
+      "Quintti es la cuenta compartida de tu edificio: el dinero solo sale si se cumplen las reglas de la asamblea y cada vecino ve a dónde va su cuota. Powered by Stellar.",
   },
 
   nav: {
@@ -22,7 +22,8 @@ export const landingCopy = {
   hero: {
     id: "inicio",
     accent: ["Transparente", "Verificable", "Compartida"],
-    body: "La cuenta del edificio con las reglas de la asamblea dentro. Nadie gasta fuera del presupuesto y cada vecino ve a dónde va su cuota.",
+    body: "Quintti es la cuenta compartida de tu edificio. El dinero solo sale si se cumplen las reglas de la asamblea, y cada vecino ve a dónde va su cuota.",
+    poweredBy: "Powered by Stellar",
     primary: "Ver cómo funciona",
     secondary: "Ver un ejemplo",
   },
@@ -30,28 +31,28 @@ export const landingCopy = {
   problem: {
     id: "problema",
     eyebrow: "El problema",
-    title: "Tu cuota es de todos. El control es de muy pocos.",
-    lead: "Cada mes, los vecinos ponen dinero en una cuenta que casi nadie puede revisar.",
+    title: "Pagas tu cuota cada mes. ¿Sabes en qué se gasta?",
+    lead: "Con una cuota de $300.000, un edificio de 40 apartamentos junta $12.000.000 cada mes en una sola cuenta. Una persona la maneja y casi nadie puede revisarla.",
     items: [
       {
-        title: "¿En qué se gastó mi cuota?",
-        body: "Las cuentas llegan semanas después, en un PDF. Preguntar se siente como acusar.",
+        title: "«¿En qué se gastó mi cuota?»",
+        body: "Las cuentas llegan semanas después, en un PDF. Y preguntar se siente como acusar.",
       },
       {
-        title: "El presupuesto es solo una sugerencia",
+        title: "«Se aprobó un presupuesto… ¿y se cumple?»",
         body: "La asamblea aprueba un monto, pero nada impide gastar más o en otra cosa.",
       },
       {
-        title: "Una sola mano en la cuenta",
-        body: "El dinero sale con la decisión de una persona. El consejo se entera después.",
+        title: "«Una sola persona decide»",
+        body: "El dinero sale con la firma de una persona. El consejo se entera después.",
       },
       {
-        title: "Se pierde la historia",
-        body: "Si cambia la administración, queda desconfianza en vez de un registro.",
+        title: "«Cambió la administración y se perdió todo»",
+        body: "Llegan cajas de papeles y desconfianza, no un registro que se pueda consultar.",
       },
     ],
+    closing: "Tú pones el dinero. Pero no tienes cómo comprobar nada.",
   },
-
   solution: {
     id: "solucion",
     eyebrow: "La solución",

@@ -19,20 +19,23 @@ const ICONS: ReactNode[] = [
 export function ProblemSection() {
   return (
     <Chapter id={problem.id} tone="rose">
-      <ScreenHeading eyebrow={problem.eyebrow} title={problem.title} lead={problem.lead} />
+      <ScreenHeading eyebrow={problem.eyebrow} title={problem.title} lead={problem.lead} keepLead />
       <ul className="mt-[clamp(1.5rem,5vh,3rem)] grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {problem.items.map((item, index) => (
           <li key={item.title} className="reveal">
-            <Card padding="md" spotlight className="h-full sm:p-6">
-              <span className="flex size-12 items-center justify-center rounded-full bg-coral-soft text-wine">
+            <Card padding="md" spotlight className="h-full short:p-4 sm:p-6 sm:short:p-4">
+              <span className="flex size-12 items-center justify-center rounded-full bg-coral-soft text-wine short:size-10">
                 {ICONS[index]}
               </span>
-              <h3 className="mt-5 text-lg font-bold tracking-tight text-balance">{item.title}</h3>
+              <h3 className="mt-5 text-lg font-bold tracking-tight text-balance short:mt-3">{item.title}</h3>
               <p className="mt-2 leading-relaxed text-pretty">{item.body}</p>
             </Card>
           </li>
         ))}
       </ul>
+      <p className="reveal mt-8 text-center text-[length:clamp(1.125rem,1.7vw,1.5rem)] font-semibold tracking-tight text-wine short:hidden">
+        {problem.closing}
+      </p>
     </Chapter>
   );
 }
