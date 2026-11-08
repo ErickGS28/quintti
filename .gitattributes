@@ -1,0 +1,2 @@
+# The demo invoices are hashed byte by byte: never convert their line endings.
+*.pdf binary
