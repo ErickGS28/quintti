@@ -4,7 +4,6 @@ import { Badge } from "@/components/atoms/Badge";
 import { Card } from "@/components/atoms/Card";
 import { PageWash } from "@/components/atoms/PageWash";
 import { Chapter } from "@/components/molecules/Chapter";
-import { FloatingNav } from "@/components/molecules/FloatingNav";
 import { ScreenHeading } from "@/components/molecules/ScreenHeading";
 import { SlideRail } from "@/components/organisms/SlideRail";
 import { SpotlightTracker } from "@/components/organisms/SpotlightTracker";
@@ -31,46 +30,30 @@ export function BusinessPage() {
       <div aria-hidden="true" className="h-0 snap-start" />
       <PageWash />
 
-      <FloatingNav label={nav.label} placement="top" width="fit">
-        <div className="flex items-center justify-center gap-1 sm:gap-2">
-          {LINKS.map((link) => (
-            <a
-              key={link.id}
-              href={`#${link.id}`}
-              className="flex min-h-11 items-center rounded-full px-4 text-sm font-semibold text-ink-soft transition-colors duration-200 hover:bg-royal-soft hover:text-royal sm:px-5 sm:text-[0.9375rem]"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </FloatingNav>
       <SlideRail label={nav.rail} items={LINKS} />
 
       <main>
-        {/* The sticky menu takes room above the first screen; pull the screen up so it still fits the window. */}
-        <div className="-mt-14">
-          <Chapter id={income.id} tone="lilac">
-            <ScreenHeading eyebrow={income.eyebrow} title={income.title} compact />
-            <ul className="mt-[clamp(1.5rem,5vh,3rem)] grid gap-4 md:grid-cols-3">
-              {income.items.map((item) => (
-                <li key={item.title} className="reveal">
-                  <Card padding="lg" spotlight className="h-full short:p-5">
-                    <Badge tone="royal">{item.when}</Badge>
-                    <h3 className="mt-4 text-xl font-bold tracking-tight short:mt-3">{item.title}</h3>
-                    <p className="mt-2 leading-relaxed text-pretty short:leading-snug">{item.body}</p>
-                  </Card>
-                </li>
-              ))}
-            </ul>
-            <div className="reveal mt-4 flex items-start gap-4 rounded-card bg-royal px-6 py-5 text-on-royal short:py-3">
-              <Sparkles className="mt-1 size-5 shrink-0" aria-hidden="true" />
-              <div>
-                <p className="font-bold tracking-tight">{income.why.title}</p>
-                <p className="mt-1 leading-snug text-pretty text-royal-soft">{income.why.body}</p>
-              </div>
+        <Chapter id={income.id} tone="lilac">
+          <ScreenHeading eyebrow={income.eyebrow} title={income.title} compact />
+          <ul className="mt-[clamp(1.5rem,5vh,3rem)] grid gap-4 md:grid-cols-3">
+            {income.items.map((item) => (
+              <li key={item.title} className="reveal">
+                <Card padding="lg" spotlight className="h-full short:p-5">
+                  <Badge tone="royal">{item.when}</Badge>
+                  <h3 className="mt-4 text-xl font-bold tracking-tight short:mt-3">{item.title}</h3>
+                  <p className="mt-2 leading-relaxed text-pretty short:leading-snug">{item.body}</p>
+                </Card>
+              </li>
+            ))}
+          </ul>
+          <div className="reveal mt-4 flex items-start gap-4 rounded-card bg-royal px-6 py-5 text-on-royal short:py-3">
+            <Sparkles className="mt-1 size-5 shrink-0" aria-hidden="true" />
+            <div>
+              <p className="font-bold tracking-tight">{income.why.title}</p>
+              <p className="mt-1 leading-snug text-pretty text-royal-soft">{income.why.body}</p>
             </div>
-          </Chapter>
-        </div>
+          </div>
+        </Chapter>
 
         <Chapter id={plan.id} tone="mist">
           <ScreenHeading eyebrow={plan.eyebrow} title={plan.title} lead={plan.lead} />

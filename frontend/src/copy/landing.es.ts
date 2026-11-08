@@ -24,7 +24,7 @@ export const landingCopy = {
     accent: ["Transparente", "Verificable", "Compartida"],
     body: "Quintti es la cuenta compartida de tu edificio. El dinero solo sale si se cumplen las reglas de la asamblea, y cada vecino ve a dónde va su cuota.",
     poweredBy: "Powered by Stellar",
-    primary: "Ver cómo funciona",
+    primary: "Ver el problema",
     secondary: "Ver un ejemplo",
   },
 

@@ -5,7 +5,7 @@ import { BrandMark } from "@/components/atoms/BrandMark";
 import { ButtonLink } from "@/components/atoms/Button";
 import { landingCopy } from "@/copy/landing.es";
 
-const { hero, solution, example } = landingCopy;
+const { hero, problem } = landingCopy;
 
 /**
  * Minimal, centered opening: logo, name, three words, one sentence and two actions.
@@ -14,7 +14,7 @@ const { hero, solution, example } = landingCopy;
  */
 export function Hero() {
   return (
-    <section id={hero.id} className="relative flex min-h-[calc(100dvh-3.5rem)] items-center justify-center overflow-hidden px-5 py-[clamp(2rem,7vh,5rem)] sm:px-8">
+    <section id={hero.id} className="relative flex min-h-dvh items-center justify-center overflow-hidden px-5 py-[clamp(2rem,7vh,5rem)] sm:px-8">
       <div
         aria-hidden="true"
         className="hero-glow pointer-events-none absolute top-1/2 left-1/2 size-[40rem] -translate-x-1/2 -translate-y-1/2 sm:size-[52rem]"
@@ -38,12 +38,10 @@ export function Hero() {
         </p>
 
         <div className="animate-rise mt-[clamp(1.25rem,4.5vh,2.5rem)] flex flex-wrap justify-center gap-3 [animation-delay:1200ms]">
-          <ButtonLink href={`#${solution.id}`} size="lg" shape="pill">
+          {/* "Ver un ejemplo" (hero.secondary) is off with the example screen; see `LandingPage`. */}
+          <ButtonLink href={`#${problem.id}`} size="lg" shape="pill">
             {hero.primary}
             <ArrowRight className="size-5" aria-hidden="true" />
-          </ButtonLink>
-          <ButtonLink href={`#${example.id}`} size="lg" shape="pill" variant="soft">
-            {hero.secondary}
           </ButtonLink>
         </div>
 
