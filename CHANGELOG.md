@@ -4,15 +4,15 @@ Notable changes to Quintti, newest first. The project has no versioned releases 
 
 ## Current state
 
-Updated: 8 November 2026 (late).
+Updated: 8 November 2026 (night).
 
 | Area | State |
 |------|-------|
-| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 15 decisions |
+| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 16 decisions |
 | Treasury contract | Implemented and unit tested (78 tests). Development deployment on Stellar testnet |
-| Web app: non-visual foundation | Built and tested (239 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
+| Web app: non-visual foundation | Built and tested (235 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
 | Web app: landing page | A presentation, one idea per screen and one window tall, in calm tones: the hero, the problem, the solution (two screens), a clickable example and why Stellar (two screens). No hackathon, code links or FAQ. Every screen fits at 1280x720 and 1366x650; on a phone they grow with their content |
-| Web app: treasury app | Built at `/app` and checked in a browser against the development treasury on testnet, at 1280x720 to 1920x1080 and 390x844 with no sideways scrolling: overview, expenses (list, detail with approvals and fingerprint), proposing, approving and cancelling, budget, vendors, council and roles, invoice check. Sidebar on large screens, top bar and drawer on phones. Actions appear by the connected wallet's role |
+| Web app: treasury app | Three screens at `/app`, checked in a browser against the development treasury on testnet: Resumen, Gastos (list, detail with approvals and invoice check, propose, approve, cancel) and Reglas (budget, vendors, who decides). Same flow for every role; the connected wallet decides the buttons |
 | Manual | A hidden page at `/hiw`: the contract's rules, each role with what it can and cannot do, the flow of an expense, a map of the screens, a guide to testing with a wallet and a live panel of who holds each role in the deployed contract |
 | Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
 | Real wallet signing | The Stellar Wallets Kit picker opens in the app, themed. Signing with a browser extension not tried end to end yet. Covered by fakes. **This and the testnet evidence are all that remains before the demo** |
@@ -33,6 +33,16 @@ Development deployment (temporary, the testnet is reset periodically):
 
 Nothing yet.
 
+## 2026-11-08 (night)
+
+### Changed
+- The app went from six screens to three (decision 0016): Resumen, Gastos and Reglas. Budget, vendors and who decides are now one screen, Reglas, where the assembly also finds the forms to change the budget and the vendors.
+- The invoice check moved into each expense: drop the original file and its fingerprint is compared with the one on-chain. It now compares a single fingerprint.
+- Fewer words everywhere: the app's page descriptions, hints and repeated explanations, the landing page's leads and cards, and the manual (`/hiw`), which now describes the three screens and says what the app does not offer.
+- The overview lost its budget panel (it lives in Reglas) and its invoice card. The rejected expense in the landing example shows a single line.
+
+### Removed
+- The screens Presupuesto, Proveedores, Consejo y roles and Verificar factura (`/app/presupuesto`, `/app/proveedores`, `/app/consejo`, `/app/verificar`), the forms to replace the administrator and to renew the council, and the multi-expense invoice matching and its tests. The contract, services and hooks for those actions stay.
 ## 2026-11-08 (late)
 
 ### Changed

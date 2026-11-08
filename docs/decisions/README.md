@@ -15,10 +15,11 @@ One decision per file, short and with its rationale. If a decision changes, a ne
 | [0009](0009-design-direction.md) | Design direction: light Cupertino in the new purple palette | Accepted, amended by 0010 |
 | [0010](0010-landing-as-colored-chapters.md) | The landing page as full-screen chapters in all five colors | Superseded by 0015 |
 | [0011](0011-landing-polish.md) | Landing polish: Geist, texture, a light that follows the pointer, lighter chapter openings | Superseded by 0015 |
-| [0012](0012-one-role-aware-app-with-a-sidebar.md) | One role-aware app with a sidebar | Accepted |
+| [0012](0012-one-role-aware-app-with-a-sidebar.md) | One role-aware app with a sidebar | Accepted, amended by 0016 |
 | [0013](0013-offchain-records-in-supabase.md) | Off-chain records in Supabase, verified against the contract | Superseded by 0014 |
 | [0014](0014-no-offchain-records-in-the-demo.md) | No off-chain records in the demo | Accepted |
 | [0015](0015-landing-as-a-calm-presentation.md) | The landing page as a calm presentation, one idea per screen | Accepted |
+| [0016](0016-a-smaller-app.md) | A smaller app: three screens and fewer words | Accepted |
 
 ## Template
 

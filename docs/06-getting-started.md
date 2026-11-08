@@ -131,7 +131,7 @@ Every call that writes prints a link to the transaction in [stellar.expert](http
 
 ## 4. Web app
 
-The `frontend/` folder holds the web app: the landing page at `/` and the treasury app at `/app` (overview, expenses, budget, vendors, council and roles, invoice check). Anyone can read everything; connecting a wallet through Stellar Wallets Kit adds the actions of its role.
+The `frontend/` folder holds the web app: the landing page at `/` and the treasury app at `/app` (overview, expenses with their detail and invoice check, and rules). Anyone can read everything; connecting a wallet through Stellar Wallets Kit adds the actions of its role.
 
 Requirements: Node 22.12 or newer (developed on Node 24).
 

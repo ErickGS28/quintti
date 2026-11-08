@@ -54,9 +54,9 @@ quintti/
 │       │   ├── landing/           the presentation page: one screen per idea, illustrations and the clickable example
 │       │   ├── public-view/       reads the treasury state: services, hooks, the expense list, budget lines, approvals
 │       │   ├── expenses/          propose, approve and cancel expenses: services, hooks, forms and buttons
-│       │   ├── governance/        budget, vendors, administrator and council: services, hooks and forms
+│       │   ├── governance/        budget and vendors forms for the assembly, plus services and hooks for the administrator and council too
 │       │   ├── wallet-session/    who is connected: a store, a hook and the wallet panel
-│       │   ├── invoice-check/     drop a file and match its fingerprint against the expenses
+│       │   ├── invoice-check/     drop a file and compare its fingerprint with the expense's
 │       ├── components/            atoms, molecules, organisms and templates shared by every screen
 │       ├── copy/                  Spanish user-facing text (landing, app and error messages), isolated from logic
 │       ├── lib/

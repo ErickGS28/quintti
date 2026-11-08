@@ -90,7 +90,7 @@ These screens are built as one app at `/app` that everyone reads the same way; t
 |--------|----------|---------------------|
 | **Public view** | Anyone | Balance, budget lines, expense list, invoice check, active network |
 | **Council panel** | Administrator, council | Connect wallet. Propose an expense (administrator). Approve a pending expense (council). Transaction status |
-| **Assembly panel** | Assembly | Edit budget lines, approved vendors, council and threshold, administrator |
+| **Assembly panel** | Assembly | Edit budget lines and approved vendors. Replacing the administrator or the council exists in the contract, not in the app |
 | **Setup / demo** | Team | Seeded demo accounts and a reset, for the demonstration only |
 
 Required states in every async view: loading, empty, error with retry, pending transaction, success with explorer link, wallet disconnected, wrong network.
