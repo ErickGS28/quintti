@@ -4,14 +4,14 @@ Notable changes to Quintti, newest first. The project has no versioned releases 
 
 ## Current state
 
-Updated: 8 November 2026.
+Updated: 8 November 2026 (late).
 
 | Area | State |
 |------|-------|
-| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 14 decisions |
+| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 15 decisions |
 | Treasury contract | Implemented and unit tested (78 tests). Development deployment on Stellar testnet |
-| Web app: non-visual foundation | Built and tested (255 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
-| Web app: landing page | Built as full-screen colored chapters (problem, solution, a clickable example, why Stellar, questions, closing), in Geist, with a light that follows the pointer. The hero fits the first screen and nothing scrolls sideways at 1280x720, 1366x768, 1707x960, 1920x1080 and 390x844 |
+| Web app: non-visual foundation | Built and tested (239 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
+| Web app: landing page | A presentation, one idea per screen and one window tall, in calm tones: the hero, the problem, the solution (two screens), a clickable example and why Stellar (two screens). No hackathon, code links or FAQ. Every screen fits at 1280x720 and 1366x650; on a phone they grow with their content |
 | Web app: treasury app | Built at `/app` and checked in a browser against the development treasury on testnet, at 1280x720 to 1920x1080 and 390x844 with no sideways scrolling: overview, expenses (list, detail with approvals and fingerprint), proposing, approving and cancelling, budget, vendors, council and roles, invoice check. Sidebar on large screens, top bar and drawer on phones. Actions appear by the connected wallet's role |
 | Manual | A hidden page at `/hiw`: the contract's rules, each role with what it can and cannot do, the flow of an expense, a map of the screens, a guide to testing with a wallet and a live panel of who holds each role in the deployed contract |
 | Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
@@ -33,6 +33,18 @@ Development deployment (temporary, the testnet is reset periodically):
 
 Nothing yet.
 
+## 2026-11-08 (late)
+
+### Changed
+- The landing page below the hero was redesigned (decision 0015) as a presentation: one idea per screen, each one window tall, with scrolling that settles on every screen on a laptop or larger. Each screen is a small label, a statement and a supporting sentence, centered, then its content. The problem is a faint rose, the example is mist, Stellar is lilac, and the solution is the one deep purple screen, so saturated colors no longer sit next to each other. The sizes follow the window height and the screens drop their extras below 800 px, checked at 1440x900, 1280x720 and 1366x650.
+- The solution and Stellar each take two screens (the rules, then the flow; the comparison, then the three reasons). The example is more compact, its ledger lines are shorter and the explanation of the rejected expense moved into the caption, so the layout does not jump between steps.
+- The landing page now speaks as a product: no hackathon, no links to the code or the contract, no FAQ and no closing call to action. The example is labelled as a simulation and the footer is one line.
+
+### Removed
+- The arrow under each title, the large rings behind it, the film grain, the light that follows the pointer, the scroll-to-top button, the overlapping sheets, and the wine, periwinkle, canvas and finale tones. `TitleSlide`, `Slide`, `CursorGlow`, `ScrollToTop`, the FAQ and closing screens, the contract link and the pointer-follow math were deleted. The card spotlight and Geist stay.
+
+### Added
+- `ScreenHeading`, the `rose` and `lilac` tones and a `short` variant for windows under 800 px high. The contrast test covers the four tones. A copy test keeps the hackathon and the repository out of the landing page.
 ## 2026-11-08
 
 ### Added

@@ -51,7 +51,7 @@ quintti/
 │       │   ├── app/               the treasury app: _shell (session, sidebar) and _screens, one per route
 │       │   └── hiw/               the manual at /hiw: roles and flow, not linked from anywhere
 │       ├── features/              one folder per capability, each with an index.ts
-│       │   ├── landing/           the presentation page: chapters, illustrations and the clickable example
+│       │   ├── landing/           the presentation page: one screen per idea, illustrations and the clickable example
 │       │   ├── public-view/       reads the treasury state: services, hooks, the expense list, budget lines, approvals
 │       │   ├── expenses/          propose, approve and cancel expenses: services, hooks, forms and buttons
 │       │   ├── governance/        budget, vendors, administrator and council: services, hooks and forms
@@ -81,7 +81,7 @@ Layer rules, enforced by ESLint (`frontend/eslint.config.mjs`), imports go downw
 - `app` and `components` import a feature only through its `index.ts`.
 - Only `lib/stellar` and `lib/wallet` talk to the SDK or the wallet library.
 
-`components/` holds the shared interface pieces, following atomic design: atoms (BrandMark, Button, Card, Badge, Eyebrow, Input, Select, Textarea, Avatar, ProgressBar, Spinner, Skeleton, IconButton, Ripple, BlurInText, PageWash), molecules (FormField, PageHeader, Panel, StatCard, DetailList, AddressTag, FileDrop, SegmentedControl, TxFeedback, EmptyState, ErrorState, FloatingNav, Chapter, TitleSlide, Slide), organisms (Sidebar, MobileBar, Drawer, Toaster, SlideRail, ScrollToTop, CursorGlow, SpotlightTracker) and one template (AppFrame). They receive data and text through props; only features read the copy.
+`components/` holds the shared interface pieces, following atomic design: atoms (BrandMark, Button, Card, Badge, Eyebrow, Input, Select, Textarea, Avatar, ProgressBar, Spinner, Skeleton, IconButton, Ripple, BlurInText, PageWash), molecules (FormField, PageHeader, Panel, StatCard, DetailList, AddressTag, FileDrop, SegmentedControl, TxFeedback, EmptyState, ErrorState, FloatingNav, Chapter, ScreenHeading), organisms (Sidebar, MobileBar, Drawer, Toaster, SlideRail, SpotlightTracker) and one template (AppFrame). They receive data and text through props; only features read the copy.
 The visual direction, palette and components are in [07-design-system.md](07-design-system.md). Colors, typography and spacing live in one place, `frontend/src/app/globals.css`, so changing the brand is a change in one file. Styling uses Tailwind 4.3.5 with those tokens, and the Spanish text of the landing page is in `frontend/src/copy/landing.es.ts`.
 
 ## Technical flow of a transaction

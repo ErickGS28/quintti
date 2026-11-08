@@ -1,6 +1,6 @@
 # 0010. The landing page as full-screen chapters in all five colors
 
-Status: Accepted, amended by [0011](0011-landing-polish.md) for the chapter openings. Amends [0009](0009-design-direction.md) for the landing page.
+Status: Superseded by [0015](0015-landing-as-a-calm-presentation.md) for everything below the hero.
 
 ## Context
 

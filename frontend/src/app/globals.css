@@ -39,7 +39,6 @@
 
   --wine: #890c50;
   --wine-soft: #fbe7f0;
-  --wine-deep: #5c0735;
 
   --coral: #eb5f7a;
   --coral-soft: #fde8ed;
@@ -82,7 +81,6 @@
   --color-coral-soft: var(--coral-soft);
   --color-on-coral: var(--on-coral);
   --color-veil: var(--veil);
-  --color-wine-deep: var(--wine-deep);
   --color-slide-title: var(--slide-title);
   --color-slide-text: var(--slide-text);
   --color-slide-muted: var(--slide-muted);

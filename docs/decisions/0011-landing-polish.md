@@ -1,6 +1,6 @@
 # 0011. Landing polish: Geist, texture, a light that follows the pointer, lighter chapter openings
 
-Status: Accepted. Amends [0010](0010-landing-as-colored-chapters.md) for the chapter openings.
+Status: Superseded by [0015](0015-landing-as-a-calm-presentation.md) for everything below the hero. Geist and the card spotlight stay.
 
 ## Context
 

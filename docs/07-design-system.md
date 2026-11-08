@@ -12,7 +12,7 @@
 4. **Human language.** "Tu cuota", "el consejo", not "stakeholders" or "on-chain".
 5. **Accessible by default.** AA contrast, 44 px touch targets, reduced motion respected.
 
-The app screens are light only. The landing page uses colored chapters (see "Chapters and tones" below and [decision 0010](decisions/0010-landing-as-colored-chapters.md)). There is no dark mode switch.
+The app screens are light only. The landing page is a presentation of calm screens with one deep purple one (see "Chapters and tones" below and [decision 0015](decisions/0015-landing-as-a-calm-presentation.md)). There is no dark mode switch.
 
 ## Palette
 
@@ -27,8 +27,7 @@ The five brand colors are fixed. Everything else (tints and ink colors) is deriv
 | `coral` | `#EB5F7A` | Fills for the problem side and for a rejected payment. Text on it is `ink` |
 | `royal-strong` | `#34187F` | Hover state of `royal`, the bird in the logo |
 | `royal-soft`, `periwinkle-soft` | `#EFEAFB`, `#ECEAFA` | Tinted backgrounds for purple elements, secondary buttons |
-| `wine-soft`, `coral-soft` | `#FBE7F0`, `#FDE8ED` | Tinted backgrounds for the problem side and rejections; text on the wine and closing chapters |
-| `wine-deep` | `#5C0735` | Dark end of the wine chapter gradient |
+| `wine-soft`, `coral-soft` | `#FBE7F0`, `#FDE8ED` | Tinted backgrounds for the problem side and rejections |
 | `ink`, `ink-soft`, `ink-faint` | `#1D1240`, `#4A4270`, `#5C5486` | Body, supporting and tertiary text |
 | `canvas`, `mist`, `cloud` | `#FFFFFF`, `#F6F3FC`, `#FFFFFF` | Page, tinted bands and inner panels, cards |
 
@@ -48,9 +47,7 @@ Geist for everything and Geist Mono for labels, chapter numbers, fingerprints an
 - Large soft corners: `rounded-card` (24 px), `rounded-control` (14 px), pills for navigation and the hero buttons.
 - One surface for cards: white, no border, a soft diffuse shadow. A tinted `mist` inner panel for grouped data.
 - Short transitions (150 to 500 ms) on color, opacity and transforms. Budget bars grow with a scale transform, not by resizing.
-- A faint film grain (`.grain`) on every chapter, so gradients feel printed rather than flat.
 - **Spotlight:** cards marked `spotlight` light up under the pointer, a soft fill and a lit 1px edge that follow it (`SpotlightTracker` writes the position, `.spotlight` draws it).
-- **Pointer light:** a soft lavender glow drifts behind the pointer (`CursorGlow`). It blends with `screen`, so it shows on dark chapters and disappears on white ones. Nothing is drawn on the cursor itself.
 - Pointer effects run only with a mouse or trackpad. `prefers-reduced-motion` turns them and every animation off.
 
 ## Logo
@@ -61,34 +58,32 @@ The hummingbird in an open ring is unchanged. Only its colors follow the palette
 
 - **Menu:** a floating rounded bar at the top with the section links centered, no button and no logo. On phones only the two links that fit are shown.
 - **Hero:** minimal and centered: the mark, the name (its letters come into focus one by one), three words, one sentence and two buttons. Sizes follow the window height so everything fits at any zoom level.
-- **The landing page is an argument, told as a stack of full-screen chapters, in this order** (see "Chapters and tones"):
-  - *01 The problem* (wine): four everyday situations in frosted cards with a coral icon each.
-  - *02 The solution* (royal purple): three rules the account enforces, then four steps of an expense with a small illustration each, horizontal on wide screens and vertical on phones.
-  - *03 An example* (mist): a short walk-through of one building where an expense is proposed, signed twice and paid, and a second one is rejected by the budget rule. It is clickable, and it is a simulation with made-up amounts, labelled as such.
-  - *04 Why Stellar* (periwinkle): a side-by-side comparison with a normal app, three reasons, and a plain note, on a wine card, about what Stellar does not solve.
-  - *Questions* (white) and the *closing* (royal to wine) with the call to action and links to the code and the contract.
-- **Honesty on the page:** the problem section says its situations are still being validated, the example says it is illustrative, and the footer says it runs on testnet with no real money and no audit.
-
+- **The landing page is a presentation: one idea per screen** (see "Chapters and tones"). A label, one statement and a supporting sentence, centered, then the content:
+  - *The problem* (rose): four everyday situations, one card each.
+  - *The solution* (deep purple), two screens: the three rules the account enforces, then the four steps of an expense with a small illustration each.
+  - *An example* (mist): a short walk-through of one building where an expense is proposed, signed twice and paid, and a second one is rejected by the budget rule. It is clickable and labelled "Simulación con valores ilustrativos".
+  - *Why Stellar* (lilac), two screens: a side-by-side comparison with a normal app, then three reasons.
+- **What the landing page leaves out:** no hackathon, no links to the code or the contract, no FAQ, no closing call to action, and none of the limits (those are in the manual at `/hiw` and in the docs). The footer is one line that says it is a prototype on testnet and a transparency tool, not a substitute for the assembly or the law.
 ## Chapters and tones
 
-Everything below the hero is a **chapter** (`Chapter`), a full-width block with its own gradient. A chapter opens with a **title screen** (`TitleSlide`): a labelled chip with the chapter number ("Capítulo 01"), the chapter name set large (up to about 104 px), one sentence that states the point, big faint ripple rings and a scroll cue. It takes about three quarters of the window, so the next screen already peeks in (decision 0011). Content screens (`Slide`) follow, each at least one window tall with the content centered. Chapters overlap with rounded top corners, like sheets. Scrolling settles on screens with `scroll-snap-type: y proximity`, blocks rise in with a scroll-driven CSS animation, and a pager of dots (`SlideRail`) on the right edge shows the current chapter on large screens.
+Everything below the hero is a **chapter** (`Chapter`): one screen, at least one window tall (`min-h-dvh`), its content centered, with a quiet gradient of its own. A chapter has no overlap, no grain and no giant title: it opens with a small label, a statement of about 60 px at most and one sentence (`ScreenHeading`). The content is sized with the window height so that every screen fits at 1280x720 and even at 1366x650; on windows shorter than 800 px (the `short` variant in `globals.css`) the supporting sentence, the label of the denser screens and the last row of the comparison are dropped. On a phone, where the content is taller than the window, a screen simply grows.
 
-A **tone** is a CSS class in `globals.css` that sets the gradient and the text colors of everything inside:
+Scrolling works like a presentation: on a laptop or larger with a mouse or trackpad, `scroll-snap-type: y mandatory` settles on each screen; elsewhere it is `proximity`, so tall content is never trapped. A zero-height snap point at the top lets the page rest on the hero. Blocks rise in with a scroll-driven CSS animation, and a pager of dots (`SlideRail`) on the right edge shows the current screen. Reduced motion turns all of it off.
 
-| Tone | Chapter | Gradient | Title / text / accent |
-|------|---------|----------|-----------------------|
-| `tone-wine` | Problem | `wine-deep` to `wine`, coral and royal glows | white / `wine-soft` / `coral-soft` |
-| `tone-royal` | Solution | `royal` to `royal-strong`, lavender and coral glows | white / `royal-soft` / `periwinkle` |
+The page is light except for one deep screen, so no two saturated colors ever sit next to each other. A **tone** is a CSS class in `globals.css` that sets the gradient and the text colors of everything inside:
+
+| Tone | Screen | Gradient | Title / text / accent |
+|------|--------|----------|-----------------------|
+| `tone-rose` | Problem | white to `coral-soft`, faint coral and lavender glows | `ink` / `ink-soft` / `wine` |
+| `tone-royal` | Solution (two screens) | `royal` to `royal-strong`, lavender and periwinkle glows | white / `royal-soft` / `periwinkle` |
 | `tone-mist` | Example | `mist` to `periwinkle-soft` | `royal` / `ink-soft` / `wine` |
-| `tone-periwinkle` | Stellar | `periwinkle` to `periwinkle-soft`, lavender glow | `royal-strong` / `ink` / `wine` |
-| `tone-canvas` | Questions | white to `mist` | `royal` / `ink-soft` / `wine` |
-| `tone-finale` | Closing | `royal` to `wine`, lavender and coral glows | white / `royal-soft` / `coral-soft` |
+| `tone-lilac` | Stellar (two screens) | `periwinkle-soft` to white | `royal` / `ink-soft` / `wine` |
 
-Components read the colors through `text-slide-title`, `text-slide-text`, `text-slide-muted`, `text-slide-accent` and `text-slide-ring`, so they work on any tone. `Card` has three surfaces: `solid` (white, restores the light text colors, readable anywhere), `glass` (frosted, for dark chapters) and `frost` (frosted white, for light colored chapters). The contrast test reads each `.tone-*` block and checks the text colors against both gradient ends.
+Components read the colors through `text-slide-title`, `text-slide-text`, `text-slide-muted`, `text-slide-accent` and `text-slide-ring`, so they work on any tone. `Card` has two surfaces: `solid` (white, restores the light text colors, readable anywhere) and `glass` (frosted, for the deep screen). The contrast test reads each `.tone-*` block and checks the text colors against both gradient ends.
 
 ## Base components
 
-`components/atoms`: BrandMark, BlurInText, Ripple, Button and ButtonLink (with `light` and `glass` variants for dark chapters), Card (with an optional `spotlight`), Badge, Eyebrow (a monospaced label in a hairline pill), PageWash. `components/molecules`: FloatingNav, Chapter, TitleSlide, Slide. `components/organisms`: SlideRail, ScrollToTop, CursorGlow, SpotlightTracker. Pointer math lives in `lib/ui/pointer.ts` and is unit tested. Copy lives in `frontend/src/copy/`, not in the components.
+`components/atoms`: BrandMark, BlurInText, Ripple, Button and ButtonLink (with `light` and `glass` variants), Card (with an optional `spotlight`), Badge, Eyebrow (a monospaced label in a hairline pill), PageWash. `components/molecules`: FloatingNav, Chapter, ScreenHeading. `components/organisms`: SlideRail, SpotlightTracker. Pointer math lives in `lib/ui/pointer.ts` and is unit tested. Copy lives in `frontend/src/copy/`, not in the components.
 ## App screens
 
 The treasury app at `/app` is light only, as decision 0009 set for the app, on a `mist` page with a soft periwinkle light from the top right (`.app-surface`). One app for every role ([decisions/0012](decisions/0012-one-role-aware-app-with-a-sidebar.md)).
@@ -104,7 +99,7 @@ The treasury app at `/app` is light only, as decision 0009 set for the app, on a
 
 ## Signature: the ripple
 
-Concentric rings that spread from a point, like a ripple on water or a hovering wing. They echo the open ring of the logo and appear huge and faint behind every chapter title, around the mark in the closing chapter and around the check of a paid receipt. They are decorative, hidden from assistive technology, and become static rings when reduced motion is requested.
+Concentric rings that spread from a point, like a ripple on water or a hovering wing. They echo the open ring of the logo and appear around the check of a paid receipt. They are decorative, hidden from assistive technology, and become static rings when reduced motion is requested.
 
 ## Not done yet
 
