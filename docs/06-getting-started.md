@@ -157,21 +157,9 @@ To act in the app, connect a wallet on testnet whose account holds a role: the a
 
 `.env.example` explains each setting. `NEXT_PUBLIC_TREASURY_CONTRACT_ID` must be a treasury you deployed in step 3, or the development one from the README if it still exists. Nothing in an env file is secret: never put keys or seed phrases there.
 
-### Connect Supabase (optional)
+### The manual
 
-Without Supabase the app shows what the contract stores. With it, each expense also gets a description, a vendor name and its invoice file, and addresses can show names. The server writes an invoice only if its SHA-256 matches the fingerprint the contract recorded ([decisions/0013](decisions/0013-offchain-records-in-supabase.md)).
-
-1. Create a Supabase project.
-2. Run the schema: paste `supabase/migrations/20261108000000_offchain_records.sql` into the SQL editor and run it, or, with the Supabase CLI, `supabase link` and `supabase db push`. It creates the three tables, the write-once rule and the private `invoices` bucket in one step.
-3. Optionally run `supabase/seed.sql` to name the development building, after filling in its addresses.
-4. Add to `frontend/.env.local`, from the project's API settings:
-
-```
-SUPABASE_URL=https://<project>.supabase.co
-SUPABASE_SECRET_KEY=<the secret key>
-```
-
-The secret key stays on the server: it is never prefixed with `NEXT_PUBLIC_` and the browser never sees it. Restart `npm run dev`, propose an expense as the administrator, and its description and invoice appear on the expense's page for anyone.
+The app has a hidden page at /hiw (http://localhost:3000/hiw) that explains the roles and the flow of an expense, lists who holds each role in the deployed contract and walks through testing with a wallet. Nothing links to it: share its address.
 
 ### Check the code against a real treasury
 
@@ -185,7 +173,7 @@ QUINTTI_LIVE_VENDOR=$(stellar keys address qt-vendor) \
 npx vitest run src/live
 ```
 
-In PowerShell, set the four variables with `$env:NAME = "value"` first, then run `npx vitest run src/live`. The run reads the configuration, the balance, the budget, the paid expense and the full public view, checks that an over-budget proposal is rejected before any signature is requested, and reads an expense's invoice fingerprint the way the server does before it accepts a file.
+In PowerShell, set the four variables with `$env:NAME = "value"` first, then run `npx vitest run src/live`. The run reads the configuration, the balance, the budget, the paid expense and the full public view, and checks that an over-budget proposal is rejected before any signature is requested.
 
 ### Regenerate the contract bindings
 
@@ -210,9 +198,12 @@ This needs the Stellar CLI. It rewrites `src/contracts/generated/index.ts`, whic
 | `npm install` fails with `ERESOLVE` on `vitest` | Use Node 22.12 or newer, and keep `@types/node` on the same major version as Node |
 | `npm run typecheck` reports old errors after changing `tsconfig.json` | Delete `frontend/tsconfig.tsbuildinfo` and run it again |
 | `Cannot find name 'LayoutProps'` or route type errors | Run `npm run typecheck`, which regenerates the route types (`next typegen`) before checking |
-| The app says the description and invoice will not be saved | Supabase is not connected. See "Connect Supabase" above; the app works without it |
-| `Invalid configuration: SUPABASE_URL is required…` | Set both `SUPABASE_URL` and `SUPABASE_SECRET_KEY`, or neither |
 
 ## 6. What is not here yet
 
-Signing with a real wallet extension has not been tried end to end yet: the wallet picker opens and the signing path is covered by fakes. Deployment and demo scripts (`scripts/`) are not built. The current state is in [../CHANGELOG.md](../CHANGELOG.md).
+Two things remain before the demo:
+
+1. **Sign with a real wallet extension, end to end.** The wallet picker opens and the signing path is covered by fakes, but a browser wallet (Freighter) has not signed a proposal and an approval yet. The `/hiw` page lists the steps.
+2. **Evidence of the contract on testnet.** A final deployment with the demo data and the transactions visible in [stellar.expert](https://stellar.expert/explorer/testnet). The development walkthrough already has a full cycle on testnet; the demo needs its own, repeatable with a script (`scripts/` is not built).
+
+The current state is in [../CHANGELOG.md](../CHANGELOG.md).

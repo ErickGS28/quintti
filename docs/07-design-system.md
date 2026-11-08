@@ -96,7 +96,7 @@ The treasury app at `/app` is light only, as decision 0009 set for the app, on a
 - **Frame** (`AppFrame` template): a white sidebar, 18 rem wide, fixed from large screens up, with the brand, a card for the building and the network, six destinations with icons, and the wallet pinned to the bottom. The active item has a royal tint and a small bar on its left edge. On phones and tablets a frosted top bar with the menu, the brand and a compact wallet button replaces it, and the sidebar opens in a drawer built on the native modal dialog.
 - **Screens** share one structure: a header (`PageHeader`: title, one sentence, the main action on the right), then titled cards (`Panel`), with a narrow right column for context or the role's form. Figures use `StatCard` (monospaced label, large tabular value), two per row on phones.
 - **Lists** are rows with a status disc (royal check for paid, coral cross for cancelled, a clock for pending), the description, the category, vendor and date in one quiet line, and the amount with its state or signatures on the right. A cancelled amount is struck through. The whole row is a link.
-- **Addresses** are never bare: `AddressTag` adds a gradient avatar derived from the address (`lib/format/identicon.ts`, hues from purple to coral), a name when the directory or the role knows it, the shortened address in monospace, and buttons to copy it or open it in the explorer.
+- **Addresses** are never bare: `AddressTag` adds a gradient avatar derived from the address (`lib/format/identicon.ts`, hues from purple to coral), a name when the role is known (the assembly and the administration), the shortened address in monospace, and buttons to copy it or open it in the explorer.
 - **Forms** use `FormField` (label, control, hint or error, wired with `aria-describedby`), 48 px controls with a hairline ring that turns royal on focus and wine when invalid. The proposal form shows a live checklist of the rules the contract will apply (approved vendor, fits the budget, invoice attached) before anything is signed.
 - **Transactions** show their state inline (`TxFeedback`: waiting for the wallet and the network, done with a link to the explorer, or the reason in plain words) and raise a toast when confirmed. A closed wallet prompt is not an error.
 - **States:** every screen has a skeleton while the contract is read, an error card with a retry, and an empty state that says what will appear and who makes it appear.
@@ -110,3 +110,7 @@ Concentric rings that spread from a point, like a ripple on water or a hovering 
 
 - A contrast audit with an external tool and a keyboard and screen-reader pass.
 - The designer's final vector of the logo.
+
+## The manual
+
+`/hiw` is a plain, light page in the same components: a table of contents, the four contract rules, one card per role with what it can and cannot do, the five steps of an expense, a map of the screens, a guide to testing with a wallet next to a live panel of who holds each role in the deployed contract, a glossary and the limits. It is not linked from the app or the landing page and is marked `noindex`; the team shares its address. The text is in `frontend/src/copy/hiw.es.ts`.

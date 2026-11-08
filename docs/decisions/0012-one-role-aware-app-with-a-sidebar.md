@@ -14,7 +14,7 @@ Build **one app** under `/app` that everyone sees the same way, and let the conn
 - The administrator sees "Proponer gasto"; council members see "Aprobar" on pending expenses; the assembly sees the forms that change the budget, the vendors, the administrator and the council. The contract checks every call again, so the interface only hides what would be rejected.
 - Navigation is a **sidebar** on large screens: six destinations (Resumen, Gastos, Presupuesto, Proveedores, Consejo y roles, Verificar factura), the building and the network at the top, the wallet at the bottom. On phones and tablets it becomes a top bar with a drawer. A top bar alone would crowd six links, the network and the wallet.
 
-The roles are computed from the contract's configuration (`lib/treasury/roles.ts`). The session that joins the wallet, the contract state and the off-chain records lives in the app layer (`app/app/_shell/session.tsx`), because it combines several features.
+The roles are computed from the contract's configuration (`lib/treasury/roles.ts`). The session that joins the wallet and the contract state lives in the app layer (`app/app/_shell/session.tsx`), because it combines several features.
 
 ## Consequences
 

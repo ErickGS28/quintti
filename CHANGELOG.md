@@ -4,18 +4,19 @@ Notable changes to Quintti, newest first. The project has no versioned releases 
 
 ## Current state
 
-Updated: 7 November 2026 (night).
+Updated: 8 November 2026.
 
 | Area | State |
 |------|-------|
-| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 13 decisions |
+| Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 14 decisions |
 | Treasury contract | Implemented and unit tested (78 tests). Development deployment on Stellar testnet |
-| Web app: non-visual foundation | Built and tested (274 offline tests, 8 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
+| Web app: non-visual foundation | Built and tested (255 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
 | Web app: landing page | Built as full-screen colored chapters (problem, solution, a clickable example, why Stellar, questions, closing), in Geist, with a light that follows the pointer. The hero fits the first screen and nothing scrolls sideways at 1280x720, 1366x768, 1707x960, 1920x1080 and 390x844 |
 | Web app: treasury app | Built at `/app` and checked in a browser against the development treasury on testnet, at 1280x720 to 1920x1080 and 390x844 with no sideways scrolling: overview, expenses (list, detail with approvals and fingerprint), proposing, approving and cancelling, budget, vendors, council and roles, invoice check. Sidebar on large screens, top bar and drawer on phones. Actions appear by the connected wallet's role |
-| Off-chain records | Built and unit tested: descriptions, vendor names and invoice files in Supabase behind three route handlers, each invoice checked against the contract before it is saved. One migration with the whole schema. Optional: not connected to a Supabase project yet |
+| Manual | A hidden page at `/hiw`: the contract's rules, each role with what it can and cannot do, the flow of an expense, a map of the screens, a guide to testing with a wallet and a live panel of who holds each role in the deployed contract |
 | Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
-| Real wallet signing | The Stellar Wallets Kit picker opens in the app, themed. Signing with a browser extension not tried end to end yet. Covered by fakes |
+| Real wallet signing | The Stellar Wallets Kit picker opens in the app, themed. Signing with a browser extension not tried end to end yet. Covered by fakes. **This and the testnet evidence are all that remains before the demo** |
+| Contract evidence on testnet | Development walkthrough done (hashes linked from the contract's explorer page). A final demo deployment with its own data and transactions is still to prepare |
 | Audit | None. Testnet only, not for real funds |
 
 What works today, verified on testnet:
@@ -30,26 +31,30 @@ Development deployment (temporary, the testnet is reset periodically):
 
 ## Unreleased
 
+Nothing yet.
+
+## 2026-11-08
+
 ### Added
 - The treasury app at `/app`, one app for every role (decision 0012): overview with balance, budget used, pending expenses, signatures needed, budget lines, latest expenses, the role of the connected wallet and who decides; the expense list with filters; each expense with its details, invoice fingerprint, council approvals counted like the contract counts them, invoice check, and approve or cancel; proposing an expense with a live checklist of the rules; budget, vendors, and council and roles, each with the assembly's forms. Every screen has loading, error and empty states.
 - Sidebar navigation with the building, the network and the wallet; a top bar and a drawer on phones; toasts when a transaction is confirmed.
 - Stellar Wallets Kit's picker in Quintti's colors and font.
 - Shared components following atomic design: inputs, select, textarea, avatar, progress bar, spinner, skeleton, icon button; form field, page header, panel, stat card, detail list, address tag, file drop, segmented control, transaction feedback, empty and error states; sidebar, mobile bar, drawer, toaster; and the app frame.
-- Off-chain records in Supabase (decision 0013): `supabase/migrations/20261108000000_offchain_records.sql` with `buildings`, `people` and `expense_details`, a write-once rule and a private `invoices` bucket; `supabase/seed.sql` for the development building. Route handlers `GET /api/details`, `POST /api/details/{id}`, `GET /api/details/{id}/invoice` and `GET /api/directory`, which work without Supabase by answering "not configured".
-- The server reads each expense's invoice fingerprint from the contract and accepts a file only if it matches. A live test checks that read against testnet.
-- An ESLint rule that keeps the Supabase secret out of browser code; features may expose a `server.ts` for route handlers.
-- Unit tests for roles, approval progress, identicons, toasts, transaction feedback, invoice matching, the server configuration, the Supabase client, the details validation and service, and the directory (274 offline tests in total).
 - A link from the landing page's closing chapter to the app.
-- Decisions 0012 and 0013.
 - Geist and Geist Mono, served from the repository through `next/font/local` with their license.
 - A soft light that drifts behind the pointer and lights the dark chapters, and cards that light up under the pointer with a lit edge. Mouse and trackpad only, off with reduced motion.
 - A faint film grain on every chapter, an `Eyebrow` label and unit tests for the pointer math.
-- Decision 0011.
+- The manual at `/hiw`, a hidden page (not linked from anywhere, `noindex`) that explains the contract's rules, the five roles, the flow of an expense, the screens and how to test with a wallet, with a live panel of who holds each role in the deployed contract. Its text is in `copy/hiw.es.ts`.
+- Unit tests for roles, approval progress, identicons, toasts, transaction feedback, invoice matching and the manual's copy (255 offline tests in total).
+- Decisions 0011, 0012 and 0014.
 
 ### Changed
-- Decision 0007 is amended by 0013: a thin server exists, only for off-chain records. Money and rules never pass through it.
 - The hero's sentence that says what Quintti is is larger and darker, so the promise reads right after the name. The hero, the menu and the logo keep their design (decision 0010).
 - Chapter openings show a labelled chip ("Capítulo 01"), a title up to about 104 px instead of 150 px, and take about three quarters of a screen, so the page is shorter.
+
+### Removed
+- The off-chain records: the Supabase database and file bucket, the `/api` routes, the server configuration and the ESLint rule that guarded the secret key (decision 0014, which supersedes 0013 and restores 0007). The app reads only the contract; the work stays in the history of the branch `feat/treasury-app`.
+- The description, vendor name and invoice download on the expense pages; the proposal form no longer asks for a description.
 
 ### Fixed
 - `npm run typecheck` generates Next.js's route types first, so it passes on a fresh clone instead of failing on `LayoutProps`.

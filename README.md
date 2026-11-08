@@ -2,7 +2,7 @@
 
 A shared treasury for residential buildings, with the assembly's rules built into the account. Built on Stellar and Soroban.
 
-> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested. The web app has the landing page and the treasury app: overview, expenses with their approvals, proposing, approving and cancelling, budget, vendors, council and an invoice check, with Stellar Wallets Kit for signing and optional off-chain records in Supabase. Testnet only, unaudited, not for real funds.
+> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested. The web app has the landing page and the treasury app: overview, expenses with their approvals, proposing, approving and cancelling, budget, vendors, council and an invoice check, with Stellar Wallets Kit for signing, and a hidden manual at `/hiw`. What is left before the demo is signing with a real wallet extension and having the evidence of the contract on testnet. Testnet only, unaudited, not for real funds.
 
 ## The problem
 
@@ -46,8 +46,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 ```
 docs/          product, design and architecture documents
 contracts/     Soroban treasury contract (Rust)
-frontend/      web app (Next.js, TypeScript): landing page, the treasury app at /app, a thin API and tests
-supabase/      the off-chain records schema (one migration) and demo seed, optional
+frontend/      web app (Next.js, TypeScript): landing page, the treasury app at /app, the manual at /hiw and tests
 scripts/       deployment and demo data, not built yet
 ```
 

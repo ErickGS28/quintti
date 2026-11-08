@@ -1,6 +1,6 @@
 # 0013. Off-chain records in Supabase, verified against the contract
 
-Status: Accepted. Amends [0007](0007-no-backend.md): a server now exists, for one reason.
+Status: Superseded by [0014](0014-no-offchain-records-in-the-demo.md). The code was removed from the app and stays in the history of the branch `feat/treasury-app`.
 
 ## Context
 
