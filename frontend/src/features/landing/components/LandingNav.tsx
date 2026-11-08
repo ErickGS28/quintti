@@ -2,7 +2,7 @@ import { FloatingNav } from "@/components/molecules/FloatingNav";
 import { landingCopy } from "@/copy/landing.es";
 import { classNames } from "@/lib/ui/class-names";
 
-const { nav, problem, solution, example, why, faq } = landingCopy;
+const { nav, problem, solution, example, why } = landingCopy;
 
 /** On phones only two links fit; the rest appear from medium screens up. */
 const LINKS = [
@@ -10,7 +10,6 @@ const LINKS = [
   { id: solution.id, label: nav.solution, onPhone: true },
   { id: example.id, label: nav.example, onPhone: true },
   { id: why.id, label: nav.why, onPhone: false },
-  { id: faq.id, label: nav.faq, onPhone: false },
 ];
 
 /** Floating, rounded menu with the section links centered. The logo lives in the hero, not here. */

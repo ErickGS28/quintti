@@ -7,9 +7,8 @@ type CardProps = HTMLAttributes<HTMLDivElement> & {
   /**
    * "solid" is the white surface and restores the light text colors, so it works on any chapter.
    * "glass" is frosted glass for dark chapters and keeps the chapter's text colors.
-   * "frost" is frosted white for light, colored chapters.
    */
-  surface?: "solid" | "glass" | "frost";
+  surface?: "solid" | "glass";
   /** A soft light and a lit edge follow the pointer over the card (see `SpotlightTracker`). */
   spotlight?: boolean;
 };
@@ -23,7 +22,6 @@ const PADDING = {
 const SURFACES = {
   solid: "card-solid bg-cloud shadow-card",
   glass: "card-glass",
-  frost: "card-frost",
 };
 
 /** The one surface of the app: soft depth, large corners, no border. */

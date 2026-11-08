@@ -4,7 +4,7 @@ import { landingCopy } from "@/copy/landing.es";
 
 import { DEMO_STEPS } from "./demo/demo-flow";
 
-const { hero, problem, solution, example, why, faq, final } = landingCopy;
+const { hero, problem, solution, example, why } = landingCopy;
 
 /** Every string in the copy, however deeply nested. */
 function strings(value: unknown): string[] {
@@ -16,7 +16,7 @@ function strings(value: unknown): string[] {
 
 describe("landing copy", () => {
   it("gives each section a distinct id, because the menu, the pager and the buttons link to them", () => {
-    const ids = [hero.id, problem.id, solution.id, example.id, why.id, faq.id, final.id];
+    const ids = [hero.id, problem.id, solution.id, example.id, why.id];
 
     expect(new Set(ids).size).toBe(ids.length);
     for (const id of ids) expect(id).toMatch(/^[a-z]+$/);
@@ -56,5 +56,10 @@ describe("landing copy", () => {
 
     expect(text).toMatch(/red de pruebas/);
     expect(text).toMatch(/no sustituye/);
+  });
+  it("sounds like a product page: no hackathon, no repository, no internal status", () => {
+    const text = strings(landingCopy).join(" ");
+
+    expect(text).not.toMatch(/hackathon|cordillera|baf|github|c[óo]digo fuente|ver el c[óo]digo/i);
   });
 });

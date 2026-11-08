@@ -15,12 +15,8 @@ export const landingCopy = {
     solution: "La solución",
     example: "Un ejemplo",
     why: "Por qué Stellar",
-    faq: "Preguntas",
-    scrollTop: "Volver al inicio",
-    railLabel: "Capítulos de la página",
+    railLabel: "Pantallas de la página",
     home: "Inicio",
-    closing: "Cierre",
-    chapter: "Capítulo",
   },
 
   hero: {
@@ -35,7 +31,7 @@ export const landingCopy = {
     id: "problema",
     eyebrow: "El problema",
     title: "Tu cuota es de todos. El control es de muy pocos.",
-    body: "Cada mes, los vecinos ponen dinero en una cuenta que casi nadie puede revisar. Estas son situaciones que se repiten en las asambleas.",
+    lead: "Cada mes, los vecinos ponen dinero en una cuenta que casi nadie puede revisar.",
     items: [
       {
         title: "¿En qué se gastó mi cuota?",
@@ -50,18 +46,17 @@ export const landingCopy = {
         body: "El dinero sale con la decisión de una persona. El consejo se entera cuando ya ocurrió.",
       },
       {
-        title: "Si cambia la administración, se pierde la historia",
-        body: "Llegan cajas de papeles y desconfianza, no un registro que se pueda consultar.",
+        title: "Se pierde la historia",
+        body: "Si cambia la administración, llegan cajas de papeles y desconfianza, no un registro que se pueda consultar.",
       },
     ],
-    note: "Seguimos validando estas situaciones con administradores y vecinos.",
   },
 
   solution: {
     id: "solucion",
     eyebrow: "La solución",
     title: "Las reglas de la asamblea, dentro de la cuenta.",
-    body: "Quintti es una cuenta compartida donde el dinero solo sale si se cumplen las reglas que la asamblea aprobó. No depende de la buena voluntad de nadie: la cuenta se niega a pagar fuera de ellas, y todos ven lo mismo.",
+    lead: "El dinero solo sale si se cumplen las reglas que la asamblea aprobó. No depende de la buena voluntad de nadie, y todos ven lo mismo.",
     rules: [
       {
         title: "Tope por categoría",
@@ -76,6 +71,7 @@ export const landingCopy = {
         body: "Un gasto se paga cuando suficientes consejeros lo aprueban, por ejemplo 2 de 3.",
       },
     ],
+    stepsEyebrow: "Cómo funciona",
     stepsTitle: "Así fluye un gasto",
     steps: [
       {
@@ -122,8 +118,8 @@ export const landingCopy = {
     id: "ejemplo",
     eyebrow: "Un ejemplo",
     title: "Torres del Parque, un martes.",
-    body: "Se daña el ascensor. Recorre el caso paso a paso y mira qué pasa cuando un gasto rompe las reglas.",
-    note: "Simulación con valores ilustrativos. El mismo flujo corre de verdad en la red de pruebas de Stellar.",
+    lead: "Se daña el ascensor. Recorre el caso y mira qué pasa cuando un gasto rompe las reglas.",
+    note: "Simulación con valores ilustrativos",
     building: "Torres del Parque · 40 apartamentos",
     accountTitle: "Cuenta del edificio",
     balanceLabel: "Saldo",
@@ -143,10 +139,6 @@ export const landingCopy = {
       pending: "Pendiente",
       paid: "Pagado",
       rejected: "Rechazado",
-    },
-    reject: {
-      title: "La cuenta lo rechazó",
-      body: "Supera lo que queda del presupuesto de mantenimiento. Ninguna firma puede saltarse el tope: solo la asamblea puede ampliarlo.",
     },
     steps: {
       idle: {
@@ -168,15 +160,16 @@ export const landingCopy = {
         action: "Un mes después: proponer otro arreglo de $5.000.000",
       },
       blocked: {
-        caption: "Solo quedan $2.000.000 en la categoría. La cuenta rechaza el gasto antes de que nadie firme.",
+        caption:
+          "Solo quedan $2.000.000 en la categoría: la cuenta rechaza el gasto antes de que nadie firme. Ni con todas las firmas se puede saltar el tope.",
         action: "Volver a empezar",
       },
     },
     ledger: {
-      proposed: "Propuesto: $8.000.000 al técnico de ascensores",
+      proposed: "Propuesto: $8.000.000 al técnico",
       approvedBy: "Firma de",
-      paid: "Pagado: $8.000.000 al técnico de ascensores",
-      rejected: "Rechazado: $5.000.000 superan lo que queda ($2.000.000)",
+      paid: "Pagado: $8.000.000 al técnico",
+      rejected: "Rechazado: $5.000.000 (quedan $2.000.000)",
     },
     progress: "Paso",
   },
@@ -185,7 +178,7 @@ export const landingCopy = {
     id: "stellar",
     eyebrow: "Por qué Stellar",
     title: "Lo que una app normal no puede prometer.",
-    body: "Una app de contabilidad te pide confiar en su empresa. Aquí las reglas viven en la misma cuenta que guarda el dinero, sobre una red pública que nadie controla.",
+    lead: "Una app de contabilidad te pide confiar en su empresa. Aquí las reglas viven en la misma cuenta que guarda el dinero, sobre una red pública que nadie controla.",
     compare: {
       headers: ["", "Una app normal", "Con Stellar"],
       rows: [
@@ -216,6 +209,8 @@ export const landingCopy = {
         },
       ],
     },
+    itemsEyebrow: "Lo que cambia",
+    itemsTitle: "Confianza que se puede comprobar.",
     items: [
       {
         title: "Reglas que nadie se salta",
@@ -230,63 +225,9 @@ export const landingCopy = {
         body: "Registrar un gasto cuesta una fracción de centavo, así que no hay razón para dejar nada fuera.",
       },
     ],
-    honest: {
-      title: "Lo que Stellar no resuelve",
-      body: "Una factura puede ser falsa: guardamos su huella digital para que nadie la cambie después, pero comprobar que el gasto ocurrió sigue siendo trabajo de las personas. Y hoy los vecinos no pagan su cuota dentro de Quintti: ese es el siguiente paso.",
-    },
-  },
-
-  faq: {
-    id: "preguntas",
-    eyebrow: "Preguntas",
-    title: "Lo que suele preguntarse.",
-    items: [
-      {
-        question: "¿Quintti guarda el dinero del edificio?",
-        answer:
-          "No. El dinero vive en un contrato público en Stellar. Ni nosotros ni la administración podemos moverlo fuera de las reglas.",
-      },
-      {
-        question: "¿Los vecinos necesitan una billetera?",
-        answer:
-          "Para ver las cuentas, no: basta un enlace. La billetera la usan quienes firman, como el consejo.",
-      },
-      {
-        question: "¿Y si el consejo se pone de acuerdo?",
-        answer:
-          "Pueden aprobar un gasto que respete el presupuesto y los proveedores aprobados. La diferencia es que queda registrado a la vista de todos, y el daño tiene un tope.",
-      },
-      {
-        question: "¿Quién es la asamblea dentro de la cuenta?",
-        answer:
-          "En este prototipo, una cuenta que representa a la asamblea. Es la simplificación más importante. Una versión real necesitaría un mecanismo colectivo, como la firma de varios representantes.",
-      },
-      {
-        question: "¿Ya está en producción?",
-        answer:
-          "No. Es un prototipo del hackathon Código Cordillera que funciona en la red de pruebas de Stellar, sin dinero real y sin auditoría.",
-      },
-      {
-        question: "¿Reemplaza a la asamblea o a la ley?",
-        answer: "No. Es una herramienta de transparencia y control interno.",
-      },
-    ],
-  },
-
-  final: {
-    id: "cierre",
-    title: "Que la cuota deje de ser un acto de fe.",
-    body: "Recorre el ejemplo paso a paso, o revisa el código y el contrato que corren en la red de pruebas.",
-    primary: "Ver el ejemplo",
-    app: "Abrir la cuenta de prueba",
-    code: "Ver el código",
-    contract: "Ver el contrato en la red",
   },
 
   footer: {
-    line: "Prototipo para Código Cordillera (BAF × Stellar). Funciona en la red de pruebas de Stellar, sin dinero real y sin auditoría.",
-    legal: "Es una herramienta de transparencia y control interno; no sustituye a la asamblea ni a la ley.",
+    line: "Prototipo en la red de pruebas de Stellar. Es una herramienta de transparencia y control interno; no sustituye a la asamblea ni a la ley.",
   },
 } as const;
-
-export const REPOSITORY_URL = "https://github.com/ErickGS28/quintti";

@@ -92,8 +92,8 @@ const LARGE_TEXT = 3;
 describe("chapter tones", () => {
   const all = tones();
 
-  it("defines the six tones the landing page uses", () => {
-    expect([...all.keys()].sort()).toEqual(["canvas", "finale", "mist", "periwinkle", "royal", "wine"]);
+  it("defines the four tones the landing page uses", () => {
+    expect([...all.keys()].sort()).toEqual(["lilac", "mist", "rose", "royal"]);
   });
 
   for (const [name, variables] of all) {

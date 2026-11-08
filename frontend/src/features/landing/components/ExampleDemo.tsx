@@ -74,7 +74,7 @@ function CouncilAvatars({ approvals }: { approvals: number }) {
           <li key={name} className="flex flex-col items-center gap-1">
             <span
               className={classNames(
-                "relative flex size-12 items-center justify-center rounded-full text-lg font-semibold transition-colors duration-300",
+                "relative flex size-10 items-center justify-center rounded-full text-base font-semibold transition-colors duration-300",
                 signed ? "bg-royal text-on-royal" : "bg-mist text-ink-soft ring-1 ring-hairline-strong",
               )}
             >
@@ -85,7 +85,7 @@ function CouncilAvatars({ approvals }: { approvals: number }) {
                 </span>
               )}
             </span>
-            <span className="text-sm text-ink-faint">{name}</span>
+            <span className="text-sm text-ink-faint short:hidden">{name}</span>
             <span className="sr-only">{signed ? example.councilSigned : example.councilPending}</span>
           </li>
         );
@@ -105,12 +105,15 @@ export function ExampleDemo() {
   const last = step === DEMO_STEPS[DEMO_STEPS.length - 1];
 
   return (
-    <Card padding="lg" className="mt-8 sm:p-8">
+    <Card padding="lg" className="mt-[clamp(1.25rem,3.5vh,2rem)] short:p-4 sm:p-6 sm:short:p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="flex items-center gap-2 text-lg font-bold text-ink">
-          <Building2 className="size-5 text-royal" aria-hidden="true" />
-          {example.building}
-        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="flex items-center gap-2 text-lg font-bold text-ink">
+            <Building2 className="size-5 text-royal" aria-hidden="true" />
+            {example.building}
+          </p>
+          <Badge tone="neutral" className="text-xs">{example.note}</Badge>
+        </div>
         <div className="flex items-center gap-3">
           <ol className="flex items-center gap-1.5" aria-hidden="true">
             {DEMO_STEPS.map((candidate) => (
@@ -129,11 +132,11 @@ export function ExampleDemo() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 lg:min-h-[21rem] lg:grid-cols-3">
-        <div className="rounded-card bg-mist p-6">
+      <div className="mt-6 grid gap-4 short:mt-4 lg:min-h-[clamp(15rem,34vh,19rem)] lg:grid-cols-3">
+        <div className="rounded-card bg-mist p-4 sm:p-5">
           <PanelTitle icon={<Landmark className="size-4" aria-hidden="true" />}>{example.accountTitle}</PanelTitle>
           <p className="mt-3 text-base text-ink-faint">{example.balanceLabel}</p>
-          <p className="text-4xl font-bold tracking-tight text-royal tabular-nums">{formatPesos(view.balance)}</p>
+          <p className="text-3xl font-bold tracking-tight text-royal tabular-nums">{formatPesos(view.balance)}</p>
 
           <div className="mt-6 flex items-baseline justify-between gap-2 text-base">
             <span className="font-semibold text-ink">{example.budgetLabel}</span>
@@ -147,7 +150,7 @@ export function ExampleDemo() {
           </p>
         </div>
 
-        <div className="rounded-card bg-mist p-6">
+        <div className="rounded-card bg-mist p-4 sm:p-5">
           <PanelTitle icon={<FileText className="size-4" aria-hidden="true" />}>{example.expenseTitle}</PanelTitle>
           {view.firstExpense === "none" ? (
             <p className="mt-4 text-base text-ink-faint">{example.expenseEmpty}</p>
@@ -167,35 +170,31 @@ export function ExampleDemo() {
                   {view.firstExpense === "paid" ? example.status.paid : example.status.pending}
                 </Badge>
               </div>
-              <div className="mt-5">
+              <div className="mt-4">
                 <CouncilAvatars approvals={view.approvals} />
               </div>
             </div>
           )}
 
           {view.secondExpense === "rejected" && (
-            <div role="alert" className="mt-5 animate-pop rounded-control bg-coral-soft p-4">
-              <p className="flex items-center gap-2 font-semibold text-wine">
-                <X className="size-4" strokeWidth={3} aria-hidden="true" />
+            <p role="alert" className="mt-3 flex animate-pop items-center gap-2 rounded-control bg-coral-soft px-3 py-2 font-semibold text-wine">
+                <X className="size-4 shrink-0" strokeWidth={3} aria-hidden="true" />
                 {formatPesos(DEMO_AMOUNTS.secondExpense)} · {example.status.rejected}
               </p>
-              <p className="mt-1 text-base font-semibold text-wine">{example.reject.title}</p>
-              <p className="mt-1 text-base text-ink-soft">{example.reject.body}</p>
-            </div>
           )}
         </div>
 
-        <div className="rounded-card bg-mist p-6">
+        <div className="rounded-card bg-mist p-4 sm:p-5">
           <PanelTitle icon={<ScrollText className="size-4" aria-hidden="true" />}>{example.ledgerTitle}</PanelTitle>
           {view.ledger.length === 0 ? (
             <p className="mt-4 text-base text-ink-faint">{example.ledgerEmpty}</p>
           ) : (
-            <ul className="mt-4 grid gap-2.5">
+            <ul className="mt-3 grid gap-2 short:gap-1.5">
               {view.ledger.map((entry, index) => (
                 <li
                   key={`${entry.kind}-${index}`}
                   className={classNames(
-                    "flex animate-pop items-start gap-2.5 rounded-control px-3 py-2 text-base",
+                    "flex animate-pop items-start gap-2.5 rounded-control px-3 py-1.5 text-[0.9375rem] short:py-1",
                     entry.kind === "rejected" ? "bg-coral-soft text-wine" : "bg-cloud text-ink-soft",
                   )}
                 >
@@ -220,8 +219,8 @@ export function ExampleDemo() {
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-        <p key={step} aria-live="polite" className="max-w-2xl animate-pop text-lg leading-relaxed text-pretty text-ink-soft sm:min-h-[6rem] sm:text-xl">
+      <div className="mt-6 flex flex-col gap-5 short:mt-4 sm:flex-row sm:items-center sm:justify-between">
+        <p key={step} aria-live="polite" className="max-w-2xl animate-pop text-lg leading-relaxed text-pretty text-ink-soft sm:min-h-[4.5rem] sm:text-lg">
           {text.caption}
         </p>
         <Button size="lg" shape="pill" onClick={() => setStep(nextStep(step))} className="shrink-0">

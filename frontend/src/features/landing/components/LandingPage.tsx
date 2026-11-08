@@ -1,13 +1,9 @@
 import { PageWash } from "@/components/atoms/PageWash";
-import { CursorGlow } from "@/components/organisms/CursorGlow";
-import { ScrollToTop } from "@/components/organisms/ScrollToTop";
 import { SlideRail } from "@/components/organisms/SlideRail";
 import { SpotlightTracker } from "@/components/organisms/SpotlightTracker";
 import { landingCopy } from "@/copy/landing.es";
 
 import { ExampleSection } from "./ExampleSection";
-import { FaqSection } from "./FaqSection";
-import { FinalCta } from "./FinalCta";
 import { Hero } from "./Hero";
 import { LandingFooter } from "./LandingFooter";
 import { LandingNav } from "./LandingNav";
@@ -15,27 +11,27 @@ import { ProblemSection } from "./ProblemSection";
 import { SolutionSection } from "./SolutionSection";
 import { WhyStellarSection } from "./WhyStellarSection";
 
-const { nav, hero, problem, solution, example, why, faq, final } = landingCopy;
+const { nav, hero, problem, solution, example, why } = landingCopy;
 
-/** The chapters in reading order, for the pager on the right edge. */
+/** The screens a reader can jump to, for the pager on the right edge. */
 const RAIL_ITEMS = [
   { id: hero.id, label: nav.home },
   { id: problem.id, label: nav.problem },
   { id: solution.id, label: nav.solution },
   { id: example.id, label: nav.example },
   { id: why.id, label: nav.why },
-  { id: faq.id, label: nav.faq },
-  { id: final.id, label: nav.closing },
 ];
 
 /**
- * Presentation page, told as a stack of full-screen chapters: the problem, the solution, an example
- * you can click through, and why it needs Stellar. Menu on top, hero right below it. Static apart
- * from the example, the pager and the scroll button.
+ * The presentation page, one idea per screen: the hero, the problem, the solution (the rules, then
+ * the flow), a clickable example, and why it needs Stellar. Scrolling settles on each screen
+ * (`data-snap-page` turns it on). Static apart from the example and the pager.
  */
 export function LandingPage() {
   return (
-    <div className="relative isolate">
+    <div data-snap-page className="relative isolate">
+      {/* A snap point at the very top, so the page can come to rest on the hero. */}
+      <div aria-hidden="true" className="h-0 snap-start" />
       <PageWash />
       <LandingNav />
       <SlideRail label={nav.railLabel} items={RAIL_ITEMS} />
@@ -45,13 +41,9 @@ export function LandingPage() {
         <SolutionSection />
         <ExampleSection />
         <WhyStellarSection />
-        <FaqSection />
-        <FinalCta />
       </main>
       <LandingFooter />
-      <ScrollToTop label={nav.scrollTop} />
       <SpotlightTracker />
-      <CursorGlow />
     </div>
   );
 }
