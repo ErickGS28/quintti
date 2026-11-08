@@ -1,4 +1,4 @@
-import { BadgeCheck, Gauge, UsersRound } from "lucide-react";
+// import { BadgeCheck, Gauge, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Card } from "@/components/atoms/Card";
@@ -13,11 +13,11 @@ import { ReceiptFigure } from "../figures/ReceiptFigure";
 
 const { solution } = landingCopy;
 
-const RULE_ICONS: ReactNode[] = [
-  <Gauge key="limit" className="size-6" aria-hidden="true" />,
-  <BadgeCheck key="vendors" className="size-6" aria-hidden="true" />,
-  <UsersRound key="council" className="size-6" aria-hidden="true" />,
-];
+// const RULE_ICONS: ReactNode[] = [
+//   <Gauge key="limit" className="size-6" aria-hidden="true" />,
+//   <BadgeCheck key="vendors" className="size-6" aria-hidden="true" />,
+//   <UsersRound key="council" className="size-6" aria-hidden="true" />,
+// ];
 
 const FIGURES: ReactNode[] = [
   <BudgetFigure key="budget" />,
@@ -26,10 +26,11 @@ const FIGURES: ReactNode[] = [
   <ReceiptFigure key="receipt" />,
 ];
 
-/** What Quintti does, in two screens on the one deep tone: the three rules, then the four steps of an expense. */
+/** What Quintti does. Two screens exist, the three rules and the four steps of an expense; only the steps are on for now. */
 export function SolutionSection() {
   return (
     <>
+      {/* The three-rules screen ("La solución") is off for now to keep the walkthrough short. Restore it by uncommenting, together with RULE_ICONS and the imports above.
       <Chapter id={solution.id} tone="royal">
         <ScreenHeading eyebrow={solution.eyebrow} title={solution.title} lead={solution.lead} />
         <ul className="mt-[clamp(1.5rem,5vh,3rem)] grid gap-4 md:grid-cols-3">
@@ -49,8 +50,9 @@ export function SolutionSection() {
           ))}
         </ul>
       </Chapter>
+      */}
 
-      <Chapter tone="royal">
+      <Chapter id={solution.stepsId} tone="royal">
         <ScreenHeading eyebrow={solution.stepsEyebrow} title={solution.stepsTitle} />
         <ol className="mt-[clamp(1.5rem,5vh,3rem)] grid gap-x-5 gap-y-8 md:grid-cols-2 xl:grid-cols-4">
           {solution.steps.map((step, index) => (

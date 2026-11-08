@@ -13,6 +13,7 @@ export const landingCopy = {
     menuLabel: "Secciones de la página",
     problem: "El problema",
     solution: "La solución",
+    flow: "Cómo funciona",
     example: "Un ejemplo",
     why: "Por qué Stellar",
     railLabel: "Pantallas de la página",
@@ -72,6 +73,7 @@ export const landingCopy = {
         body: "Se paga cuando suficientes consejeros aprueban, por ejemplo 2 de 3.",
       },
     ],
+    stepsId: "flujo",
     stepsEyebrow: "Cómo funciona",
     stepsTitle: "Así fluye un gasto",
     steps: [
