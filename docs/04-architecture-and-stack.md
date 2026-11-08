@@ -49,7 +49,8 @@ quintti/
 │   └── src/
 │       ├── app/                   routes, composition only
 │       │   ├── app/               the treasury app: _shell (session, sidebar) and _screens, one per route
-│       │   └── hiw/               the manual at /hiw: roles and flow, not linked from anywhere
+│       │   ├── hiw/               the manual at /hiw: roles and flow, not linked from anywhere
+│       │   └── negocio/           business model and plan at /negocio, not linked from anywhere
 │       ├── features/              one folder per capability, each with an index.ts
 │       │   ├── landing/           the presentation page: one screen per idea, illustrations and the clickable example
 │       │   ├── public-view/       reads the treasury state: services, hooks, the expense list, budget lines, approvals

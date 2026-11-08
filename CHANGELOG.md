@@ -10,10 +10,11 @@ Updated: 8 November 2026 (night).
 |------|-------|
 | Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 16 decisions |
 | Treasury contract | Implemented and unit tested (78 tests). Development deployment on Stellar testnet |
-| Web app: non-visual foundation | Built and tested (235 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
+| Web app: non-visual foundation | Built and tested (240 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
 | Web app: landing page | A presentation, one idea per screen and one window tall, in calm tones: the hero, the problem, the solution (two screens), a clickable example and why Stellar (two screens). No hackathon, code links or FAQ. Every screen fits at 1280x720 and 1366x650; on a phone they grow with their content |
 | Web app: treasury app | Three screens at `/app`, checked in a browser against the development treasury on testnet: Resumen, Gastos (list, detail with approvals and invoice check, propose, approve, cancel) and Reglas (budget, vendors, who decides). Same flow for every role; the connected wallet decides the buttons |
 | Manual | A hidden page at `/hiw`: the contract's rules, each role with what it can and cannot do, the flow of an expense, a map of the screens, a guide to testing with a wallet and a live panel of who holds each role in the deployed contract |
+| Business model and plan | A hidden page at `/negocio`: subscription per building, three sources of income, a four-step plan from validation to a first real building, and the metrics that follow it. Figures are assumptions to validate |
 | Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
 | Real wallet signing | Done with Varial (Freighter) on testnet: connect, propose, approve and pay with real signatures. The picker is themed |
 | Contract evidence on testnet | Done: a demo deployment with Spanish categories and a full paid expense, seeded by `scripts/seed-demo.ps1`, with every transaction linked from the README |
@@ -31,7 +32,8 @@ Demo deployment (temporary, the testnet is reset periodically; its transactions 
 
 ## Unreleased
 
-Nothing yet.
+### Added
+- A hidden page at `/negocio` for the business model and the plan after the hackathon, in the landing page's style (four one-window screens): what a building pays against what it moves (a $2.000 per apartment subscription against $12.000.000 a month, under 1 %), the three sources of income, the four steps of the plan (validate, pilot, complete, production) and what is done first and how it is measured. The figures are illustrative and the page says so. Not linked from the landing, `noindex`. Its text is in `copy/negocio.es.ts`, with a test of the arithmetic behind the sentences.
 
 ## 2026-11-08 (recording day)
 

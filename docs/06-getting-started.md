@@ -159,7 +159,7 @@ To act in the app, connect a wallet on testnet whose account holds a role: the a
 
 ### The manual
 
-The app has a hidden page at /hiw (http://localhost:3000/hiw) that explains the roles and the flow of an expense, lists who holds each role in the deployed contract and walks through testing with a wallet. Nothing links to it: share its address.
+The app has a hidden page at /hiw (http://localhost:3000/hiw) that explains the roles and the flow of an expense, lists who holds each role in the deployed contract and walks through testing with a wallet. Nothing links to it: share its address. The business model and the plan after the hackathon are on another hidden page, /negocio, in the landing page's style.
 
 ### Check the code against a real treasury
 

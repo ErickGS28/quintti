@@ -109,3 +109,5 @@ Concentric rings that spread from a point, like a ripple on water or a hovering 
 ## The manual
 
 `/hiw` is a plain, light page in the same components: a table of contents, the four contract rules, one card per role with what it can and cannot do, the five steps of an expense, a map of the screens, a guide to testing with a wallet next to a live panel of who holds each role in the deployed contract, a glossary and the limits. It is not linked from the app or the landing page and is marked `noindex`; the team shares its address. The text is in `frontend/src/copy/hiw.es.ts`.
+
+`/negocio` is the business model and the plan after the hackathon, built like the landing page (four one-window screens in the royal, lilac, mist and royal tones, with the same menu and pager): what a building moves against what it pays, the sources of income, the steps ahead and how they are measured. It is not linked from the landing page and is marked `noindex`. The figures are illustrative and labelled as such. The text is in `frontend/src/copy/negocio.es.ts`.
