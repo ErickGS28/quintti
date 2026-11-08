@@ -20,12 +20,10 @@ import { SessionProvider, useSession } from "./session";
 const ICON = "size-[1.125rem]";
 
 function BuildingCard() {
-  const { buildingName, buildingUnits } = useSession();
   const network = getConfig().network;
   return (
     <div className="rounded-card bg-mist px-4 py-3.5">
-      <p className="truncate text-[0.9375rem] font-semibold text-ink">{buildingName}</p>
-      {buildingUnits && <p className="text-sm text-ink-faint">{appCopy.building.units(buildingUnits)}</p>}
+      <p className="truncate text-[0.9375rem] font-semibold text-ink">{appCopy.building.fallbackName}</p>
       <div className="mt-2.5 text-royal">
         <Eyebrow dot="live" className="text-[0.625rem]">
           {appCopy.network.short[network]}

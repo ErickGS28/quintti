@@ -15,7 +15,7 @@ import { ReadError, ScreenSkeleton } from "./states";
 
 /** Drop an invoice and find the expense it belongs to, if any. Nothing leaves the browser. */
 export function VerifyScreen() {
-  const { expenses, textFor } = useSession();
+  const { expenses } = useSession();
   const { verify: copy, expenses: listCopy } = appCopy;
 
   if (expenses.isPending) return <ScreenSkeleton rows={1} />;
@@ -24,7 +24,7 @@ export function VerifyScreen() {
   const candidates = expenses.data.map((expense) => ({
     id: expense.id,
     invoiceHash: expense.invoiceHash,
-    title: `${listCopy.number(expense.id)} · ${textFor(expense.id)?.description ?? categoryLabel(expense.category)}`,
+    title: `${listCopy.number(expense.id)} · ${categoryLabel(expense.category)}`,
   }));
 
   return (

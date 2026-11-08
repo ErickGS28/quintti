@@ -3,7 +3,6 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
 // Imports go one way: app → features → components/copy → lib → contracts/generated.
-// A feature has one public entry, index.ts, and optionally server.ts for route handlers.
 // See docs/04-architecture-and-stack.md.
 const layer = (files, group, message) => ({
   files,
@@ -25,15 +24,8 @@ const eslintConfig = defineConfig([
   ),
   layer(
     ["src/app/**", "src/components/**"],
-    ["@/features/*/*", "!@/features/*/server"],
-    "Import a feature through its index.ts (or server.ts from a route handler), not its internals",
-  ),
-  // Code that runs in the browser never reaches the secret key: only route handlers and the
-  // features' server code read it.
-  layer(
-    ["src/components/**", "src/features/*/components/**", "src/features/*/hooks/**", "src/app/**/*.tsx"],
-    ["@/features/*/server", "@/lib/supabase/*", "@/config/server-env"],
-    "Browser code cannot import server-only modules: they read the Supabase secret key",
+    ["@/features/*/*"],
+    "Import a feature through its index.ts, not its internals",
   ),
   // Override default ignores of eslint-config-next.
   globalIgnores([

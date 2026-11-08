@@ -18,7 +18,7 @@ import { ReadError, ScreenSkeleton } from "./states";
 
 /** The accounts that may be paid, what each has received, and, for the assembly, a way to change the list. */
 export function VendorsScreen() {
-  const { snapshot, expenses, permissions, vendorNameFor } = useSession();
+  const { snapshot, expenses, permissions } = useSession();
   const { vendors: copy } = appCopy;
   const config = getConfig();
 
@@ -45,7 +45,6 @@ export function VendorsScreen() {
                     <div className="min-w-0 flex-1">
                       <AddressTag
                         address={vendor}
-                        name={vendorNameFor(vendor)}
                         explorerUrl={accountUrl(config, vendor)}
                         labels={appCopy.address}
                       />

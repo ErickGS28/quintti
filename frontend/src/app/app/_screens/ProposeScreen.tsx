@@ -7,20 +7,15 @@ import { Card } from "@/components/atoms/Card";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PageHeader } from "@/components/molecules/PageHeader";
 import { appCopy } from "@/copy/app.es";
-import { ProposeExpenseForm, type AfterProposal, type ProposalExtras } from "@/features/expenses";
-import { canUploadInvoice, useAttachExpenseDetails } from "@/features/expense-details";
+import { ProposeExpenseForm } from "@/features/expenses";
 
 import { appRoutes } from "../_shell/routes";
 import { useSession } from "../_shell/session";
 import { ReadError, ScreenSkeleton } from "./states";
 
-/**
- * Proposing an expense. The form lives in the expenses feature; this screen joins it with the
- * off-chain details, so the description and the invoice are saved right after the proposal.
- */
+/** Proposing an expense. The form lives in the expenses feature; this screen only decides who may see it. */
 export function ProposeScreen() {
-  const { snapshot, details, permissions, vendorNameFor } = useSession();
-  const attach = useAttachExpenseDetails();
+  const { snapshot, permissions } = useSession();
   const { propose: copy } = appCopy;
 
   if (snapshot.isPending) return <ScreenSkeleton rows={1} />;
@@ -54,22 +49,12 @@ export function ProposeScreen() {
     );
   }
 
-  async function afterProposal(expenseId: number, extras: ProposalExtras): Promise<AfterProposal> {
-    if (!canUploadInvoice(extras.invoice)) return "skipped";
-    await attach.mutateAsync({ expenseId, ...extras });
-    return "saved";
-  }
-
-  const vendors = snapshot.data.vendors.map((address) => ({ address, label: vendorNameFor(address) }));
-
   return (
     <div className="grid gap-8">
       {header}
       <ProposeExpenseForm
         budgets={snapshot.data.budgets}
-        vendors={vendors}
-        detailsEnabled={details.configured}
-        afterProposal={afterProposal}
+        vendors={snapshot.data.vendors}
         expenseHref={appRoutes.expense}
       />
     </div>

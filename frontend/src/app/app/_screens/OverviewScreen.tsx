@@ -70,7 +70,7 @@ function RolePanel() {
 
 /** The building at a glance: money, budget, what waits for signatures and who decides. */
 export function OverviewScreen() {
-  const { snapshot, expenses, permissions, buildingName, nameFor, textFor } = useSession();
+  const { snapshot, expenses, permissions, nameFor } = useSession();
   const { overview, roles, address: addressCopy } = appCopy;
   const config = getConfig();
 
@@ -94,7 +94,7 @@ export function OverviewScreen() {
             <Eyebrow dot="live">{overview.eyebrow}</Eyebrow>
           </span>
         }
-        title={buildingName}
+        title={appCopy.building.fallbackName}
         description={overview.description}
         actions={
           permissions.canPropose ? (
@@ -164,7 +164,6 @@ export function OverviewScreen() {
                 council={treasury.council}
                 threshold={treasury.threshold}
                 hrefFor={appRoutes.expense}
-                textFor={textFor}
               />
             ) : (
               <EmptyState

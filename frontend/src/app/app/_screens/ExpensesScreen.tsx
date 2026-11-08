@@ -20,7 +20,7 @@ type Filter = "all" | ExpenseStatusView;
 
 /** Every expense, newest first, filtered by state. */
 export function ExpensesScreen() {
-  const { snapshot, expenses, permissions, textFor } = useSession();
+  const { snapshot, expenses, permissions } = useSession();
   const [filter, setFilter] = useState<Filter>("all");
   const { expenses: copy } = appCopy;
 
@@ -66,7 +66,6 @@ export function ExpensesScreen() {
             council={snapshot.data.council}
             threshold={snapshot.data.threshold}
             hrefFor={appRoutes.expense}
-            textFor={textFor}
           />
         ) : (
           <EmptyState

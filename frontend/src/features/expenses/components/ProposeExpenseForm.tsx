@@ -8,7 +8,6 @@ import { Button, buttonStyles } from "@/components/atoms/Button";
 import { Card } from "@/components/atoms/Card";
 import { Input } from "@/components/atoms/Input";
 import { Select } from "@/components/atoms/Select";
-import { Textarea } from "@/components/atoms/Textarea";
 import { FileDrop } from "@/components/molecules/FileDrop";
 import { FormField } from "@/components/molecules/FormField";
 import { TxFeedback } from "@/components/molecules/TxFeedback";
@@ -26,22 +25,13 @@ import { txFeedbackFor } from "@/lib/ui/tx-feedback";
 
 import { useExpenseActions } from "../hooks/use-expense-actions";
 
-/** What happened to the description and the invoice after the proposal reached the network. */
-export type AfterProposal = "saved" | "skipped";
-
-export type ProposalExtras = { description: string; vendorLabel: string; invoice: File };
-
 type ProposeExpenseFormProps = {
   budgets: ReadonlyArray<{ category: string; remaining: bigint }>;
-  vendors: ReadonlyArray<{ address: string; label: string | null }>;
-  /** Whether the description and the invoice can be saved off-chain after the proposal. */
-  detailsEnabled: boolean;
-  /** Saves the description and the invoice for the new expense. Provided by the screen. */
-  afterProposal?: (expenseId: number, extras: ProposalExtras) => Promise<AfterProposal>;
+  vendors: readonly string[];
   expenseHref: (id: number) => string;
 };
 
-type Errors = Partial<Record<"category" | "vendor" | "amount" | "invoice" | "description", string>>;
+type Errors = Partial<Record<"category" | "vendor" | "amount" | "invoice", string>>;
 
 const ACCEPT = "application/pdf,image/png,image/jpeg,image/webp";
 
@@ -59,25 +49,16 @@ function readAmount(text: string): bigint | null {
  * invoice's fingerprint, and a live checklist shows the rules the contract will apply, so a proposal
  * that would be rejected is caught before anyone is asked to sign.
  */
-export function ProposeExpenseForm({
-  budgets,
-  vendors,
-  detailsEnabled,
-  afterProposal,
-  expenseHref,
-}: ProposeExpenseFormProps) {
+export function ProposeExpenseForm({ budgets, vendors, expenseHref }: ProposeExpenseFormProps) {
   const { propose: copy, tx } = appCopy;
   const { propose } = useExpenseActions();
 
   const [category, setCategory] = useState("");
   const [vendor, setVendor] = useState("");
   const [amountText, setAmountText] = useState("");
-  const [description, setDescription] = useState("");
-  const [vendorLabel, setVendorLabel] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [fingerprint, setFingerprint] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
-  const [extrasState, setExtrasState] = useState<"idle" | "saving" | AfterProposal>("idle");
 
   const line = budgets.find((budget) => budget.category === category);
   const amount = readAmount(amountText);
@@ -102,7 +83,6 @@ export function ProposeExpenseForm({
     if (amount === null || amount <= 0n) found.amount = copy.amountHint;
     else if (fits === false) found.amount = copy.overBudget;
     if (!file) found.invoice = copy.invoicePrompt;
-    if (detailsEnabled && description.trim().length < 3) found.description = copy.descriptionPlaceholder;
     return found;
   }
 
@@ -119,16 +99,6 @@ export function ProposeExpenseForm({
       title: copy.proposed(receipt.value),
       action: { label: tx.explorer, href: receipt.explorerUrl },
     });
-
-    if (detailsEnabled && afterProposal) {
-      setExtrasState("saving");
-      const result = await afterProposal(receipt.value, {
-        description: description.trim(),
-        vendorLabel: vendorLabel.trim(),
-        invoice: file,
-      }).catch(() => "skipped" as const);
-      setExtrasState(result);
-    }
   }
 
   function reset() {
@@ -136,12 +106,9 @@ export function ProposeExpenseForm({
     setCategory("");
     setVendor("");
     setAmountText("");
-    setDescription("");
-    setVendorLabel("");
     setFile(null);
     setFingerprint(null);
     setErrors({});
-    setExtrasState("idle");
   }
 
   if (propose.isSuccess && propose.data) {
@@ -154,17 +121,11 @@ export function ProposeExpenseForm({
         <h2 className="mt-5 text-2xl font-semibold tracking-tight text-ink">{copy.proposed(id)}</h2>
         <div className="mt-5 text-left">
           <TxFeedback
-            state={
-              extrasState === "saving"
-                ? { status: "pending", message: copy.uploading }
-                : extrasState === "saved"
-                  ? { status: "success", message: copy.uploaded }
-                  : {
-                      status: "success",
-                      message: extrasState === "skipped" ? copy.uploadSkipped : copy.proposedBody,
-                      link: { label: tx.explorer, href: propose.data.explorerUrl },
-                    }
-            }
+            state={{
+              status: "success",
+              message: copy.proposedBody,
+              link: { label: tx.explorer, href: propose.data.explorerUrl },
+            }}
           />
         </div>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -238,44 +199,14 @@ export function ProposeExpenseForm({
               onChange={(event) => setVendor(event.target.value)}
             >
               <option value="">{copy.vendorPlaceholder}</option>
-              {vendors.map((option) => (
-                <option key={option.address} value={option.address}>
-                  {option.label ? `${option.label} · ${shortenAddress(option.address)}` : shortenAddress(option.address, 6, 6)}
+              {vendors.map((address) => (
+                <option key={address} value={address}>
+                  {shortenAddress(address, 6, 6)}
                 </option>
               ))}
             </Select>
           )}
         </FormField>
-
-        {detailsEnabled ? (
-          <div className="grid gap-6 sm:grid-cols-2">
-            <FormField label={copy.descriptionLabel} error={errors.description} hint={copy.descriptionHint}>
-              {(control) => (
-                <Textarea
-                  {...control}
-                  rows={2}
-                  maxLength={500}
-                  placeholder={copy.descriptionPlaceholder}
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
-                />
-              )}
-            </FormField>
-            <FormField label={copy.vendorLabel}>
-              {(control) => (
-                <Input
-                  {...control}
-                  maxLength={120}
-                  placeholder={copy.vendorLabelPlaceholder}
-                  value={vendorLabel}
-                  onChange={(event) => setVendorLabel(event.target.value)}
-                />
-              )}
-            </FormField>
-          </div>
-        ) : (
-          <p className="rounded-control bg-mist px-4 py-3 text-sm text-ink-soft">{copy.detailsOff}</p>
-        )}
 
         <FormField label={copy.invoice} error={errors.invoice}>
           {(control) => (

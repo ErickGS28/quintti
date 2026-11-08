@@ -27,7 +27,6 @@ export const appCopy = {
 
   building: {
     fallbackName: "Cuenta del edificio",
-    units: (units: number) => `${units} apartamentos`,
   },
 
   network: {
@@ -141,7 +140,6 @@ export const appCopy = {
     emptyFiltered: "No hay gastos con este estado.",
     number: (id: number) => `Gasto #${id}`,
     signatures: (valid: number, needed: number) => `${valid} de ${needed} firmas`,
-    noDescription: "Sin descripción",
   },
 
   detail: {
@@ -155,8 +153,8 @@ export const appCopy = {
     paidAt: "Pagado",
     fingerprint: "Huella de la factura",
     invoiceTitle: "Factura",
-    invoiceDownload: "Descargar factura",
-    invoiceMissing: "La factura no se subió a Quintti. Pídela a la administración y compárala aquí.",
+    invoiceMissing:
+      "Quintti solo guarda la huella de la factura, no el archivo. Pídelo a la administración y compáralo aquí.",
     approvalsTitle: "Firmas del consejo",
     approvalsHint: (missing: number) =>
       missing === 0 ? "Ya tiene las firmas necesarias." : `Falta${missing === 1 ? "" : "n"} ${missing} firma${missing === 1 ? "" : "s"} para pagar.`,
@@ -196,11 +194,6 @@ export const appCopy = {
     vendorNone: "La asamblea todavía no aprobó proveedores.",
     amount: "Monto",
     amountHint: "Usa punto o coma para los decimales.",
-    descriptionLabel: "Descripción",
-    descriptionPlaceholder: "Por ejemplo: reparación del motor del ascensor",
-    descriptionHint: "La verán los vecinos junto al gasto.",
-    vendorLabel: "Nombre del proveedor",
-    vendorLabelPlaceholder: "Por ejemplo: Técnico de ascensores",
     invoice: "Factura",
     invoicePrompt: "Arrastra la factura o haz clic para elegirla",
     invoiceHint: "PDF o imagen. Solo su huella va a la red.",
@@ -218,12 +211,8 @@ export const appCopy = {
     proposed: (id: number) => `Gasto #${id} propuesto`,
     proposedBody: "Quedó registrado en la red. Ahora el consejo puede firmarlo.",
     remainingLabel: "Disponible en la categoría",
-    uploading: "Guardando la descripción y la factura…",
-    uploaded: "Descripción y factura guardadas. Cualquier vecino puede descargarla.",
-    uploadSkipped: "El gasto quedó en la red. La descripción y la factura no se guardaron en Quintti.",
     viewExpense: "Ver el gasto",
     another: "Proponer otro",
-    detailsOff: "La descripción y la factura no se guardarán: el almacenamiento de Quintti no está conectado.",
   },
 
   budget: {

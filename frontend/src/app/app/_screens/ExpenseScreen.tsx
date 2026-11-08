@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Download, FileQuestion } from "lucide-react";
+import { ArrowLeft, FileQuestion } from "lucide-react";
 import Link from "next/link";
 
 import { buttonStyles } from "@/components/atoms/Button";
@@ -12,7 +12,6 @@ import { Panel } from "@/components/molecules/Panel";
 import { getConfig } from "@/config/env";
 import { appCopy } from "@/copy/app.es";
 import { ApproveExpenseButton, CancelExpenseButton } from "@/features/expenses";
-import { invoiceUrl } from "@/features/expense-details";
 import { InvoiceCheck } from "@/features/invoice-check";
 import { ApprovalTrack, ExpenseStatusBadge } from "@/features/public-view";
 import { categoryLabel } from "@/lib/format/category";
@@ -36,13 +35,9 @@ function BackLink() {
   );
 }
 
-function fileSize(bytes: number): string {
-  return bytes < 1024 * 1024 ? `${Math.ceil(bytes / 1024)} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
 /** One expense: what, to whom, how much, its invoice, its signatures, and what you can do with it. */
 export function ExpenseScreen({ idText }: { idText: string }) {
-  const { snapshot, expenses, details, address, permissions, nameFor, textFor, vendorNameFor } = useSession();
+  const { snapshot, expenses, address, permissions, nameFor } = useSession();
   const { detail: copy, expenses: listCopy, tx } = appCopy;
   const config = getConfig();
 
@@ -65,9 +60,6 @@ export function ExpenseScreen({ idText }: { idText: string }) {
   }
 
   const treasury = snapshot.data;
-  const text = textFor(expense.id);
-  const saved = details.byId.get(expense.id);
-  const vendorName = text?.vendorLabel ?? vendorNameFor(expense.vendor);
   const pending = expense.status === "pending";
   const signed = address !== null && expense.approvals.includes(address);
 
@@ -82,7 +74,7 @@ export function ExpenseScreen({ idText }: { idText: string }) {
             <ExpenseStatusBadge status={expense.status} />
           </div>
           <h1 className="mt-3 text-[length:clamp(1.75rem,3vw,2.375rem)] leading-tight font-semibold tracking-[-0.03em] text-pretty text-ink">
-            {text?.description ?? categoryLabel(expense.category)}
+            {categoryLabel(expense.category)}
           </h1>
         </div>
         <p
@@ -107,7 +99,6 @@ export function ExpenseScreen({ idText }: { idText: string }) {
                   value: (
                     <AddressTag
                       address={expense.vendor}
-                      name={vendorName}
                       explorerUrl={accountUrl(config, expense.vendor)}
                       labels={appCopy.address}
                       size="sm"
@@ -128,26 +119,7 @@ export function ExpenseScreen({ idText }: { idText: string }) {
           </Panel>
 
           <Panel title={copy.invoiceTitle}>
-            {saved ? (
-              <a
-                href={invoiceUrl(expense.id)}
-                target="_blank"
-                rel="noreferrer"
-                className="mb-5 flex items-center gap-3 rounded-control bg-mist px-4 py-3 transition-colors hover:bg-royal-soft"
-              >
-                <span aria-hidden="true" className="flex size-10 items-center justify-center rounded-full bg-royal text-on-royal">
-                  <Download className="size-4" />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold text-ink">{copy.invoiceDownload}</span>
-                  <span className="block truncate text-xs text-ink-faint">
-                    {saved.invoice.name} · {fileSize(saved.invoice.size)}
-                  </span>
-                </span>
-              </a>
-            ) : (
-              <p className="mb-5 text-sm leading-relaxed text-ink-soft">{copy.invoiceMissing}</p>
-            )}
+            <p className="mb-5 text-sm leading-relaxed text-ink-soft">{copy.invoiceMissing}</p>
             <InvoiceCheck
               single
               candidates={[

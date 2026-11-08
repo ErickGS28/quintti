@@ -11,16 +11,11 @@ import { classNames } from "@/lib/ui/class-names";
 
 import type { ExpenseView } from "../types";
 
-/** Words that describe an expense beyond what the contract stores. Provided by the caller. */
-export type ExpenseText = { description: string | null; vendorLabel: string | null };
-
 type ExpenseListProps = {
   expenses: readonly ExpenseView[];
   council: readonly string[];
   threshold: number;
   hrefFor: (id: number) => string;
-  /** Description and vendor name, when they were saved off-chain. */
-  textFor?: (id: number) => ExpenseText | null;
 };
 
 const ICONS = {
@@ -30,15 +25,14 @@ const ICONS = {
 };
 
 /** Expenses, newest first, each a link to its detail. The status is said in words, not only by color. */
-export function ExpenseList({ expenses, council, threshold, hrefFor, textFor }: ExpenseListProps) {
+export function ExpenseList({ expenses, council, threshold, hrefFor }: ExpenseListProps) {
   const { expenses: copy, status } = appCopy;
   return (
     <ul className="divide-y divide-hairline">
       {expenses.map((expense) => {
-        const text = textFor?.(expense.id) ?? null;
         const progress = approvalProgress(expense.approvals, council, threshold);
         const look = ICONS[expense.status];
-        const vendor = text?.vendorLabel || shortenAddress(expense.vendor);
+        const vendor = shortenAddress(expense.vendor);
         return (
           <li key={expense.id}>
             <Link
@@ -53,11 +47,10 @@ export function ExpenseList({ expenses, council, threshold, hrefFor, textFor }: 
               </span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[0.9375rem] font-semibold text-ink group-hover:text-royal">
-                  {text?.description || categoryLabel(expense.category)}
+                  {categoryLabel(expense.category)}
                 </p>
                 <p className="mt-0.5 truncate text-sm text-ink-faint">
-                  <span className="font-mono">#{expense.id}</span> · {categoryLabel(expense.category)} · {vendor} ·{" "}
-                  {formatLedgerTime(expense.createdAt)}
+                  <span className="font-mono">#{expense.id}</span> · {vendor} · {formatLedgerTime(expense.createdAt)}
                 </p>
               </div>
               <div className="shrink-0 text-right">
