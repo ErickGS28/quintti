@@ -1,5 +1,7 @@
 # Quintti
 
+[![CI](https://github.com/ErickGS28/quintti/actions/workflows/ci.yml/badge.svg)](https://github.com/ErickGS28/quintti/actions/workflows/ci.yml)
+
 A shared treasury for residential buildings, with the assembly's rules built into the account. Built on Stellar and Soroban.
 
 > **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested. The web app has the landing page and the treasury app: overview, expenses (propose, approve, cancel, check the invoice) and rules (budget and vendors), with Stellar Wallets Kit for signing, a hidden manual at `/hiw` and a hidden page with the business model and the plan at `/negocio`. A browser wallet has signed a full cycle on testnet and the demo deployment, with its transactions, is linked below. Testnet only, unaudited, not for real funds.
@@ -47,7 +49,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 docs/          product, design and architecture documents
 contracts/     Soroban treasury contract (Rust)
 frontend/      web app (Next.js, TypeScript): landing page, the treasury app at /app, the manual at /hiw, the business model and plan at /negocio, and tests
-scripts/       deployment and demo data, not built yet
+scripts/       deploys and seeds the demo treasury on testnet (seed-demo.ps1) and holds the demo invoices
 ```
 
 ## Quick start
