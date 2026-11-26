@@ -4,7 +4,7 @@ Notable changes to Quintti, newest first. The project has no versioned releases 
 
 ## Current state
 
-Updated: 8 November 2026 (night).
+Updated: 25 November 2026.
 
 | Area | State |
 |------|-------|
@@ -18,6 +18,7 @@ Updated: 8 November 2026 (night).
 | Visual design | Defined: light Cupertino direction, the five-color purple palette, tokens in one file. The logo is a traced vector, to be replaced by the designer's file |
 | Real wallet signing | Done with Varial (Freighter) on testnet: connect, propose, approve and pay with real signatures. The picker is themed |
 | Contract evidence on testnet | Done: a demo deployment with Spanish categories and a full paid expense, seeded by `scripts/seed-demo.ps1`, with every transaction linked from the README |
+| Collective assembly | A 2-of-3 multi-signature account as the assembly and a delay on council rotation, both shown on testnet ([decision 0017](docs/decisions/0017-a-collective-assembly.md)). The web app does not offer rotations yet |
 | Audit | None. Testnet only, not for real funds |
 
 What works today, verified on testnet:
