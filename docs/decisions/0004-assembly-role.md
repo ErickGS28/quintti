@@ -1,6 +1,6 @@
 # 0004. An assembly role changes rules but cannot move funds
 
-Status: Accepted for the prototype
+Status: Accepted for the prototype. Extended by [0017](0017-a-collective-assembly.md), which proposes a collective assembly.
 
 ## Context
 
