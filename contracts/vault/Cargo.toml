@@ -1,0 +1,17 @@
+[package]
+name = "quintti-vault"
+description = "A vault that holds a token and pays a fixed amount, once per account, to whoever presents the right code. Built for the Ship It challenge (Bóveda)."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
