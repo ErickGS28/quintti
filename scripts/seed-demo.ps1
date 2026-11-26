@@ -71,7 +71,7 @@ $token = (& stellar contract id asset --asset native --network $network).Trim()
 $deployOutput = Invoke-Stellar "deploy" @(
   "contract", "deploy", "--wasm", $wasm, "--source", "qt-admin", "--network", $network, "--alias", $Alias,
   "--", "--token", $token, "--assembly", (Address "qt-assembly"), "--administrator", (Address "qt-admin"),
-  "--council-file-path", $councilFile, "--threshold", "2"
+  "--council-file-path", $councilFile, "--threshold", "2", "--rotation_delay", "0"
 )
 $contractId = [regex]::Match($deployOutput, "C[A-Z2-7]{55}").Value
 if (-not $contractId) { throw "Could not read the contract id from:`n$deployOutput" }
