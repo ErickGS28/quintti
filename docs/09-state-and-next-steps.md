@@ -10,7 +10,7 @@ Written on 25 November 2026 so the work can resume without the conversation that
 | Collective assembly | A 2-of-3 Stellar multi-signature account works as the assembly. Shown on testnet by `scripts/demo-multisig-assembly.ps1`. Not wired into the web app |
 | Web app | Landing, `/app` (Resumen, Gastos, Reglas), `/hiw`, `/negocio`. 240 offline tests. Static export, hosted on Netlify |
 | Demo treasury | `CA7DWVPW2JWFZ7KSVGLCLFDXD7HZOY7HL7274UZW4ZQZBJCQSHQ4U237`, deployed before the rotation delay. It has the previous interface |
-| Mainnet | The web app can be built for mainnet as an unaudited beta ([0018](decisions/0018-mainnet-as-an-opt-in-beta.md)), and `scripts/deploy-treasury.ps1` deploys with your own roles. Nothing is deployed there. Guide: [10-mainnet-launch.md](10-mainnet-launch.md) |
+| Mainnet | The web app can be built for mainnet as an unaudited beta ([0018](decisions/0018-mainnet-as-an-opt-in-beta.md)), and `scripts/deploy-treasury.ps1` deploys with your own roles. Nothing is deployed there. Guide: [10-mainnet-launch.md](10-mainnet-launch.md). A plan to launch for the Ship It challenge only, undecided, is in [11-shipit-mainnet-plan.md](11-shipit-mainnet-plan.md); it is not part of the roadmap below |
 | Repository | `main` and `dev` equal, CI green on both, branch rules in [CONTRIBUTING.md](../CONTRIBUTING.md). `shipit` carries the mainnet work until it is merged |
 | Audit, pilot, fee collection | None |
 

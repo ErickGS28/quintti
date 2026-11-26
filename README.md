@@ -53,6 +53,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 | [docs/08-demo-walkthrough.md](docs/08-demo-walkthrough.md) | A two-minute walk through one full expense |
 | [docs/09-state-and-next-steps.md](docs/09-state-and-next-steps.md) | Where we are, the gaps between code and demo, and what comes next |
 | [docs/10-mainnet-launch.md](docs/10-mainnet-launch.md) | Putting a treasury on mainnet as an unaudited beta, step by step |
+| [docs/11-shipit-mainnet-plan.md](docs/11-shipit-mainnet-plan.md) | The plan to launch on mainnet for the Ship It challenge only. Optional, not decided |
 | [CHANGELOG.md](CHANGELOG.md) | Current state and history of changes |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commit style and the checks to run before pushing |
 | [docs/decisions/](docs/decisions/README.md) | Design decisions and their rationale |
