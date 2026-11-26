@@ -19,6 +19,8 @@ export type AppErrorKind =
   | "timeout"
   /** Stored data expired and has to be restored before the call can run. */
   | "state-expired"
+  /** The building was opened from a link and not saved, so nothing may be signed on it yet. */
+  | "untrusted-building"
   | "unknown";
 
 export class AppError extends Error {
