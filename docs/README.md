@@ -10,6 +10,7 @@
 | 5 | [05-risks-and-limits.md](05-risks-and-limits.md) | Known limits, risks and common objections |
 | 6 | [06-getting-started.md](06-getting-started.md) | Build, test and deploy your own copy on testnet |
 | 7 | [07-design-system.md](07-design-system.md) | Visual direction, palette, components and the landing page |
+| 8 | [08-demo-walkthrough.md](08-demo-walkthrough.md) | A two-minute walk through one full expense |
 | — | [../CHANGELOG.md](../CHANGELOG.md) | Current state and history of changes |
 | — | [decisions/](decisions/README.md) | Design decisions and their rationale |
 
