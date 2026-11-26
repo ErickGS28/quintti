@@ -36,7 +36,7 @@ export interface WriteReceipt<T> {
  * treasury's, and reading it with the treasury's table would blame the wrong rule. That case becomes an
  * `other-contract` error that keeps the code.
  */
-function assertSimulationSucceeded(assembled: contract.AssembledTransaction<unknown>): void {
+export function assertSimulationSucceeded(assembled: contract.AssembledTransaction<unknown>): void {
   const { simulation } = assembled;
   if (simulation && rpc.Api.isSimulationError(simulation)) {
     const raisedBy = failingContract(simulation.events);
