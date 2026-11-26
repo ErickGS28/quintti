@@ -62,6 +62,18 @@ pub struct Expense {
     pub paid_at: Option<u64>,
 }
 
+/// A council rotation the assembly has announced and not yet executed. It can
+/// run once the ledger time reaches executable_at, and the assembly can
+/// cancel it before that.
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct PendingRotation {
+    pub council: Vec<Address>,
+    pub threshold: u32,
+    /// Ledger time (seconds) from which the rotation can be executed.
+    pub executable_at: u64,
+}
+
 /// Typed storage keys.
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -73,4 +85,6 @@ pub enum DataKey {
     ExpenseCount,
     Budget(Symbol),
     Expense(u32),
+    RotationDelay,
+    PendingRotation,
 }

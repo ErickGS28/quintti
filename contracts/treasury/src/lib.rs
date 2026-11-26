@@ -18,15 +18,15 @@ mod test;
 
 pub use errors::Error;
 pub use types::{
-    BudgetLine, Config, DataKey, Expense, ExpenseStatus, MAX_CATEGORIES, MAX_COUNCIL, MAX_PAGE,
-    MAX_VENDORS,
+    BudgetLine, Config, DataKey, Expense, ExpenseStatus, PendingRotation, MAX_CATEGORIES,
+    MAX_COUNCIL, MAX_PAGE, MAX_VENDORS,
 };
 
 use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, Symbol, Vec};
 
 use events::{
     AdministratorSet, BudgetSet, CouncilRotated, Deposited, ExpenseApproved, ExpenseCancelled,
-    ExpenseProposed, Initialized, VendorSet,
+    ExpenseProposed, Initialized, RotationAnnounced, RotationCancelled, VendorSet,
 };
 
 #[contract]
@@ -37,6 +37,12 @@ impl Treasury {
     /// Fixes the building's rules at deployment. It runs once, atomically with
     /// the deployment, so there is no window to initialize it twice.
     ///
+    /// `rotation_delay` is the waiting period in seconds between announcing a
+    /// council rotation and executing it. With zero, `rotate_council` works
+    /// at once. With more, the council can only change through
+    /// `announce_rotation` and `execute_rotation`, so residents see the
+    /// change coming.
+    ///
     /// Auth: none. Errors: `InvalidCouncil`, `InvalidThreshold`,
     /// `AdministratorInCouncil` (the deployment fails).
     pub fn __constructor(
@@ -46,6 +52,7 @@ impl Treasury {
         administrator: Address,
         council: Vec<Address>,
         threshold: u32,
+        rotation_delay: u64,
     ) -> Result<(), Error> {
         logic::validate_governance(&administrator, &council, threshold)?;
 
@@ -59,6 +66,7 @@ impl Treasury {
             },
         );
         storage::write_council(&env, &council);
+        storage::write_rotation_delay(&env, rotation_delay);
         storage::extend_instance(&env);
 
         Initialized {
@@ -67,6 +75,7 @@ impl Treasury {
             administrator,
             council,
             threshold,
+            rotation_delay,
         }
         .publish(&env);
         Ok(())
@@ -333,14 +342,18 @@ impl Treasury {
         Ok(())
     }
 
-    /// Replaces the council and the approval threshold. Approvals already given
-    /// by members who leave the council stop counting.
+    /// Replaces the council and the approval threshold at once. Approvals
+    /// already given by members who leave the council stop counting. Only
+    /// available when the treasury was deployed without a rotation delay.
     ///
-    /// Auth: assembly. Errors: `InvalidCouncil`, `InvalidThreshold`,
-    /// `AdministratorInCouncil`.
+    /// Auth: assembly. Errors: `RotationDelayRequired`, `InvalidCouncil`,
+    /// `InvalidThreshold`, `AdministratorInCouncil`.
     pub fn rotate_council(env: Env, council: Vec<Address>, threshold: u32) -> Result<(), Error> {
         let mut config = storage::read_config(&env)?;
         config.assembly.require_auth();
+        if storage::read_rotation_delay(&env) > 0 {
+            return Err(Error::RotationDelayRequired);
+        }
 
         logic::validate_governance(&config.administrator, &council, threshold)?;
 
@@ -350,6 +363,101 @@ impl Treasury {
         storage::extend_instance(&env);
         CouncilRotated { council, threshold }.publish(&env);
         Ok(())
+    }
+
+    /// Announces a council rotation. It can be executed once the rotation delay
+    /// has passed, and cancelled until then. Residents can read it with
+    /// `get_pending_rotation` and see the `RotationAnnounced` event. Only one
+    /// rotation can be announced at a time.
+    ///
+    /// Auth: assembly. Errors: `RotationAlreadyPending`, `InvalidCouncil`,
+    /// `InvalidThreshold`, `AdministratorInCouncil`, `Overflow`.
+    pub fn announce_rotation(env: Env, council: Vec<Address>, threshold: u32) -> Result<(), Error> {
+        let config = storage::read_config(&env)?;
+        config.assembly.require_auth();
+        if storage::read_pending_rotation(&env).is_some() {
+            return Err(Error::RotationAlreadyPending);
+        }
+        logic::validate_governance(&config.administrator, &council, threshold)?;
+
+        let executable_at = env
+            .ledger()
+            .timestamp()
+            .checked_add(storage::read_rotation_delay(&env))
+            .ok_or(Error::Overflow)?;
+        storage::write_pending_rotation(
+            &env,
+            &PendingRotation {
+                council: council.clone(),
+                threshold,
+                executable_at,
+            },
+        );
+        storage::extend_instance(&env);
+        RotationAnnounced {
+            council,
+            threshold,
+            executable_at,
+        }
+        .publish(&env);
+        Ok(())
+    }
+
+    /// Executes the announced rotation once its delay has passed. The new
+    /// council is checked again, because the administrator may have changed
+    /// since the announcement. Approvals already given by members who leave the
+    /// council stop counting.
+    ///
+    /// Auth: assembly. Errors: `NoPendingRotation`, `RotationNotReady`,
+    /// `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil`.
+    pub fn execute_rotation(env: Env) -> Result<(), Error> {
+        let mut config = storage::read_config(&env)?;
+        config.assembly.require_auth();
+        let pending = storage::read_pending_rotation(&env).ok_or(Error::NoPendingRotation)?;
+        if env.ledger().timestamp() < pending.executable_at {
+            return Err(Error::RotationNotReady);
+        }
+        logic::validate_governance(&config.administrator, &pending.council, pending.threshold)?;
+
+        config.threshold = pending.threshold;
+        storage::write_config(&env, &config);
+        storage::write_council(&env, &pending.council);
+        storage::clear_pending_rotation(&env);
+        storage::extend_instance(&env);
+        CouncilRotated {
+            council: pending.council,
+            threshold: pending.threshold,
+        }
+        .publish(&env);
+        Ok(())
+    }
+
+    /// Cancels the announced rotation.
+    ///
+    /// Auth: assembly. Errors: `NoPendingRotation`.
+    pub fn cancel_rotation(env: Env) -> Result<(), Error> {
+        let config = storage::read_config(&env)?;
+        config.assembly.require_auth();
+        let pending = storage::read_pending_rotation(&env).ok_or(Error::NoPendingRotation)?;
+
+        storage::clear_pending_rotation(&env);
+        storage::extend_instance(&env);
+        RotationCancelled {
+            executable_at: pending.executable_at,
+        }
+        .publish(&env);
+        Ok(())
+    }
+
+    /// Returns the announced council rotation, if there is one.
+    pub fn get_pending_rotation(env: Env) -> Option<PendingRotation> {
+        storage::read_pending_rotation(&env)
+    }
+
+    /// Returns the waiting period for council rotations, in seconds. Zero means
+    /// rotations are immediate.
+    pub fn get_rotation_delay(env: Env) -> u64 {
+        storage::read_rotation_delay(&env)
     }
 
     /// Returns the budget categories, in creation order.

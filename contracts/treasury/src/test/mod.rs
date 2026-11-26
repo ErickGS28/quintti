@@ -8,5 +8,6 @@ mod handover;
 mod initialization;
 mod invariants;
 mod proposals;
+mod rotation;
 mod setup;
 mod vendors;

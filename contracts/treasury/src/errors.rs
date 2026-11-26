@@ -46,4 +46,13 @@ pub enum Error {
     InsufficientBalance = 18,
     /// A checked arithmetic operation overflowed.
     Overflow = 19,
+    /// The treasury was deployed with a rotation delay, so the council can only
+    /// change through nnounce_rotation and execute_rotation.
+    RotationDelayRequired = 20,
+    /// A rotation is already announced. Cancel it before announcing another.
+    RotationAlreadyPending = 21,
+    /// There is no announced rotation.
+    NoPendingRotation = 22,
+    /// The announced rotation cannot run yet: its delay has not passed.
+    RotationNotReady = 23,
 }

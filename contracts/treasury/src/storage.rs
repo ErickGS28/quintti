@@ -6,7 +6,7 @@
 use soroban_sdk::{Address, Env, Symbol, Vec};
 
 use crate::errors::Error;
-use crate::types::{BudgetLine, Config, DataKey, Expense};
+use crate::types::{BudgetLine, Config, DataKey, Expense, PendingRotation};
 
 /// Ledgers close about every 5 seconds.
 const LEDGERS_PER_DAY: u32 = 17_280;
@@ -107,4 +107,33 @@ pub fn write_expense(env: &Env, expense: &Expense) {
     let key = DataKey::Expense(expense.id);
     env.storage().persistent().set(&key, expense);
     extend_persistent(env, &key);
+}
+
+/// The waiting period (seconds) between announcing and executing a council
+/// rotation. Zero means rotations are immediate.
+pub fn read_rotation_delay(env: &Env) -> u64 {
+    env.storage()
+        .instance()
+        .get(&DataKey::RotationDelay)
+        .unwrap_or(0)
+}
+
+pub fn write_rotation_delay(env: &Env, delay: u64) {
+    env.storage()
+        .instance()
+        .set(&DataKey::RotationDelay, &delay);
+}
+
+pub fn read_pending_rotation(env: &Env) -> Option<PendingRotation> {
+    env.storage().instance().get(&DataKey::PendingRotation)
+}
+
+pub fn write_pending_rotation(env: &Env, pending: &PendingRotation) {
+    env.storage()
+        .instance()
+        .set(&DataKey::PendingRotation, pending);
+}
+
+pub fn clear_pending_rotation(env: &Env) {
+    env.storage().instance().remove(&DataKey::PendingRotation);
 }

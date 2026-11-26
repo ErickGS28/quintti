@@ -11,6 +11,8 @@ pub struct Initialized {
     pub administrator: Address,
     pub council: Vec<Address>,
     pub threshold: u32,
+    /// Waiting period for council rotations, in seconds. Zero means immediate.
+    pub rotation_delay: u64,
 }
 
 /// A budget line was created or its limit changed.
@@ -79,6 +81,21 @@ pub struct AdministratorSet {
 pub struct CouncilRotated {
     pub council: Vec<Address>,
     pub threshold: u32,
+}
+
+/// The assembly announced a council rotation. It can be executed from
+/// `executable_at` and cancelled until then.
+#[contractevent]
+pub struct RotationAnnounced {
+    pub council: Vec<Address>,
+    pub threshold: u32,
+    pub executable_at: u64,
+}
+
+/// The assembly cancelled an announced council rotation.
+#[contractevent]
+pub struct RotationCancelled {
+    pub executable_at: u64,
 }
 
 /// Someone paid tokens into the treasury through `deposit`.

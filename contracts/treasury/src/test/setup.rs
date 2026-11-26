@@ -26,8 +26,15 @@ pub struct Fixture<'a> {
 }
 
 impl<'a> Fixture<'a> {
-    /// A treasury with a 2-of-3 council and every authorization mocked.
+    /// A treasury with a 2-of-3 council, immediate rotations and every
+    /// authorization mocked.
     pub fn new() -> Self {
+        Self::with_rotation_delay(0)
+    }
+
+    /// The same treasury, deployed with a waiting period (in seconds) between
+    /// announcing a council rotation and executing it.
+    pub fn with_rotation_delay(rotation_delay: u64) -> Self {
         let env = Env::default();
         env.mock_all_auths();
 
@@ -43,13 +50,14 @@ impl<'a> Fixture<'a> {
         let token = token::Client::new(&env, &sac.address());
         let token_admin = token::StellarAssetClient::new(&env, &sac.address());
 
-        let treasury_id = register(
+        let treasury_id = register_with_delay(
             &env,
             &sac.address(),
             &assembly,
             &administrator,
             &council_vec(&env, &council),
             THRESHOLD,
+            rotation_delay,
         );
         let treasury = TreasuryClient::new(&env, &treasury_id);
 
@@ -96,7 +104,8 @@ impl<'a> Fixture<'a> {
     }
 }
 
-/// Registers a treasury with explicit constructor arguments.
+/// Registers a treasury with explicit constructor arguments and immediate
+/// council rotations.
 pub fn register(
     env: &Env,
     token: &Address,
@@ -104,6 +113,19 @@ pub fn register(
     administrator: &Address,
     council: &Vec<Address>,
     threshold: u32,
+) -> Address {
+    register_with_delay(env, token, assembly, administrator, council, threshold, 0)
+}
+
+/// Registers a treasury with a waiting period for council rotations.
+pub fn register_with_delay(
+    env: &Env,
+    token: &Address,
+    assembly: &Address,
+    administrator: &Address,
+    council: &Vec<Address>,
+    threshold: u32,
+    rotation_delay: u64,
 ) -> Address {
     env.register(
         Treasury,
@@ -113,6 +135,7 @@ pub fn register(
             administrator.clone(),
             council.clone(),
             threshold,
+            rotation_delay,
         ),
     )
 }
