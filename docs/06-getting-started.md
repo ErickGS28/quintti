@@ -24,7 +24,7 @@ cargo test
 stellar contract build
 ```
 
-`cargo test` runs the 95 unit tests. They need no network and no accounts. `stellar contract build` writes `target/wasm32v1-none/release/quintti_treasury.wasm`.
+`cargo test` runs the 109 unit tests. They need no network and no accounts. `stellar contract build` writes `target/wasm32v1-none/release/quintti_treasury.wasm`.
 
 The quality checks used before every commit:
 

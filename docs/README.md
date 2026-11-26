@@ -15,6 +15,7 @@
 | 10 | [10-mainnet-launch.md](10-mainnet-launch.md) | Putting a treasury on mainnet as an unaudited beta, step by step |
 | 11 | [11-shipit-mainnet-plan.md](11-shipit-mainnet-plan.md) | The plan to launch on mainnet for the Ship It challenge only. Optional, not decided |
 | 12 | [12-buildings-and-links.md](12-buildings-and-links.md) | How a building is created, shared and opened, with no server |
+| 13 | [13-status-and-scope.md](13-status-and-scope.md) | What exists today, how each claim was checked, what does not exist, and what a semi-stable beta promises |
 | — | [../CHANGELOG.md](../CHANGELOG.md) | Current state and history of changes |
 | — | [decisions/](decisions/README.md) | Design decisions and their rationale |
 

@@ -4,18 +4,18 @@
 
 A shared treasury for residential buildings, with the assembly's rules built into the account. Built on Stellar and Soroban.
 
-> **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested. The web app has the landing page and the treasury app: overview, expenses (propose, approve, cancel, check the invoice) and rules (budget and vendors), with Stellar Wallets Kit for signing, a hidden manual at `/hiw` and a hidden page with the business model and the plan at `/negocio`. A browser wallet has signed a full cycle on testnet and the demo deployment, with its transactions, is linked below. Testnet only, unaudited, not for real funds.
+> **Status: semi-stable beta, testnet only, unaudited.** The contract and the web app work end to end on Stellar testnet and are tested on every push. No real building has used it, and it must not hold real money. What exists, how each part was checked and what does not exist are in [docs/13-status-and-scope.md](docs/13-status-and-scope.md). Built for the Código Cordillera hackathon (BAF x Stellar) and developed since.
+## Ship It, November 2026
 
-## Ship It: what we launch on 27 November
+For the Ship It challenge (BAF x Stellar, 23 to 27 November 2026) the project moved from a hackathon demo to something anyone can open, check and build on, still on testnet:
 
-We are taking Quintti from a hackathon demo to something anyone can open, check and build on. By 27 November 2026 we will ship, on Stellar testnet:
+- **Continuous integration** on every push: contract tests, format and lint, and the web app's lint, types, tests and build.
+- **A collective assembly.** A 2-of-3 multi-signature account can be the assembly, and council rotation can be made to wait ([decision 0017](docs/decisions/0017-a-collective-assembly.md)). Shown on testnet by a script; the app cannot do it yet.
+- **A building with a name, expenses with words, several buildings by link and deposits from the app**, all without a server ([12-buildings-and-links.md](docs/12-buildings-and-links.md)).
+- **A vault for the "Bóveda" mission.** A separate contract holds XLM and pays a share, once per account, to whoever presents the code; the app has a page for it at `/boveda` ([decision 0021](docs/decisions/0021-a-vault-for-ship-it.md)). On testnet: [`CAFRW3R4...M274H`](https://stellar.expert/explorer/testnet/contract/CAFRW3R4IACGOX62V7WGXEYFXHUIVLNHGBXG7CGKDX42LSXNCR4M274H).
+- **A two-minute demo walkthrough** ([docs/08-demo-walkthrough.md](docs/08-demo-walkthrough.md)).
 
-- **A public demo.** The web app as a static site that reads the live demo treasury, so anyone can see the balance, the budget against what was spent, and who approved each payment, with no account.
-- **Continuous integration.** Every push to main runs the contract tests, format and lint checks, and the web app's lint, types, tests and build.
-- **A design for a collective assembly.** Today the assembly is one account, the main limit listed in [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md). We will write the decision record for replacing it with a collective mechanism (multi-signature of owners' representatives or an on-chain vote) and a delay on council rotation.
-- **A two-minute demo walkthrough** of a full expense: propose, two council approvals, payment on stellar.expert.
-
-Still testnet only and unaudited: nothing here handles real funds.
+A plan to launch on mainnet for this challenge only exists, undecided and not run ([docs/11-shipit-mainnet-plan.md](docs/11-shipit-mainnet-plan.md)). Nothing is deployed there.
 ## The problem
 
 In most residential buildings, owners pay a monthly fee into an account they cannot inspect. One person, the administrator, decides how it is spent. The budget the assembly approves is a recommendation, invoices arrive weeks later as a PDF or a spreadsheet, and when the administrator changes, the history is lost. The money belongs to everyone, but control belongs to very few.
@@ -32,9 +32,9 @@ Quintti moves the assembly's rules into the account itself:
 
 The goal is to replace "trust me" with "see for yourself".
 
-## Scope of this prototype
+## Scope
 
-The prototype focuses on **how money leaves** the account. Collecting fees in local currency, and verifying that an invoice reflects a real expense, are out of scope and are described in [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md).
+Quintti covers **how money leaves** the account, and lets anyone put money in by depositing from a wallet. Collecting fees from residents in local currency, paying vendors in local currency, and verifying that an invoice reflects a real expense are out of scope, and so are an audit and a legal review. They are listed in [docs/13-status-and-scope.md](docs/13-status-and-scope.md) and [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md).
 
 ## Documentation
 
@@ -55,6 +55,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 | [docs/10-mainnet-launch.md](docs/10-mainnet-launch.md) | Putting a treasury on mainnet as an unaudited beta, step by step |
 | [docs/11-shipit-mainnet-plan.md](docs/11-shipit-mainnet-plan.md) | The plan to launch on mainnet for the Ship It challenge only. Optional, not decided |
 | [docs/12-buildings-and-links.md](docs/12-buildings-and-links.md) | How a building is created, shared and opened, with no server |
+| [docs/13-status-and-scope.md](docs/13-status-and-scope.md) | What exists today, how each claim was checked, what does not exist, and what a semi-stable beta promises |
 | [CHANGELOG.md](CHANGELOG.md) | Current state and history of changes |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commit style and the checks to run before pushing |
 | [docs/decisions/](docs/decisions/README.md) | Design decisions and their rationale |
@@ -87,7 +88,7 @@ npm install
 npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-To deploy your own copy on testnet and run a full expense (budget, vendor, deposit, proposal, two council approvals, payment, and a rejected payment), follow [docs/06-getting-started.md](docs/06-getting-started.md). The current state of the project is in [CHANGELOG.md](CHANGELOG.md).
+To deploy your own copy on testnet and run a full expense (budget, vendor, deposit, proposal, two council approvals, payment, and a rejected payment), follow [docs/06-getting-started.md](docs/06-getting-started.md). The current state of the project is in [docs/13-status-and-scope.md](docs/13-status-and-scope.md) and the history in [CHANGELOG.md](CHANGELOG.md).
 
 The contract is `contracts/treasury/`. Its rules, entry points, errors and tests are described in [docs/03-contract-design.md](docs/03-contract-design.md). Versions used: `soroban-sdk` 29.0.1, Rust 1.99.1, Stellar CLI 30.0.1.
 
