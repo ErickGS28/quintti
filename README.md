@@ -6,6 +6,16 @@ A shared treasury for residential buildings, with the assembly's rules built int
 
 > **Status:** hackathon prototype for Código Cordillera (BAF × Stellar). The treasury contract is implemented and tested. The web app has the landing page and the treasury app: overview, expenses (propose, approve, cancel, check the invoice) and rules (budget and vendors), with Stellar Wallets Kit for signing, a hidden manual at `/hiw` and a hidden page with the business model and the plan at `/negocio`. A browser wallet has signed a full cycle on testnet and the demo deployment, with its transactions, is linked below. Testnet only, unaudited, not for real funds.
 
+## Ship It: what we launch on 27 November
+
+We are taking Quintti from a hackathon demo to something anyone can open, check and build on. By 27 November 2026 we will ship, on Stellar testnet:
+
+- **A public demo.** The web app as a static site that reads the live demo treasury, so anyone can see the balance, the budget against what was spent, and who approved each payment, with no account.
+- **Continuous integration.** Every push to main runs the contract tests, format and lint checks, and the web app's lint, types, tests and build.
+- **A design for a collective assembly.** Today the assembly is one account, the main limit listed in [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md). We will write the decision record for replacing it with a collective mechanism (multi-signature of owners' representatives or an on-chain vote) and a delay on council rotation.
+- **A two-minute demo walkthrough** of a full expense: propose, two council approvals, payment on stellar.expert.
+
+Still testnet only and unaudited: nothing here handles real funds.
 ## The problem
 
 In most residential buildings, owners pay a monthly fee into an account they cannot inspect. One person, the administrator, decides how it is spent. The budget the assembly approves is a recommendation, invoices arrive weeks later as a PDF or a spreadsheet, and when the administrator changes, the history is lost. The money belongs to everyone, but control belongs to very few.
