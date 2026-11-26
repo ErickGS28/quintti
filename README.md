@@ -95,7 +95,7 @@ The demo deployment, created by [scripts/seed-demo.ps1](scripts/seed-demo.ps1) (
 | | |
 |---|---|
 | Network | Stellar testnet |
-| Contract | `CA7DWVPW2JWFZ7KSVGLCLFDXD7HZOY7HL7274UZW4ZQZBJCQSHQ4U237` ([stellar.expert](https://stellar.expert/explorer/testnet/contract/CA7DWVPW2JWFZ7KSVGLCLFDXD7HZOY7HL7274UZW4ZQZBJCQSHQ4U237)) |
+| Contract | `CCHMX7JMZ7XVKURSR55FSM5MT5SOZOPNTFYQ6SSL5YIIRXKNN5FA5QDP` ([stellar.expert](https://stellar.expert/explorer/testnet/contract/CCHMX7JMZ7XVKURSR55FSM5MT5SOZOPNTFYQ6SSL5YIIRXKNN5FA5QDP)) |
 | Token | Native XLM through its Stellar Asset Contract, `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
 | Council | 3 members, threshold 2 |
 | Budget | mantenimiento 1,000 XLM, vigilancia 600 XLM, aseo 300 XLM |
@@ -104,15 +104,15 @@ Transactions of the seed run, each visible in stellar.expert:
 
 | Step | Transaction |
 |------|-------------|
-| Deploy | [ab48707d…86d1](https://stellar.expert/explorer/testnet/tx/ab48707d996b0c3b22e28e70800219c463dd1a6feefa2817179ac3f42be386d1) |
-| Budget mantenimiento | [be6dfba2…6a1e](https://stellar.expert/explorer/testnet/tx/be6dfba2889bf6e57cd369937bf08cf2c1384272f003dc00cd85d5e85a5a6a1e) |
-| Budget vigilancia | [4b9495ac…5e49](https://stellar.expert/explorer/testnet/tx/4b9495acd2761ff6fd994f3121203ad07f031d7358554ab91b64002652c05e49) |
-| Budget aseo | [3981954f…54fc](https://stellar.expert/explorer/testnet/tx/3981954f87d7d4a5b776a15ee1b9f501c21828b64b3d1259c9bab159ae8154fc) |
-| Vendor approved | [16fc71b6…a95d](https://stellar.expert/explorer/testnet/tx/16fc71b693566f6005e9ee41c68b5e77577bd7be2bab27af2152c4d2cb57a95d) |
-| Deposit 500 XLM | [4f785889…742e](https://stellar.expert/explorer/testnet/tx/4f7858899c1c83108c557a970b808a7d6968d326f20a07c8a5589f85c306742e) |
-| Propose 80 XLM | [c4ad95b2…9a1f](https://stellar.expert/explorer/testnet/tx/c4ad95b256ba8d5a440b833be8f9132e60e9ac8575999dac52201ff5bf9d9a1f) |
-| First approval (pending) | [12d354e9…789e](https://stellar.expert/explorer/testnet/tx/12d354e9da289c2f102388b31dccf33590e0975a2687436439fa959c5887789e) |
-| Second approval (pays the vendor) | [c51aedbb…11c2](https://stellar.expert/explorer/testnet/tx/c51aedbb571f58ea2383f6cf37596c4ff27e48f7ae609ad7ca630288843811c2) |
+| Deploy | [03e11f5f…0530](https://stellar.expert/explorer/testnet/tx/03e11f5f49611b9c8e7e68d0cb9fb1bfbdc19735d18d35ba65b9aa605f9e0530) |
+| Budget mantenimiento | [9361d7db…9375](https://stellar.expert/explorer/testnet/tx/9361d7db5824cb824b0e5cfcb599dd8ba50725321b18d0fc64a4f80594559375) |
+| Budget vigilancia | [701459d7…cf77](https://stellar.expert/explorer/testnet/tx/701459d78dc25335b6f0b6e398b96a366e52842dd9c6e9d310a312bfeec6cf77) |
+| Budget aseo | [254455ff…dc6a](https://stellar.expert/explorer/testnet/tx/254455ff8346549f0b638ae619fedc3bc2996ff547920b42cab035b177eedc6a) |
+| Vendor approved | [34c45cb3…6b3e](https://stellar.expert/explorer/testnet/tx/34c45cb3bd00504c51fdf6cf789c2c28ec117a52b56ff304696dc49974c76b3e) |
+| Deposit 500 XLM | [ff584659…bc5f](https://stellar.expert/explorer/testnet/tx/ff584659c483df8e40fab2277facb6a90da701e06a8778fcda1211ef1662bc5f) |
+| Propose 80 XLM | [6d21bb77…4fa1](https://stellar.expert/explorer/testnet/tx/6d21bb77ccf7658c574692afd885971c102cf61e832a3626811a634ad30f4fa1) |
+| First approval (pending) | [d2fa7f3a…8b96](https://stellar.expert/explorer/testnet/tx/d2fa7f3aabfca44b524c12a06ba5ae0fce756af1e480fd97c34d5bec11dc8b96) |
+| Second approval (pays the vendor) | [f6e28a19…cdc4](https://stellar.expert/explorer/testnet/tx/f6e28a19669b798a93ce20fbbe8db0f7c98f8c97604668b20bdb2a468a20cdc4) |
 
 After the run the expense is `Paid`, the budget shows 80 of 1,000 XLM spent and the treasury holds 420 XLM. Verified on testnet in the earlier development deployment: a proposal above the category limit fails with error 12, and an approval by a non-council account fails with error 15. The demo invoices used by the seed and the recording are in [scripts/demo/](scripts/demo/).
 ## Name

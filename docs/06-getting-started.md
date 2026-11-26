@@ -77,7 +77,8 @@ stellar contract deploy \
   --administrator $(stellar keys address qt-admin) \
   --council-file-path council.json \
   --threshold 2 \
-  --rotation_delay 0
+  --rotation_delay 0 \
+  --name "Torres del Parque"
 ```
 
 In PowerShell, write it on one line without the trailing `\` characters. The command prints the contract ID (it starts with `C`). The alias `quintti-dev` lets the next commands use `--id quintti-dev`.
@@ -93,7 +94,7 @@ Each command below calls the contract. Add `--source <identity> --network testne
 | Open a budget of 1,000 XLM | `qt-assembly` | `set_budget --category maintenance --limit 10000000000` |
 | Approve a vendor | `qt-assembly` | `set_vendor --vendor $(stellar keys address qt-vendor) --allowed true` |
 | Fund the treasury with 500 XLM | `qt-assembly` | `deposit --from $(stellar keys address qt-assembly) --amount 5000000000` |
-| Propose an expense of 80 XLM | `qt-admin` | `propose_expense --category maintenance --vendor $(stellar keys address qt-vendor) --amount 800000000 --invoice_hash 5359aa4f547c5c12e8a10a98b3e43675ff8a39a147e065784a277ed8f4845aa8` |
+| Propose an expense of 80 XLM | `qt-admin` | `propose_expense --category maintenance --vendor $(stellar keys address qt-vendor) --amount 800000000 --invoice_hash 5359aa4f547c5c12e8a10a98b3e43675ff8a39a147e065784a277ed8f4845aa8 --description "Mantenimiento del ascensor" --invoice_uri ""` |
 | First approval (stays pending) | `qt-council1` | `approve_expense --approver $(stellar keys address qt-council1) --id 0` |
 | Second approval (pays the vendor) | `qt-council2` | `approve_expense --approver $(stellar keys address qt-council2) --id 0` |
 
@@ -123,7 +124,8 @@ Proposing 950 XLM when 80 of 1,000 are already spent fails before anything is wr
 ```
 stellar contract invoke --id quintti-dev --source qt-admin --network testnet \
   -- propose_expense --category maintenance --vendor $(stellar keys address qt-vendor) \
-  --amount 9500000000 --invoice_hash 5359aa4f547c5c12e8a10a98b3e43675ff8a39a147e065784a277ed8f4845aa8
+  --amount 9500000000 --invoice_hash 5359aa4f547c5c12e8a10a98b3e43675ff8a39a147e065784a277ed8f4845aa8 \
+  --description "Gasto que supera el tope" --invoice_uri ""
 ```
 
 The command ends with `Error(Contract, #12)`, which is `OverBudget`. The full list of error codes is in [03-contract-design.md](03-contract-design.md#errors). Calling `approve_expense` with an account that is not on the council fails with `#15`.

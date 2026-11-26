@@ -14,7 +14,7 @@ The bonus asks for "a contract or app on mainnet with a real transaction made fr
 
 | Need | Detail |
 |------|--------|
-| Real XLM | A few XLM from your own pocket. Each account that signs must exist on mainnet, which needs the network's minimum balance (*to verify* the current figure). Fees are small, and `deploy-treasury.ps1` prints the exact upload fee from a simulation once the paying account is funded |
+| Real XLM | A few XLM from your own pocket. Each account that signs must exist on mainnet, which needs the network's minimum balance (*to verify* the current figure). Uploading the WASM cost 1.7 XLM in fees on testnet on 26 November 2026 (a simulation; the first estimate of 0.007 XLM was wrong, because that WASM was already installed). Mainnet fees may differ: `deploy-treasury.ps1` prints the upload fee from a simulation once the paying account is funded, and the deployment is a second transaction |
 | Keys | New ones. Do not reuse the `qt-*` testnet identities. Use a wallet (Freighter or a hardware wallet) for the roles that sign from the app, and a CLI identity only for the deployer |
 | An RPC provider | The SDF runs no public Soroban RPC on mainnet. The [Stellar documentation](https://developers.stellar.org/docs/data/apis/rpc/providers) lists providers and public URLs, for example Gateway at `https://soroban-rpc.mainnet.stellar.gateway.fm`. Public ones are rate limited, and a key in a browser bundle is public |
 | A second Netlify site | The network is fixed when the site is built. The testnet site stays as it is |
@@ -37,7 +37,7 @@ Every address must be a funded mainnet account if it is to sign.
 
    ```
    stellar contract build
-   ./scripts/deploy-treasury.ps1 -Network testnet -Source qt-admin -Assembly G... -Administrator G... -Council G...,G... -Threshold 2 -RotationDelay 60 -Execute
+   ./scripts/deploy-treasury.ps1 -Network testnet -Source qt-admin -Name "Torres del Parque" -Assembly G... -Administrator G... -Council G...,G... -Threshold 2 -RotationDelay 60 -Execute
    ```
 
 2. **Create the deployer and fund it with a little XLM.**
@@ -52,7 +52,7 @@ Every address must be a funded mainnet account if it is to sign.
 3. **See the plan on mainnet. Nothing is sent without -Execute.**
 
    ```
-   ./scripts/deploy-treasury.ps1 -RpcUrl https://soroban-rpc.mainnet.stellar.gateway.fm -Source qm-deployer -Assembly G... -Administrator G... -Council G... -Threshold 1
+   ./scripts/deploy-treasury.ps1 -RpcUrl https://soroban-rpc.mainnet.stellar.gateway.fm -Source qm-deployer -Name "Torres del Parque" -Assembly G... -Administrator G... -Council G... -Threshold 1
    ```
 
    Check the roles, the token address and the fee.

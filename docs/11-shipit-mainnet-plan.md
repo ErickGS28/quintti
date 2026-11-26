@@ -29,7 +29,7 @@ Each step says who does it. Time to allow: a few hours, plus the wait for the ex
 | # | Who | Step |
 |---|-----|------|
 | 1 | Owner | In Freighter, switch to **Mainnet** and have three accounts: **A** (assembly, the one that signs from the app), **B** (administrator) and **C** (council). Copy each public address (`G...`) |
-| 2 | Owner | Buy XLM at an exchange (about 10 to 15 XLM, only a rough figure; the script reports the exact cost before sending). Send about 5 to account A and about 5 to the deployer of step 3. B and C can stay empty for this test |
+| 2 | Owner | Buy XLM at an exchange (about 10 to 15 XLM, only a rough figure; uploading the WASM alone was estimated at 1.7 XLM on testnet, and the script reports the cost before sending). Send about 5 to account A and about 5 to the deployer of step 3. B and C can stay empty for this test |
 | 3 | Owner | Create the deployer key on the machine: `stellar keys generate qm-deployer`, then `stellar keys address qm-deployer`, and send it the XLM |
 | 4 | Owner, then assistant | The owner shares the three public addresses and confirms the deployer is funded |
 | 5 | Assistant | Runs `deploy-treasury.ps1` **without** `-Execute`: roles, token address, WASM hash and the real upload fee. Nothing is sent |

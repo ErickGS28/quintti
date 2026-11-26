@@ -1,6 +1,6 @@
 # 3. Contract design
 
-Design status: **implemented and tested** in `contracts/treasury/` (95 unit tests). A demo is deployed on testnet; it is not audited. Items that depend on network behaviour are marked *to verify*.
+Design status: **implemented and tested** in `contracts/treasury/` (109 unit tests). A demo is deployed on testnet; it is not audited. Items that depend on network behaviour are marked *to verify*.
 
 One contract instance serves one building. Structure follows `toolkit/playbooks/contract.md`.
 
@@ -55,6 +55,8 @@ Expense {
   vendor: Address,
   amount: i128,
   invoice_hash: BytesN<32>,
+  description: String,       // what it is for; never empty, at most 200 bytes
+  invoice_uri: String,       // link to the invoice file, or empty; at most 200 bytes
   approvals: Vec<Address>,   // in order; removed members stop counting
   status: Pending | Paid | Cancelled,
   created_at: u64,           // ledger time
@@ -62,7 +64,9 @@ Expense {
 }
 ```
 
-Bounds: `MAX_COUNCIL = 7`, `MAX_CATEGORIES = 16`, `MAX_VENDORS = 64`, `MAX_PAGE = 20`.
+Bounds: `MAX_COUNCIL = 7`, `MAX_CATEGORIES = 16`, `MAX_VENDORS = 64`, `MAX_PAGE = 20`, `MAX_NAME_BYTES = 80`, `MAX_DESCRIPTION_BYTES = 200`, `MAX_URI_BYTES = 200`. Text limits are in bytes, so an accented letter counts as two.
+
+The building's name, the description and the link live on-chain so that the product needs no database: anyone who can read the contract can read them. The link is a convenience. The invoice's fingerprint is the proof, and the app only opens a link that starts with `http://` or `https://`, because the contract limits the length of the text but not its scheme.
 
 TTL: every state-changing call extends the instance entry and the persistent entries it writes. An entry is extended to about 30 days when less than 7 days remain (ledgers close about every 5 seconds). Reads do not extend. A deployment that stays idle for a long time needs a keep-alive transaction. *To verify:* current ledger limits for entry lifetime.
 
@@ -72,7 +76,7 @@ Roles read from `Config` authorize with `require_auth()` on the stored address, 
 
 | Entry point | Auth | Effect | Errors | Events |
 |-------------|------|--------|--------|--------|
-| `__constructor(token, assembly, administrator, council, threshold, rotation_delay)` | none (runs once at deployment) | Fixes the rules. `rotation_delay` is the waiting period in seconds for council rotations, zero for none | `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil` | `Initialized` |
+| `__constructor(token, assembly, administrator, council, threshold, rotation_delay, name)` | none (runs once at deployment) | Fixes the rules. `rotation_delay` is the waiting period in seconds for council rotations, zero for none. `name` is the building's name | `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil`, `EmptyText`, `TextTooLong` | `Initialized` |
 | `set_budget(category, limit)` | assembly | Create or update a budget line. The limit must be positive and not below what is spent | `InvalidAmount`, `BudgetBelowSpent`, `TooManyCategories` | `BudgetSet` |
 | `set_vendor(vendor, allowed)` | assembly | Approve or remove a vendor. Idempotent | `VendorIsInsider`, `TooManyVendors` | `VendorSet` |
 | `set_administrator(administrator)` | assembly | Replace the administrator | `AdministratorInCouncil` | `AdministratorSet` |
@@ -80,7 +84,8 @@ Roles read from `Config` authorize with `require_auth()` on the stored address, 
 | `announce_rotation(council, threshold)` | assembly | Announce a council rotation that can run after the rotation delay. One at a time | `RotationAlreadyPending`, `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil`, `Overflow` | `RotationAnnounced` |
 | `execute_rotation()` | assembly | Apply the announced rotation once its delay has passed. The new council is validated again | `NoPendingRotation`, `RotationNotReady`, `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil` | `CouncilRotated` |
 | `cancel_rotation()` | assembly | Drop the announced rotation | `NoPendingRotation` | `RotationCancelled` |
-| `propose_expense(category, vendor, amount, invoice_hash) -> u32` | administrator | Create a pending expense | `InvalidAmount`, `UnknownCategory`, `VendorNotApproved`, `VendorIsInsider`, `OverBudget`, `Overflow` | `ExpenseProposed` |
+| `set_name(name)` | assembly | Change the building's name, for example to fix a typo | `EmptyText`, `TextTooLong` | `NameSet` |
+| `propose_expense(category, vendor, amount, invoice_hash, description, invoice_uri) -> u32` | administrator | Create a pending expense. The description is required, the link may be empty | `InvalidAmount`, `EmptyText`, `TextTooLong`, `UnknownCategory`, `VendorNotApproved`, `VendorIsInsider`, `OverBudget`, `Overflow` | `ExpenseProposed` |
 | `approve_expense(approver, id)` | approver (council member) | Record an approval. If the approvals reach the threshold, pay | `NotCouncilMember`, `ExpenseNotFound`, `ExpenseNotPending`, `AlreadyApproved`, and when paying `VendorNotApproved`, `VendorIsInsider`, `UnknownCategory`, `OverBudget`, `Overflow`, `InsufficientBalance` | `ExpenseApproved`, and `ExpensePaid` when it pays |
 | `cancel_expense(caller, id)` | administrator or assembly | Move a pending expense to cancelled | `NotAuthorized`, `ExpenseNotFound`, `ExpenseNotPending` | `ExpenseCancelled` |
 | `deposit(from, amount)` | payer | Transfer tokens into the treasury and record who paid | `InvalidAmount` | `Deposited` |
@@ -89,7 +94,7 @@ A plain token transfer to the contract address also funds the treasury, but leav
 
 ### Reads (no auth)
 
-`get_config`, `get_council`, `get_pending_rotation -> Option<PendingRotation>`, `get_rotation_delay -> u64`, `list_categories`, `get_budget(category) -> Option<BudgetLine>`, `list_vendors`, `is_vendor(address)`, `expense_count`, `get_expense(id)`, `get_expenses(from, limit)` (page size capped by `MAX_PAGE`, in id order), `balance` (token balance of the contract).
+`get_name`, `get_config`, `get_council`, `get_pending_rotation -> Option<PendingRotation>`, `get_rotation_delay -> u64`, `list_categories`, `get_budget(category) -> Option<BudgetLine>`, `list_vendors`, `is_vendor(address)`, `expense_count`, `get_expense(id)`, `get_expenses(from, limit)` (page size capped by `MAX_PAGE`, in id order), `balance` (token balance of the contract).
 
 ## Rules
 
@@ -158,10 +163,12 @@ Typed with `#[contracterror]`. The numeric values are part of the interface and 
 | 21 | `RotationAlreadyPending` | A rotation is already announced. Cancel it before announcing another |
 | 22 | `NoPendingRotation` | There is no announced rotation |
 | 23 | `RotationNotReady` | The announced rotation cannot run yet: its delay has not passed |
+| 24 | `TextTooLong` | A name, description or invoice link is longer than its limit |
+| 25 | `EmptyText` | A building name or an expense description is empty |
 
 ## Events
 
-One event per state change, so clients can follow the treasury: `Initialized`, `BudgetSet`, `VendorSet`, `AdministratorSet`, `CouncilRotated`, `RotationAnnounced`, `RotationCancelled`, `ExpenseProposed`, `ExpenseApproved`, `ExpensePaid`, `ExpenseCancelled`, `Deposited`. The expense id, the category or the address is a topic, so it can be indexed.
+One event per state change, so clients can follow the treasury: `Initialized`, `NameSet`, `BudgetSet`, `VendorSet`, `AdministratorSet`, `CouncilRotated`, `RotationAnnounced`, `RotationCancelled`, `ExpenseProposed`, `ExpenseApproved`, `ExpensePaid`, `ExpenseCancelled`, `Deposited`. The expense id, the category or the address is a topic, so it can be indexed.
 
 The public view reads **state**, not events, to rebuild the history. *To verify:* RPC event retention is limited, so events are for live updates and explorers, not for long-term history.
 
@@ -184,7 +191,7 @@ The public view reads **state**, not events, to rebuild the history. *To verify:
 
 ## Tests
 
-95 unit tests in `contracts/treasury/src/test/`, named by behaviour and grouped by capability: initialization, budget, vendors, proposals, approvals, cancellation, handover, rotation with a delay, deposits and invariants. They cover the happy path, every error variant, boundaries, repeated calls and the authorization of every privileged entry point, checked both by inspecting which address is asked to sign and by calling without any mocked authorization. Invariant tests check that funds are conserved and that a category never pays beyond its limit.
+109 unit tests in `contracts/treasury/src/test/`, named by behaviour and grouped by capability: initialization, budget, vendors, proposals, approvals, cancellation, handover, rotation with a delay, the name and the words of an expense, deposits and invariants. They cover the happy path, every error variant, boundaries, repeated calls and the authorization of every privileged entry point, checked both by inspecting which address is asked to sign and by calling without any mocked authorization. Invariant tests check that funds are conserved and that a category never pays beyond its limit.
 
 Not covered yet: fuzzing and property-based tests, and the behaviour of persistent entries when they expire.
 
