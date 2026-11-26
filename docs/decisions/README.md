@@ -23,6 +23,7 @@ One decision per file, short and with its rationale. If a decision changes, a ne
 | [0017](0017-a-collective-assembly.md) | A collective assembly: multi-signature first, a delay on rotation second | Accepted |
 | [0018](0018-mainnet-as-an-opt-in-beta.md) | Mainnet as an opt-in beta with symbolic funds | Proposed |
 | [0019](0019-buildings-by-link-without-a-backend.md) | Several buildings in one app, chosen by the link, with no backend | Accepted, amends 0016 |
+| [0020](0020-deposits-and-errors-from-other-contracts.md) | Deposits from the app, and an error is read by the contract that raised it | Accepted, extends 0008 |
 
 ## Template
 

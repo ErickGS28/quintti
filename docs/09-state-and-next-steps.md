@@ -8,7 +8,8 @@ Written on 25 November 2026 so the work can resume without the conversation that
 |------|-------|
 | Contract | 109 unit tests, fmt and clippy clean. Rules, council approval, handover, a delay on council rotation ([0017](decisions/0017-a-collective-assembly.md)), the building's name and a description and invoice link on every expense, all on-chain |
 | Collective assembly | A 2-of-3 Stellar multi-signature account works as the assembly. Shown on testnet by `scripts/demo-multisig-assembly.ps1`. Not wired into the web app |
-| Web app | Landing, `/app` (Resumen, Gastos, Reglas, and Mis edificios from the building card), `/hiw`, `/negocio`. 289 offline tests. Static export, hosted on Netlify |
+| Web app | Landing, `/app` (Resumen, Gastos, Reglas, and Mis edificios from the building card), `/hiw`, `/negocio`. 308 offline tests. Static export, hosted on Netlify |
+| Deposits | A **Depositar** screen at `/app/depositar` ([0020](decisions/0020-deposits-and-errors-from-other-contracts.md)). Any wallet, no role, only on a saved building. A deposit was made for real on testnet with a key in memory, moving a treasury from 0 to 1 XLM. **Not tried with a browser wallet extension** |
 | Several buildings | A building is chosen by the link, `/app/?edificio=C...`, with a list kept in the browser and no backend. A building opened from a link is read-only until it is saved ([0019](decisions/0019-buildings-by-link-without-a-backend.md), [12-buildings-and-links.md](12-buildings-and-links.md)). Seen working in a browser on testnet with two buildings |
 | Demo treasury | `CCHMX7JMZ7XVKURSR55FSM5MT5SOZOPNTFYQ6SSL5YIIRXKNN5FA5QDP`, the current interface, seeded by `scripts/seed-demo.ps1`. A second one, `CC2NVO7Z4BVRTHJG34EDFF5JLHBBRJXKOLUYVUL5DFGO4RA7D5VS4I52` ("Conjunto Pirámide"), has no data and serves to try switching buildings. The testnet is reset periodically |
 | Mainnet | The web app can be built for mainnet as an unaudited beta ([0018](decisions/0018-mainnet-as-an-opt-in-beta.md)), and `scripts/deploy-treasury.ps1` deploys with your own roles. Nothing is deployed there. Guide: [10-mainnet-launch.md](10-mainnet-launch.md). A plan to launch for the Ship It challenge only, undecided, is in [11-shipit-mainnet-plan.md](11-shipit-mainnet-plan.md); it is not part of the roadmap below |
@@ -23,15 +24,16 @@ None of these breaks the running demo.
 2. **The app offers no council rotation.** [0016](decisions/0016-a-smaller-app.md) removed those forms. The contract and the hooks support them.
 3. **The multi-signature assembly only exists as a script.** The app signs with one wallet, so a building whose assembly is a 2-of-3 account cannot change its rules from the app.
 4. **A building is created from the command line.** `scripts/deploy-treasury.ps1` is the only way ([12-buildings-and-links.md](12-buildings-and-links.md)).
-5. **Money arrives by command line too.** The app has no deposit screen.
-6. **Three live tests fail against a seeded treasury.** They expect an English category and a variable that the seed does not set. They are opt-in (`QUINTTI_LIVE=1`) and the reason is written at the top of the file.
+5. **Fee collection is not built.** The app has a deposit screen ([decisions/0020](decisions/0020-deposits-and-errors-from-other-contracts.md)), but a resident cannot pay a fee in pesos: money still has to reach a wallet before it can be deposited.
+6. **The deposit screen was never clicked with a real wallet.** The signing path was checked with a key in memory, and the screens and locks in a browser without a wallet. Try it once with Freighter on testnet.
+7. **Three live tests fail against a seeded treasury.** They expect an English category and a variable that the seed does not set. They are opt-in (`QUINTTI_LIVE=1`) and the reason is written at the top of the file.
 
 The demo treasury should keep a **single-account assembly** while item 3 stands.
 ## What comes next
 
 In the order that matters for the Instaward sprint:
 
-1. **Pilot-readiness work, in this order.** (a) A deposit screen, so a building can be funded from the app. (b) Creating a building from the browser, which depends on whether Stellar Wallets Kit can deploy a contract (*to verify*). (c) The multi-signature assembly inside the app, below. Done so far: the building's name and the words of an expense on-chain, and several buildings by link.
+1. **Pilot-readiness work, in this order.** (a) *Done:* a deposit screen, so a building can be funded from the app. (b) Creating a building from the browser, which depends on whether Stellar Wallets Kit can deploy a contract (*to verify*). (c) The multi-signature assembly inside the app, below. Done so far: the building's name and the words of an expense on-chain, several buildings by link, and deposits from the app.
 2. **The multi-signature assembly inside the app.** Today only a script can use it. The app would build the rule-changing transaction with the assembly account as its source, let each representative sign it in turn with their wallet, and send it once the threshold is met. Whether Stellar Wallets Kit can pass the same transaction between signers is *to verify*. This turns [0017](decisions/0017-a-collective-assembly.md) from a script into a product.
 3. **A pilot in shadow mode.** One or two buildings, or a property management company, replaying real expenses on testnet with their invoices and approvals. A letter of intent is the deliverable, and the interviews in `hack/validation/` (outside the repository) are the evidence. This is the main open risk: nobody outside the team has used Quintti.
 4. **A way for fees to arrive.** An anchor for Colombian pesos, to verify per provider. Without it the product covers only how money leaves ([0003](decisions/0003-spending-side-first.md)).

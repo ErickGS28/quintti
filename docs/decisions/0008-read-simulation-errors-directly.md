@@ -1,6 +1,6 @@
 # 0008. Read simulation errors directly
 
-Status: Accepted
+Status: Accepted. Extended by [0020](0020-deposits-and-errors-from-other-contracts.md): the code is only read with the treasury's table when the treasury raised the error.
 
 ## Context
 

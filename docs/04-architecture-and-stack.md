@@ -53,7 +53,8 @@ quintti/
 │       │   └── negocio/           business model and plan at /negocio, not linked from anywhere
 │       ├── features/              one folder per capability, each with an index.ts
 │       │   ├── landing/           the presentation page: one screen per idea, illustrations and the clickable example
-│       │   ├── public-view/       reads the treasury state: services, hooks, the expense list, budget lines, approvals
+│       │   ├── public-view/       reads the treasury state: services, hooks, the expense list, budget lines, approvals
+│       │   ├── funding/           put money into the treasury: a deposit service, hooks, the token balance of the payer and the form
 │       │   ├── expenses/          propose, approve and cancel expenses: services, hooks, forms and buttons
 │       │   ├── governance/        budget and vendors forms for the assembly, plus services and hooks for the administrator and council too
 │       │   ├── wallet-session/    who is connected: a store, a hook and the wallet panel
@@ -103,7 +104,7 @@ component → hook → feature service → executeWrite → connectedSigner (wal
 
 ### One error type
 
-Everything that leaves `lib/` is an `AppError` with a `kind`: `contract`, `invalid-input`, `wallet-rejected`, `wallet-unavailable`, `wallet-network`, `network`, `timeout`, `state-expired`, `untrusted-building` or `unknown`. Screens never inspect SDK or wallet errors. For `contract` errors, `contractError` holds the name of the rule (for example `OverBudget`), and `copy/errors.es.ts` has a Spanish message for each of the 25. A test compares the list of names with the generated bindings, and the message table is typed as `Record<ContractErrorName, string>`, so a new contract error cannot be added without a message.
+Everything that leaves `lib/` is an `AppError` with a `kind`: `contract`, `invalid-input`, `wallet-rejected`, `wallet-unavailable`, `wallet-network`, `network`, `timeout`, `state-expired`, `untrusted-building`, `other-contract` or `unknown`. Screens never inspect SDK or wallet errors. A failed call is attributed to the contract that raised it ([decisions/0020](decisions/0020-deposits-and-errors-from-other-contracts.md)): a deposit that the token rejects is `other-contract` with its code, never one of the treasury's rules. For `contract` errors, `contractError` holds the name of the rule (for example `OverBudget`), and `copy/errors.es.ts` has a Spanish message for each of the 25. A test compares the list of names with the generated bindings, and the message table is typed as `Record<ContractErrorName, string>`, so a new contract error cannot be added without a message.
 
 See [decisions/0008](decisions/0008-read-simulation-errors-directly.md) for why the simulation error is read directly.
 

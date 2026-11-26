@@ -91,6 +91,7 @@ These screens are built as one app at `/app` that everyone reads the same way; t
 | **Public view** | Anyone | Balance, budget lines, expense list, invoice check, active network |
 | **Council panel** | Administrator, council | Connect wallet. Propose an expense (administrator). Approve a pending expense (council). Transaction status |
 | **Assembly panel** | Assembly | Edit budget lines and approved vendors. Replacing the administrator or the council exists in the contract, not in the app |
+| **Deposit** | Anyone with a wallet | Pay money into the treasury from the connected account. Shows what the account holds and what the treasury would hold. Needs no role, but the building must be saved ([decisions/0020](decisions/0020-deposits-and-errors-from-other-contracts.md)) |
 | **My buildings** | Anyone | The buildings this browser knows (the main one and the ones saved), a link to share each one, and a form to add one by link or address. A building opened from a link is read-only until it is saved ([decisions/0019](decisions/0019-buildings-by-link-without-a-backend.md), [12-buildings-and-links.md](12-buildings-and-links.md)) |
 | **Setup / demo** | Team | Seeded demo accounts and a reset, for the demonstration only |
 

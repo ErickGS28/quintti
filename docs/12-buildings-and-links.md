@@ -26,6 +26,21 @@ Without `-Execute` the script only shows the plan. The name is shown to every re
 
 Deploying another building with the same WASM should cost far less than the first, because the WASM is already installed on the network. The script's simulation of the upload estimated 0.008 XLM for a second building on testnet, against 1.7 XLM the first time with a new WASM. These are estimates from a simulation, not fees charged, and mainnet may differ.
 
+## Putting money into a building
+
+From the overview, **Depositar fondos**. Anyone with a wallet can deposit; no role is needed.
+
+1. Connect your wallet. The page shows what your account holds.
+2. Type the amount. The page shows what the building would hold afterwards, and marks whether you have enough.
+3. Choose **Depositar** and sign in the wallet. The deposit is recorded with your address, and any resident sees it.
+
+Things to know:
+
+- **The building must be saved.** On a building opened from a link and not saved there is no amount field and no button, only the notice. Save it first, after confirming its address.
+- **The money cannot be taken back.** The contract has no withdrawal. It leaves only through an expense that the administration proposed and the council approved, to an approved vendor and within the budget.
+- **Leave some in your wallet.** The network keeps a minimum balance on an account and charges a small fee. Depositing everything fails with "no tienes saldo suficiente".
+- **Your balance is the building's token.** In the demos that is XLM on testnet. The page reads it from the token, so it shows the token the building uses.
+
 ## Sharing a building
 
 1. Open the building in the app and choose **Copiar enlace** in the building card (the left column, or the menu on a phone).
@@ -69,6 +84,7 @@ The network (`NEXT_PUBLIC_STELLAR_NETWORK`) and the RPC are fixed when the site 
 | The building shows, but there is no button to sign | It was opened from a link and not saved, or your wallet holds no role in it | Save it after confirming the address. Check the account your wallet has selected |
 | "No encontramos un edificio de Quintti con esa dirección en esta red" | The address is not a Quintti treasury, it is from an older version without a name, or it is on another network | Check the address and the network of the site |
 | "No se pudo leer" next to a saved building | The contract could not be read right now or stopped being a treasury | Try again later, or remove it |
+| "Tu cuenta no tiene saldo suficiente para esta operación" when depositing | The account holds less than the amount, or exactly all it has | Lower the amount and leave a little for the network's reserve and fee |
 | The list is empty on another computer | The list lives in the browser | Add the buildings again, from their links |
 
 ## Limits
