@@ -33,7 +33,7 @@ export const appErrorMessages: Record<Exclude<AppErrorKind, "contract">, string>
   "wallet-unavailable":
     "No hay una billetera conectada o no pudo firmar. Conéctala e inténtalo de nuevo.",
   "wallet-network":
-    "Tu billetera está en otra red. Cámbiala a la red que muestra esta cuenta, abajo a la izquierda, en los ajustes de la billetera y vuelve a intentarlo.",
+    "Tu billetera está en otra red. Cámbiala a la misma red que indica esta app (red de pruebas o red principal) en los ajustes de la billetera y vuelve a intentarlo.",
   network: "No pudimos conectar con la red de Stellar. Revisa tu conexión e inténtalo de nuevo.",
   timeout:
     "La transacción se envió pero aún no se confirma. Revísala en el explorador antes de repetirla.",

@@ -12,7 +12,7 @@ It asks for a launch. It does not ask for, and this plan does not involve, money
 
 ## What is already built
 
-On the `shipit` branch, ready to use or to leave unused:
+Added on the `shipit` branch and merged into `dev` and `main`, ready to use or to leave unused:
 
 | Piece | Where |
 |-------|-------|
@@ -58,7 +58,7 @@ A seed phrase, a secret key (it starts with `S`) or a wallet password. The assis
 ## If it is not done
 
 - Nothing is lost. The code is opt-in and harmless on testnet.
-- Either merge `shipit` into `dev` and `main` so the work stays, or delete the branch. Both are fine. Keep the two commits that add the documents if the decision records matter.
+- The work is already merged into `dev` and `main`, so there is nothing to undo. After the challenge closes, delete the `shipit` branch.
 - The challenge's missions 00 to 05 are independent of this plan.
 
 ## Where normal development goes

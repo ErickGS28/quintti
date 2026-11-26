@@ -6,7 +6,7 @@
 |--------|---------|
 | `main` | The stable line. What the README describes and what the demo runs |
 | `dev` | Where work is integrated before it reaches `main`. It is kept equal to `main` between pieces of work |
-| `shipit` | Work for the Ship It challenge (23 to 27 November 2026), started from `dev`. Delete it once it is merged |
+| `shipit` | Work for the Ship It challenge (23 to 27 November 2026), started from `dev` and kept equal to it while the challenge lasts. Delete it after 27 November |
 
 - Start a piece of work from `dev` in a short-lived branch named `feat/...`, `fix/...` or `docs/...`.
 - Merge it into `dev`, then bring `dev` into `main` with a fast-forward (`git merge --ff-only dev`), so the two never diverge.
