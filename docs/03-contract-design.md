@@ -1,6 +1,6 @@
 # 3. Contract design
 
-Design status: **implemented and tested** in `contracts/treasury/` (78 unit tests). It is not deployed or audited. Items that depend on network behaviour are marked *to verify*.
+Design status: **implemented and tested** in `contracts/treasury/` (95 unit tests). A demo is deployed on testnet; it is not audited. Items that depend on network behaviour are marked *to verify*.
 
 One contract instance serves one building. Structure follows `toolkit/playbooks/contract.md`.
 
@@ -72,11 +72,14 @@ Roles read from `Config` authorize with `require_auth()` on the stored address, 
 
 | Entry point | Auth | Effect | Errors | Events |
 |-------------|------|--------|--------|--------|
-| `__constructor(token, assembly, administrator, council, threshold)` | none (runs once at deployment) | Fixes the rules | `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil` | `Initialized` |
+| `__constructor(token, assembly, administrator, council, threshold, rotation_delay)` | none (runs once at deployment) | Fixes the rules. `rotation_delay` is the waiting period in seconds for council rotations, zero for none | `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil` | `Initialized` |
 | `set_budget(category, limit)` | assembly | Create or update a budget line. The limit must be positive and not below what is spent | `InvalidAmount`, `BudgetBelowSpent`, `TooManyCategories` | `BudgetSet` |
 | `set_vendor(vendor, allowed)` | assembly | Approve or remove a vendor. Idempotent | `VendorIsInsider`, `TooManyVendors` | `VendorSet` |
 | `set_administrator(administrator)` | assembly | Replace the administrator | `AdministratorInCouncil` | `AdministratorSet` |
-| `rotate_council(council, threshold)` | assembly | Replace the council and threshold | `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil` | `CouncilRotated` |
+| `rotate_council(council, threshold)` | assembly | Replace the council and threshold at once. Only when the rotation delay is zero | `RotationDelayRequired`, `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil` | `CouncilRotated` |
+| `announce_rotation(council, threshold)` | assembly | Announce a council rotation that can run after the rotation delay. One at a time | `RotationAlreadyPending`, `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil`, `Overflow` | `RotationAnnounced` |
+| `execute_rotation()` | assembly | Apply the announced rotation once its delay has passed. The new council is validated again | `NoPendingRotation`, `RotationNotReady`, `InvalidCouncil`, `InvalidThreshold`, `AdministratorInCouncil` | `CouncilRotated` |
+| `cancel_rotation()` | assembly | Drop the announced rotation | `NoPendingRotation` | `RotationCancelled` |
 | `propose_expense(category, vendor, amount, invoice_hash) -> u32` | administrator | Create a pending expense | `InvalidAmount`, `UnknownCategory`, `VendorNotApproved`, `VendorIsInsider`, `OverBudget`, `Overflow` | `ExpenseProposed` |
 | `approve_expense(approver, id)` | approver (council member) | Record an approval. If the approvals reach the threshold, pay | `NotCouncilMember`, `ExpenseNotFound`, `ExpenseNotPending`, `AlreadyApproved`, and when paying `VendorNotApproved`, `VendorIsInsider`, `UnknownCategory`, `OverBudget`, `Overflow`, `InsufficientBalance` | `ExpenseApproved`, and `ExpensePaid` when it pays |
 | `cancel_expense(caller, id)` | administrator or assembly | Move a pending expense to cancelled | `NotAuthorized`, `ExpenseNotFound`, `ExpenseNotPending` | `ExpenseCancelled` |
@@ -86,7 +89,7 @@ A plain token transfer to the contract address also funds the treasury, but leav
 
 ### Reads (no auth)
 
-`get_config`, `get_council`, `list_categories`, `get_budget(category) -> Option<BudgetLine>`, `list_vendors`, `is_vendor(address)`, `expense_count`, `get_expense(id)`, `get_expenses(from, limit)` (page size capped by `MAX_PAGE`, in id order), `balance` (token balance of the contract).
+`get_config`, `get_council`, `get_pending_rotation -> Option<PendingRotation>`, `get_rotation_delay -> u64`, `list_categories`, `get_budget(category) -> Option<BudgetLine>`, `list_vendors`, `is_vendor(address)`, `expense_count`, `get_expense(id)`, `get_expenses(from, limit)` (page size capped by `MAX_PAGE`, in id order), `balance` (token balance of the contract).
 
 ## Rules
 
@@ -151,10 +154,14 @@ Typed with `#[contracterror]`. The numeric values are part of the interface and 
 | 17 | `NotAuthorized` | The caller may not do this |
 | 18 | `InsufficientBalance` | The treasury cannot cover the payment |
 | 19 | `Overflow` | A checked arithmetic operation overflowed |
+| 20 | `RotationDelayRequired` | The treasury has a rotation delay, so the council changes only through `announce_rotation` and `execute_rotation` |
+| 21 | `RotationAlreadyPending` | A rotation is already announced. Cancel it before announcing another |
+| 22 | `NoPendingRotation` | There is no announced rotation |
+| 23 | `RotationNotReady` | The announced rotation cannot run yet: its delay has not passed |
 
 ## Events
 
-One event per state change, so clients can follow the treasury: `Initialized`, `BudgetSet`, `VendorSet`, `AdministratorSet`, `CouncilRotated`, `ExpenseProposed`, `ExpenseApproved`, `ExpensePaid`, `ExpenseCancelled`, `Deposited`. The expense id, the category or the address is a topic, so it can be indexed.
+One event per state change, so clients can follow the treasury: `Initialized`, `BudgetSet`, `VendorSet`, `AdministratorSet`, `CouncilRotated`, `RotationAnnounced`, `RotationCancelled`, `ExpenseProposed`, `ExpenseApproved`, `ExpensePaid`, `ExpenseCancelled`, `Deposited`. The expense id, the category or the address is a topic, so it can be indexed.
 
 The public view reads **state**, not events, to rebuild the history. *To verify:* RPC event retention is limited, so events are for live updates and explorers, not for long-term history.
 
@@ -177,7 +184,7 @@ The public view reads **state**, not events, to rebuild the history. *To verify:
 
 ## Tests
 
-78 unit tests in `contracts/treasury/src/test/`, named by behaviour and grouped by capability: initialization, budget, vendors, proposals, approvals, cancellation, handover, deposits and invariants. They cover the happy path, every error variant, boundaries, repeated calls and the authorization of every privileged entry point, checked both by inspecting which address is asked to sign and by calling without any mocked authorization. Invariant tests check that funds are conserved and that a category never pays beyond its limit.
+95 unit tests in `contracts/treasury/src/test/`, named by behaviour and grouped by capability: initialization, budget, vendors, proposals, approvals, cancellation, handover, rotation with a delay, deposits and invariants. They cover the happy path, every error variant, boundaries, repeated calls and the authorization of every privileged entry point, checked both by inspecting which address is asked to sign and by calling without any mocked authorization. Invariant tests check that funds are conserved and that a category never pays beyond its limit.
 
 Not covered yet: fuzzing and property-based tests, and the behaviour of persistent entries when they expire.
 

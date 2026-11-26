@@ -1,6 +1,6 @@
 # 0017. A collective assembly: multi-signature first, a delay on rotation second
 
-Status: Proposed. Option A verified on testnet (see Verification). Extends [0004](0004-assembly-role.md), which accepted a single assembly account for the prototype.
+Status: Accepted for A and C, implemented and verified on testnet (see Verification). B remains a later step. Extends [0004](0004-assembly-role.md), which accepted a single assembly account for the prototype.
 
 ## Context
 
@@ -25,7 +25,7 @@ The contract stores the assembly as an `Address` and checks it with `require_aut
 Do A and C now, and leave B as the direction.
 
 1. **A. Deploy with a native multi-signature account as the assembly.** The contract needs no change. The work is to build the account (for example 3 representatives, 2 of 3 required), deploy the treasury with it as `assembly`, and show on testnet that a rule change signed by one representative is rejected and one signed by two is accepted. This was verified on testnet (see Verification).
-2. **C. Add a waiting period to `rotate_council` and `set_administrator`.** The assembly announces the change, the contract emits an event with the new members and the time it can run, and a second call executes it after the delay. The assembly can cancel a pending change. Budget and vendor changes stay immediate, because they cannot move money outside the existing limits.
+2. **C. Add a waiting period to council rotation.** The constructor takes a `rotation_delay` in seconds. With a delay, `rotate_council` is refused and the assembly uses `announce_rotation`, which emits an event with the new members and the time they can take over, and `execute_rotation` after the delay. The assembly can `cancel_rotation` until then, and the new council is validated again when it runs. With a delay of zero the contract behaves as before. The delay covers the council because the council is what approves payments. Replacing the administrator, who can only propose, and changing budget lines and vendors stay immediate: none of them moves money outside the existing limits. This leaves a path to watch, since an assembly could approve a vendor and raise a limit at once; those changes are public and each emits an event, but they are not delayed.
 3. **B stays a later step.** A weighted on-chain vote needs the legal question answered first, and a pilot that tells us how real assemblies decide.
 
 ## Verification of option A
@@ -35,7 +35,9 @@ Do A and C now, and leave B as the direction.
 - Signed by one representative, the network rejects the transaction with `TxBadAuth`.
 - Signed by two, it succeeds, and `get_budget` returns the new limit.
 
-Run on 25 November 2026: the assembly account is `GBPZIFBLEZLMV5ZSWAEMTPDLM6VRUSUZLQOCYXZCVHX74Z65A6L2AN5Y`, the treasury `CAETP2Y63VQR4RGL3RBFTRNYFP3F3FHTCTQXPAYTY3RWCVXDYWC4A6R4` and the accepted transaction [afe93925...3877](https://stellar.expert/explorer/testnet/tx/afe93925062d0a5a59503981bcef1f7bdc870a206e224cc700069034933d3877). The testnet is reset periodically, so these will disappear; rerun the script.
+Run on 25 November 2026: the assembly account is `GBPZIFBLEZLMV5ZSWAEMTPDLM6VRUSUZLQOCYXZCVHX74Z65A6L2AN5Y`, the treasury `CAETP2Y63VQR4RGL3RBFTRNYFP3F3FHTCTQXPAYTY3RWCVXDYWC4A6R4` and the accepted transaction [afe93925...3877](https://stellar.expert/explorer/testnet/tx/afe93925062d0a5a59503981bcef1f7bdc870a206e224cc700069034933d3877). The rotation delay was run on 25 November 2026 with treasury `CB2KCDP62NWLG2FWODVEX4HMW4KW573MWU6BZL2HTKKL52OPARE2LZ3Q`: [announced](https://stellar.expert/explorer/testnet/tx/b393573edace59ca8e4aa2e988648744e697268a57c8ab3c67ce82f646d89539) and [executed](https://stellar.expert/explorer/testnet/tx/3b0b38dc080f92664ced1b506546068de8af9e8b78a9e5ff3d64375cd081efe8). The testnet is reset periodically, so these will disappear; rerun the script.
+
+The same script then shows the delay on testnet: `rotate_council` is refused with error 20, `announce_rotation` is accepted, `execute_rotation` is refused with error 23 until the delay passes, and after the wait the council changes and `get_pending_rotation` returns nothing. The script uses a 45 second delay so it can run in a minute; a building would choose days.
 
 What this does not tell us:
 
@@ -48,7 +50,7 @@ What this does not tell us:
 - The most serious limit in the risk document gets a concrete, testable answer without a rewrite. The honest claim becomes "no single person can change the rules", not "the assembly votes on-chain".
 - With A, signers hold equal weight. A building where units differ in size needs B.
 - With C, rotating the council is slower on purpose. If the council loses its keys, the assembly waits out the delay. The waiting period must be a parameter fixed at deployment, and its length is open (a first proposal is 48 hours on testnet, to be decided with a pilot building).
-- C adds entry points, storage and events, so it needs new tests, an update of [03-contract-design.md](../03-contract-design.md) and new error codes appended after the existing ones (the numbers are a public interface).
+- C adds three entry points, two readers, storage and events, and four error codes appended after the existing ones (20 to 23, the numbers are a public interface). It adds 17 tests. The constructor gains an argument, so the web app's generated bindings and the demo treasury it points to are unchanged until the demo is redeployed and the bindings regenerated.
 - The assembly keeps its own limit: if its signers lose their keys, the rules cannot change. Key recovery for the assembly remains an open question.
 - The real contract is still unaudited. Nothing here makes it fit for real funds.
 
@@ -57,3 +59,4 @@ What this does not tell us:
 - Who are the signers in a real building, and how are they chosen and replaced?
 - How long should the waiting period be?
 - Whether Law 675 allows a signature of representatives to stand for an assembly vote.
+- Whether a delay on vendor and budget changes is also needed.

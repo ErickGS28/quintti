@@ -20,7 +20,7 @@ One decision per file, short and with its rationale. If a decision changes, a ne
 | [0014](0014-no-offchain-records-in-the-demo.md) | No off-chain records in the demo | Accepted |
 | [0015](0015-landing-as-a-calm-presentation.md) | The landing page as a calm presentation, one idea per screen | Accepted |
 | [0016](0016-a-smaller-app.md) | A smaller app: three screens and fewer words | Accepted |
-| [0017](0017-a-collective-assembly.md) | A collective assembly: multi-signature first, a delay on rotation second | Proposed |
+| [0017](0017-a-collective-assembly.md) | A collective assembly: multi-signature first, a delay on rotation second | Accepted |
 
 ## Template
 

@@ -9,7 +9,7 @@ Updated: 8 November 2026 (night).
 | Area | State |
 |------|-------|
 | Product documentation | Written: idea, vision, product and flows, contract design, architecture, risks, getting started, design system, 16 decisions |
-| Treasury contract | Implemented and unit tested (78 tests). Development deployment on Stellar testnet |
+| Treasury contract | Implemented and unit tested (95 tests), with an optional delay on council rotation. Development deployment on Stellar testnet |
 | Web app: non-visual foundation | Built and tested (240 offline tests, 6 optional live tests against testnet): validated configuration, generated contract bindings, transaction layer, wallet adapter, input validation, Spanish error messages, treasury reader, expense and governance services, wallet session, query hooks |
 | Web app: landing page | A presentation, one idea per screen and one window tall, in calm tones: the hero, the problem, the solution (two screens), a clickable example and why Stellar (two screens). No hackathon, code links or FAQ. Every screen fits at 1280x720 and 1366x650; on a phone they grow with their content |
 | Web app: treasury app | Three screens at `/app`, checked in a browser against the development treasury on testnet: Resumen, Gastos (list, detail with approvals and invoice check, propose, approve, cancel) and Reglas (budget, vendors, who decides). Same flow for every role; the connected wallet decides the buttons |
@@ -33,9 +33,14 @@ Demo deployment (temporary, the testnet is reset periodically; its transactions 
 ## Unreleased
 
 ### Changed
+- The constructor takes a sixth argument, `rotation_delay`. `scripts/seed-demo.ps1` passes zero, so the demo treasury behaves as before.
 - The landing page is cut to four screens for the recorded walkthrough: the hero, the problem, how an expense flows ("Así fluye un gasto", the four roles) and why Stellar (the comparison). The three-rules screen, the clickable example and the "Lo que cambia" screen are commented out in `LandingPage`, `LandingNav` and `WhyStellarSection`, not deleted. The top menu was removed from both pages (the dots on the right edge remain), the hero is now one full window tall and its single button goes to the problem screen. `/negocio` keeps two screens, income and plan; the model and follow-up screens are in the history (commit `44237e0`).
 
 ### Added
+- CI on every push and pull request (`.github/workflows/ci.yml`): format, lint and tests for the contract, and lint, types, tests and the static build for the web app. The build uses `.env.example` as its configuration.
+- A collective assembly, decision [0017](docs/decisions/0017-a-collective-assembly.md). The assembly can be a Stellar multi-signature account (2 of 3 representatives); `scripts/demo-multisig-assembly.ps1` shows on testnet that one signature is refused and two are accepted.
+- A delay on council rotation. The constructor takes `rotation_delay` (seconds, zero for none). With a delay, `rotate_council` is refused with `RotationDelayRequired` and the assembly uses `announce_rotation`, `execute_rotation` and `cancel_rotation`; `get_pending_rotation` and `get_rotation_delay` read the state. New errors 20 to 23 and events `RotationAnnounced` and `RotationCancelled`. 17 new tests (95 in total). The existing demo deployment and the web app's generated bindings are unchanged; the web app does not offer rotations.
+- A two-minute demo walkthrough, [docs/08-demo-walkthrough.md](docs/08-demo-walkthrough.md).
 - A hidden page at `/negocio` for the business model and the plan after the hackathon, in the landing page's style (one-window screens): what a building pays against what it moves (a $2.000 per apartment subscription against $12.000.000 a month, under 1 %), the three sources of income, the four steps of the plan (validate, pilot, complete, production) and what is done first and how it is measured. The figures are illustrative and the page says so. Not linked from the landing, `noindex`. Its text is in `copy/negocio.es.ts`, with a test of the arithmetic behind the sentences.
 
 ## 2026-11-08 (recording day)

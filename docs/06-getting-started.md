@@ -24,7 +24,7 @@ cargo test
 stellar contract build
 ```
 
-`cargo test` runs the 78 unit tests. They need no network and no accounts. `stellar contract build` writes `target/wasm32v1-none/release/quintti_treasury.wasm`.
+`cargo test` runs the 95 unit tests. They need no network and no accounts. `stellar contract build` writes `target/wasm32v1-none/release/quintti_treasury.wasm`.
 
 The quality checks used before every commit:
 
@@ -76,7 +76,8 @@ stellar contract deploy \
   --assembly $(stellar keys address qt-assembly) \
   --administrator $(stellar keys address qt-admin) \
   --council-file-path council.json \
-  --threshold 2
+  --threshold 2 \
+  --rotation_delay 0
 ```
 
 In PowerShell, write it on one line without the trailing `\` characters. The command prints the contract ID (it starts with `C`). The alias `quintti-dev` lets the next commands use `--id quintti-dev`.
