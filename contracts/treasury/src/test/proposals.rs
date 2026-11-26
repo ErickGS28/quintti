@@ -1,7 +1,9 @@
 use soroban_sdk::testutils::{Address as _, Ledger};
 use soroban_sdk::Address;
 
-use super::setup::{invoice_hash, maintenance, numbered_category, without_auths, Fixture};
+use super::setup::{
+    description, invoice_hash, maintenance, no_uri, numbered_category, without_auths, Fixture,
+};
 use crate::{Error, ExpenseStatus, MAX_PAGE};
 
 #[test]
@@ -69,6 +71,8 @@ fn propose_expense_rejects_an_amount_above_the_limit() {
         &vendor,
         &10_001,
         &invoice_hash(&f.env),
+        &description(&f.env),
+        &no_uri(&f.env),
     );
 
     assert_eq!(result, Err(Ok(Error::OverBudget)));
@@ -86,6 +90,8 @@ fn propose_expense_rejects_a_zero_or_negative_amount() {
             &vendor,
             &amount,
             &invoice_hash(&f.env),
+            &description(&f.env),
+            &no_uri(&f.env),
         );
         assert_eq!(result, Err(Ok(Error::InvalidAmount)));
     }
@@ -101,6 +107,8 @@ fn propose_expense_rejects_an_unknown_category() {
         &vendor,
         &100,
         &invoice_hash(&f.env),
+        &description(&f.env),
+        &no_uri(&f.env),
     );
 
     assert_eq!(result, Err(Ok(Error::UnknownCategory)));
@@ -116,6 +124,8 @@ fn propose_expense_rejects_a_vendor_that_is_not_approved() {
         &Address::generate(&f.env),
         &100,
         &invoice_hash(&f.env),
+        &description(&f.env),
+        &no_uri(&f.env),
     );
 
     assert_eq!(result, Err(Ok(Error::VendorNotApproved)));
@@ -142,6 +152,8 @@ fn propose_expense_fails_without_a_signature() {
         &Address::generate(&env),
         &100,
         &invoice_hash(&env),
+        &description(&env),
+        &no_uri(&env),
     );
 
     assert!(result.is_err());

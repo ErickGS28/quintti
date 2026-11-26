@@ -4,7 +4,7 @@
 use soroban_sdk::testutils::Address as _;
 use soroban_sdk::Address;
 
-use super::setup::{invoice_hash, maintenance, Fixture};
+use super::setup::{description, invoice_hash, maintenance, no_uri, Fixture};
 use crate::{DataKey, Error};
 
 #[test]
@@ -47,6 +47,8 @@ fn what_a_category_pays_never_exceeds_its_limit() {
         &vendor,
         &3_000,
         &invoice_hash(&f.env),
+        &description(&f.env),
+        &no_uri(&f.env),
     );
 
     let spent = f.treasury.get_budget(&maintenance(&f.env)).unwrap().spent;
@@ -68,6 +70,8 @@ fn a_payment_that_would_overflow_the_spent_total_is_rejected() {
         &vendor,
         &i128::MAX,
         &invoice_hash(&f.env),
+        &description(&f.env),
+        &no_uri(&f.env),
     );
 
     assert_eq!(result, Err(Ok(Error::Overflow)));

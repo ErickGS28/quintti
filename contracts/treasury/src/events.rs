@@ -1,6 +1,6 @@
 //! Events for every state change a client must observe.
 
-use soroban_sdk::{contractevent, Address, BytesN, Symbol, Vec};
+use soroban_sdk::{contractevent, Address, BytesN, String, Symbol, Vec};
 
 /// Published once, when the contract is deployed.
 #[contractevent]
@@ -13,6 +13,13 @@ pub struct Initialized {
     pub threshold: u32,
     /// Waiting period for council rotations, in seconds. Zero means immediate.
     pub rotation_delay: u64,
+    pub name: String,
+}
+
+/// The assembly changed the building's name.
+#[contractevent]
+pub struct NameSet {
+    pub name: String,
 }
 
 /// A budget line was created or its limit changed.

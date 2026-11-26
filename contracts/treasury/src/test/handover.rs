@@ -5,7 +5,9 @@ use core::slice::from_ref;
 use soroban_sdk::testutils::Address as _;
 use soroban_sdk::Address;
 
-use super::setup::{council_vec, invoice_hash, maintenance, without_auths, Fixture};
+use super::setup::{
+    council_vec, description, invoice_hash, maintenance, no_uri, without_auths, Fixture,
+};
 use crate::{Error, ExpenseStatus};
 
 #[test]
@@ -15,8 +17,14 @@ fn set_administrator_replaces_the_role() {
     let successor = Address::generate(&f.env);
 
     f.treasury.set_administrator(&successor);
-    f.treasury
-        .propose_expense(&maintenance(&f.env), &vendor, &100, &invoice_hash(&f.env));
+    f.treasury.propose_expense(
+        &maintenance(&f.env),
+        &vendor,
+        &100,
+        &invoice_hash(&f.env),
+        &description(&f.env),
+        &no_uri(&f.env),
+    );
 
     assert_eq!(f.env.auths()[0].0, successor);
     assert_eq!(f.treasury.get_config().administrator, successor);
@@ -49,9 +57,14 @@ fn a_new_administrator_cannot_be_a_vendor_who_is_paid() {
     let vendor = f.prepare(10_000);
     f.treasury.set_administrator(&vendor);
 
-    let result =
-        f.treasury
-            .try_propose_expense(&maintenance(&f.env), &vendor, &100, &invoice_hash(&f.env));
+    let result = f.treasury.try_propose_expense(
+        &maintenance(&f.env),
+        &vendor,
+        &100,
+        &invoice_hash(&f.env),
+        &description(&f.env),
+        &no_uri(&f.env),
+    );
 
     assert_eq!(result, Err(Ok(Error::VendorIsInsider)));
 }

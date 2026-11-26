@@ -5,6 +5,11 @@
 //! per category, approved vendors) and reaches the council's approval
 //! threshold. See `docs/03-contract-design.md`.
 #![no_std]
+// The constructor has one argument per rule fixed at deployment. They are passed by name from the
+// command line and the web app, so grouping them in a struct would make the public interface
+// harder to use, not clearer. `contractimpl` also generates a wrapper outside the `impl`, which
+// an attribute on the `impl` does not reach, so the allowance is for the whole crate.
+#![allow(clippy::too_many_arguments)]
 
 mod errors;
 mod events;
@@ -19,14 +24,14 @@ mod test;
 pub use errors::Error;
 pub use types::{
     BudgetLine, Config, DataKey, Expense, ExpenseStatus, PendingRotation, MAX_CATEGORIES,
-    MAX_COUNCIL, MAX_PAGE, MAX_VENDORS,
+    MAX_COUNCIL, MAX_DESCRIPTION_BYTES, MAX_NAME_BYTES, MAX_PAGE, MAX_URI_BYTES, MAX_VENDORS,
 };
 
-use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, Symbol, Vec};
+use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, String, Symbol, Vec};
 
 use events::{
     AdministratorSet, BudgetSet, CouncilRotated, Deposited, ExpenseApproved, ExpenseCancelled,
-    ExpenseProposed, Initialized, RotationAnnounced, RotationCancelled, VendorSet,
+    ExpenseProposed, Initialized, NameSet, RotationAnnounced, RotationCancelled, VendorSet,
 };
 
 #[contract]
@@ -43,8 +48,12 @@ impl Treasury {
     /// `announce_rotation` and `execute_rotation`, so residents see the
     /// change coming.
     ///
+    /// `name` is the building's name, shown to every resident. It is not
+    /// empty and fits in `MAX_NAME_BYTES`.
+    ///
     /// Auth: none. Errors: `InvalidCouncil`, `InvalidThreshold`,
-    /// `AdministratorInCouncil` (the deployment fails).
+    /// `AdministratorInCouncil`, `EmptyText`, `TextTooLong` (the
+    /// deployment fails).
     pub fn __constructor(
         env: Env,
         token: Address,
@@ -53,8 +62,10 @@ impl Treasury {
         council: Vec<Address>,
         threshold: u32,
         rotation_delay: u64,
+        name: String,
     ) -> Result<(), Error> {
         logic::validate_governance(&administrator, &council, threshold)?;
+        logic::validate_text(&name, MAX_NAME_BYTES)?;
 
         storage::write_config(
             &env,
@@ -67,6 +78,7 @@ impl Treasury {
         );
         storage::write_council(&env, &council);
         storage::write_rotation_delay(&env, rotation_delay);
+        storage::write_name(&env, &name);
         storage::extend_instance(&env);
 
         Initialized {
@@ -76,8 +88,28 @@ impl Treasury {
             council,
             threshold,
             rotation_delay,
+            name,
         }
         .publish(&env);
+        Ok(())
+    }
+
+    /// Returns the building's name.
+    pub fn get_name(env: Env) -> String {
+        storage::read_name(&env)
+    }
+
+    /// Changes the building's name, for example to fix a typo.
+    ///
+    /// Auth: assembly. Errors: `EmptyText`, `TextTooLong`.
+    pub fn set_name(env: Env, name: String) -> Result<(), Error> {
+        let config = storage::read_config(&env)?;
+        config.assembly.require_auth();
+        logic::validate_text(&name, MAX_NAME_BYTES)?;
+
+        storage::write_name(&env, &name);
+        storage::extend_instance(&env);
+        NameSet { name }.publish(&env);
         Ok(())
     }
 
@@ -150,17 +182,22 @@ impl Treasury {
     }
 
     /// Proposes a payment to an approved vendor, with the SHA-256 fingerprint of
-    /// its invoice. Nothing is reserved: money moves only when the council
-    /// approves. The proposal is rejected early if it already breaks a rule.
+    /// its invoice, a description of what it is for and, optionally, a link to
+    /// the invoice file (empty for none). Nothing is reserved: money moves only
+    /// when the council approves. The proposal is rejected early if it already
+    /// breaks a rule.
     ///
-    /// Auth: administrator. Errors: `InvalidAmount`, `UnknownCategory`,
-    /// `VendorNotApproved`, `VendorIsInsider`, `OverBudget`, `Overflow`.
+    /// Auth: administrator. Errors: `InvalidAmount`, `EmptyText`,
+    /// `TextTooLong`, `UnknownCategory`, `VendorNotApproved`,
+    /// `VendorIsInsider`, `OverBudget`, `Overflow`.
     pub fn propose_expense(
         env: Env,
         category: Symbol,
         vendor: Address,
         amount: i128,
         invoice_hash: BytesN<32>,
+        description: String,
+        invoice_uri: String,
     ) -> Result<u32, Error> {
         let config = storage::read_config(&env)?;
         config.administrator.require_auth();
@@ -168,6 +205,8 @@ impl Treasury {
         if amount <= 0 {
             return Err(Error::InvalidAmount);
         }
+        logic::validate_text(&description, MAX_DESCRIPTION_BYTES)?;
+        logic::validate_optional_text(&invoice_uri, MAX_URI_BYTES)?;
         let line = storage::read_budget(&env, &category).ok_or(Error::UnknownCategory)?;
         if !storage::read_vendors(&env).contains(&vendor) {
             return Err(Error::VendorNotApproved);
@@ -188,6 +227,8 @@ impl Treasury {
                 vendor: vendor.clone(),
                 amount,
                 invoice_hash: invoice_hash.clone(),
+                description,
+                invoice_uri,
                 approvals: Vec::new(&env),
                 status: ExpenseStatus::Pending,
                 created_at: env.ledger().timestamp(),

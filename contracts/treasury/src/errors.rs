@@ -55,4 +55,8 @@ pub enum Error {
     NoPendingRotation = 22,
     /// The announced rotation cannot run yet: its delay has not passed.
     RotationNotReady = 23,
+    /// A name, description or invoice link is longer than its limit.
+    TextTooLong = 24,
+    /// A building name or an expense description is empty.
+    EmptyText = 25,
 }

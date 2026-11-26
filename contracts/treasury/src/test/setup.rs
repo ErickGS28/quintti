@@ -2,7 +2,7 @@
 //! roles as generated addresses.
 
 use soroban_sdk::testutils::Address as _;
-use soroban_sdk::{token, vec, Address, BytesN, Env, Symbol, Vec};
+use soroban_sdk::{token, vec, Address, BytesN, Env, String, Symbol, Vec};
 
 use crate::{Treasury, TreasuryClient};
 
@@ -88,6 +88,8 @@ impl<'a> Fixture<'a> {
             vendor,
             &amount,
             &invoice_hash(&self.env),
+            &description(&self.env),
+            &no_uri(&self.env),
         )
     }
 
@@ -136,8 +138,24 @@ pub fn register_with_delay(
             council.clone(),
             threshold,
             rotation_delay,
+            building_name(env),
         ),
     )
+}
+
+/// The name every test building has.
+pub fn building_name(env: &Env) -> String {
+    String::from_str(env, "Edificio de prueba")
+}
+
+/// A description for expenses whose text does not matter to the test.
+pub fn description(env: &Env) -> String {
+    String::from_str(env, "Mantenimiento del ascensor")
+}
+
+/// No invoice link.
+pub fn no_uri(env: &Env) -> String {
+    String::from_str(env, "")
 }
 
 pub fn council_vec(env: &Env, members: &[Address]) -> Vec<Address> {

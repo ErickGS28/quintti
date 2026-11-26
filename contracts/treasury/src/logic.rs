@@ -1,7 +1,7 @@
 //! Pure rules. They take values and return results, with no storage access,
 //! so they are easy to test and to reason about.
 
-use soroban_sdk::{Address, Vec};
+use soroban_sdk::{Address, String, Vec};
 
 use crate::errors::Error;
 use crate::types::{BudgetLine, MAX_COUNCIL, MAX_VENDORS};
@@ -121,4 +121,24 @@ pub fn after_payment(line: &BudgetLine, amount: i128) -> Result<BudgetLine, Erro
         limit: line.limit,
         spent,
     })
+}
+
+/// Checks a text that may be empty: it only has to fit in `max` bytes.
+///
+/// Errors: `TextTooLong`.
+pub fn validate_optional_text(text: &String, max: u32) -> Result<(), Error> {
+    if text.len() > max {
+        return Err(Error::TextTooLong);
+    }
+    Ok(())
+}
+
+/// Checks a text that must be there: not empty and within `max` bytes.
+///
+/// Errors: `EmptyText`, `TextTooLong`.
+pub fn validate_text(text: &String, max: u32) -> Result<(), Error> {
+    if text.is_empty() {
+        return Err(Error::EmptyText);
+    }
+    validate_optional_text(text, max)
 }

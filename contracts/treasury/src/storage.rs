@@ -3,7 +3,7 @@
 //! Instance storage holds the small, bounded state read on almost every call.
 //! Every state-changing entry point calls `extend_instance`.
 
-use soroban_sdk::{Address, Env, Symbol, Vec};
+use soroban_sdk::{Address, Env, String, Symbol, Vec};
 
 use crate::errors::Error;
 use crate::types::{BudgetLine, Config, DataKey, Expense, PendingRotation};
@@ -136,4 +136,16 @@ pub fn write_pending_rotation(env: &Env, pending: &PendingRotation) {
 
 pub fn clear_pending_rotation(env: &Env) {
     env.storage().instance().remove(&DataKey::PendingRotation);
+}
+
+/// The building's name. Empty only if the contract was never initialized.
+pub fn read_name(env: &Env) -> String {
+    env.storage()
+        .instance()
+        .get(&DataKey::Name)
+        .unwrap_or_else(|| String::from_str(env, ""))
+}
+
+pub fn write_name(env: &Env, name: &String) {
+    env.storage().instance().set(&DataKey::Name, name);
 }

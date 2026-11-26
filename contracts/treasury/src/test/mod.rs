@@ -4,6 +4,7 @@ mod approvals;
 mod budget;
 mod cancellation;
 mod deposits;
+mod details;
 mod handover;
 mod initialization;
 mod invariants;
