@@ -21,6 +21,7 @@ One decision per file, short and with its rationale. If a decision changes, a ne
 | [0015](0015-landing-as-a-calm-presentation.md) | The landing page as a calm presentation, one idea per screen | Accepted |
 | [0016](0016-a-smaller-app.md) | A smaller app: three screens and fewer words | Accepted |
 | [0017](0017-a-collective-assembly.md) | A collective assembly: multi-signature first, a delay on rotation second | Accepted |
+| [0018](0018-mainnet-as-an-opt-in-beta.md) | Mainnet as an opt-in beta with symbolic funds | Proposed |
 
 ## Template
 

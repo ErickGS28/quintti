@@ -34,11 +34,14 @@ Demo deployment (temporary, the testnet is reset periodically; its transactions 
 ## Unreleased
 
 ### Changed
+- The web app's configuration accepts `mainnet` (it used to reject it). The wallet-on-another-network message no longer names testnet, because the right network now depends on the build.
 - The constructor takes a sixth argument, `rotation_delay`. `scripts/seed-demo.ps1` passes zero, so the demo treasury behaves as before.
 - The landing page is cut to four screens for the recorded walkthrough: the hero, the problem, how an expense flows ("Así fluye un gasto", the four roles) and why Stellar (the comparison). The three-rules screen, the clickable example and the "Lo que cambia" screen are commented out in `LandingPage`, `LandingNav` and `WhyStellarSection`, not deleted. The top menu was removed from both pages (the dots on the right edge remain), the hero is now one full window tall and its single button goes to the problem screen. `/negocio` keeps two screens, income and plan; the model and follow-up screens are in the history (commit `44237e0`).
 
 ### Added
-- [docs/09-state-and-next-steps.md](docs/09-state-and-next-steps.md): the state, the gaps between the code and the deployed demo, and what comes next, so the work can resume without the conversation that produced it.
+- Mainnet as an opt-in beta, decision [0018](docs/decisions/0018-mainnet-as-an-opt-in-beta.md). The web app can be built for mainnet with `NEXT_PUBLIC_STELLAR_NETWORK=mainnet`, which requires an https `NEXT_PUBLIC_SOROBAN_RPC_URL` because the SDF runs no public RPC there. The sidebar, the landing footer and the manual say it is an unaudited beta and no longer claim there is no real money. The default stays testnet. 6 new tests. Nothing is deployed on mainnet.
+- `scripts/deploy-treasury.ps1`: deploys a treasury with the roles you give it. It only shows the plan and an estimate unless it gets `-Execute`, and on mainnet it asks for the word MAINNET. [docs/10-mainnet-launch.md](docs/10-mainnet-launch.md) is the guide.
+- [docs/09-state-and-next-steps.md](docs/09-state-and-next-steps.md)(docs/09-state-and-next-steps.md): the state, the gaps between the code and the deployed demo, and what comes next, so the work can resume without the conversation that produced it.
 - `CONTRIBUTING.md` with the branch model (`main` and `dev` kept equal, fast-forward only), the commit style and the checks to run before pushing. The CI also runs on `dev`.
 - CI on every push and pull request (`.github/workflows/ci.yml`): format, lint and tests for the contract, and lint, types, tests and the static build for the web app. The build uses `.env.example` as its configuration.
 - A collective assembly, decision [0017](docs/decisions/0017-a-collective-assembly.md). The assembly can be a Stellar multi-signature account (2 of 3 representatives); `scripts/demo-multisig-assembly.ps1` shows on testnet that one signature is refused and two are accepted.

@@ -52,6 +52,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 | [docs/07-design-system.md](docs/07-design-system.md) | Visual direction, palette, components and the landing page |
 | [docs/08-demo-walkthrough.md](docs/08-demo-walkthrough.md) | A two-minute walk through one full expense |
 | [docs/09-state-and-next-steps.md](docs/09-state-and-next-steps.md) | Where we are, the gaps between code and demo, and what comes next |
+| [docs/10-mainnet-launch.md](docs/10-mainnet-launch.md) | Putting a treasury on mainnet as an unaudited beta, step by step |
 | [CHANGELOG.md](CHANGELOG.md) | Current state and history of changes |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commit style and the checks to run before pushing |
 | [docs/decisions/](docs/decisions/README.md) | Design decisions and their rationale |
@@ -62,7 +63,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 docs/          product, design and architecture documents
 contracts/     Soroban treasury contract (Rust)
 frontend/      web app (Next.js, TypeScript): landing page, the treasury app at /app, the manual at /hiw, the business model and plan at /negocio, and tests
-scripts/       deploys and seeds the demo treasury on testnet (seed-demo.ps1), shows a 2-of-3 multi-signature assembly (demo-multisig-assembly.ps1) and holds the demo invoices
+scripts/       deploys a treasury with your own roles (deploy-treasury.ps1, a dry run unless -Execute), seeds the demo treasury on testnet (seed-demo.ps1), shows a 2-of-3 multi-signature assembly (demo-multisig-assembly.ps1) and holds the demo invoices
 ```
 
 ## Quick start
