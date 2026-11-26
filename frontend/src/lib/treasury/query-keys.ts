@@ -8,4 +8,6 @@ export const treasuryKeys = {
   snapshot: (contractId: string) => [...treasuryKeys.building(contractId), "snapshot"] as const,
   expenses: (contractId: string) => [...treasuryKeys.building(contractId), "expenses"] as const,
   name: (contractId: string) => [...treasuryKeys.building(contractId), "name"] as const,
+  /** What an account holds of the building's token. Under `all`, so a deposit refreshes it too. */
+  tokenBalance: (token: string, address: string) => [...treasuryKeys.all, "token-balance", token, address] as const,
 };
