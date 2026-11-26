@@ -29,7 +29,8 @@ export const appCopy = {
   network: {
     testnet: "Red de pruebas de Stellar",
     local: "Red local",
-    short: { testnet: "Red de pruebas", local: "Red local" },
+    mainnet: "Red principal de Stellar",
+    short: { testnet: "Red de pruebas", local: "Red local", mainnet: "Red principal · beta sin auditar" },
   },
 
   wallet: {

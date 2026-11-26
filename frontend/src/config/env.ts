@@ -49,13 +49,22 @@ export function parseConfig(raw: RawConfig): AppConfig {
   const network = isNetworkName(networkValue) ? networkValue : undefined;
   if (!network) {
     issues.push(
-      `NEXT_PUBLIC_STELLAR_NETWORK must be "testnet" or "local" (got "${networkValue}"); mainnet is not supported`,
+      `NEXT_PUBLIC_STELLAR_NETWORK must be "testnet", "local" or "mainnet" (got "${networkValue}")`,
     );
   }
 
   const rpcUrl = raw.rpcUrl?.trim() || (network ? NETWORKS[network].defaultRpcUrl : "");
   if (rpcUrl && !isHttpUrl(rpcUrl)) {
     issues.push("NEXT_PUBLIC_SOROBAN_RPC_URL must be an http(s) URL");
+  }
+  if (network === "mainnet") {
+    if (!rpcUrl) {
+      issues.push(
+        "NEXT_PUBLIC_SOROBAN_RPC_URL is required on mainnet: the SDF runs no public RPC there, so choose a provider",
+      );
+    } else if (isHttpUrl(rpcUrl) && !rpcUrl.startsWith("https://")) {
+      issues.push("NEXT_PUBLIC_SOROBAN_RPC_URL must use https on mainnet");
+    }
   }
 
   const treasuryContractId = raw.treasuryContractId?.trim() ?? "";

@@ -234,3 +234,7 @@ export const landingCopy = {
     line: "Prototipo en la red de pruebas de Stellar. Es una herramienta de transparencia y control interno; no sustituye a la asamblea ni a la ley.",
   },
 } as const;
+
+/** The footer when the app is built for mainnet (decision 0018): the testnet line says it is a test. */
+export const landingMainnetFooterLine =
+  "Beta en la red principal de Stellar, sin auditar. Usa solo montos simbólicos. Es una herramienta de transparencia y control interno; no sustituye a la asamblea ni a la ley.";

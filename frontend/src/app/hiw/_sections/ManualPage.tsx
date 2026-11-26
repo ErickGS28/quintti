@@ -8,11 +8,25 @@ import { buttonStyles } from "@/components/atoms/Button";
 import { Card } from "@/components/atoms/Card";
 import { Eyebrow } from "@/components/atoms/Eyebrow";
 import { PageWash } from "@/components/atoms/PageWash";
-import { hiwCopy } from "@/copy/hiw.es";
+import { getConfig } from "@/config/env";
+import { hiwCopy, hiwMainnetCopy } from "@/copy/hiw.es";
 
 import { LiveRoles } from "./LiveRoles";
 
 const { header, rules, roles, flow, screens, trial, glossary, limits } = hiwCopy;
+
+/** On mainnet the testnet claims ("no real money") would be false, so those texts are swapped. */
+const isMainnet = getConfig().network === "mainnet";
+const trialBody = isMainnet ? hiwMainnetCopy.trialBody : trial.body;
+const trialSteps: readonly string[] = isMainnet
+  ? [...hiwMainnetCopy.trialSteps, ...trial.steps.slice(2)]
+  : trial.steps;
+const glossaryItems = isMainnet
+  ? glossary.items.map((item) => (item.term === "Red de pruebas" ? hiwMainnetCopy.glossaryTerm : item))
+  : glossary.items;
+const limitsItems: readonly string[] = isMainnet
+  ? [hiwMainnetCopy.limitsFirstItem, ...limits.items.slice(1)]
+  : limits.items;
 
 const ROLE_ICONS: Record<string, ReactNode> = {
   resident: <Eye className="size-5" aria-hidden="true" />,
@@ -189,11 +203,11 @@ export function ManualPage() {
           </section>
 
           <section>
-            <SectionTitle id={trial.id} title={trial.title} body={trial.body} />
+            <SectionTitle id={trial.id} title={trial.title} body={trialBody} />
             <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]">
               <Card padding="lg">
                 <ol className="grid gap-5">
-                  {trial.steps.map((step, index) => (
+                  {trialSteps.map((step, index) => (
                     <li key={step} className="flex gap-4">
                       <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-royal text-sm font-semibold text-on-royal">
                         {index + 1}
@@ -215,7 +229,7 @@ export function ManualPage() {
           <section>
             <SectionTitle id={glossary.id} title={glossary.title} />
             <dl className="mt-8 grid gap-4 sm:grid-cols-2">
-              {glossary.items.map((item) => (
+              {glossaryItems.map((item) => (
                 <Card key={item.term} padding="md">
                   <dt className="font-semibold tracking-tight text-royal">{item.term}</dt>
                   <dd className="mt-1.5 leading-relaxed text-pretty">{item.body}</dd>
@@ -227,7 +241,7 @@ export function ManualPage() {
           <section>
             <SectionTitle id={limits.id} title={limits.title} body={limits.body} />
             <ul className="mt-6 grid gap-3">
-              {limits.items.map((item) => (
+              {limitsItems.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-lg leading-relaxed text-ink-soft">
                   <span
                     aria-hidden="true"

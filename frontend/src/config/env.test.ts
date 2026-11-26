@@ -53,9 +53,38 @@ describe("parseConfig", () => {
     expect(config.rpcUrl).toBe("http://localhost:8000/soroban/rpc");
   });
 
-  it("rejects mainnet and unknown networks", () => {
-    expect(issuesOf({ ...validRaw, network: "public" })[0]).toMatch(/mainnet is not supported/);
-    expect(issuesOf({ ...validRaw, network: "mainnet" })[0]).toMatch(/must be "testnet" or "local"/);
+  it("rejects unknown networks", () => {
+    expect(issuesOf({ ...validRaw, network: "public" })[0]).toMatch(/must be "testnet", "local" or "mainnet"/);
+    expect(issuesOf({ ...validRaw, network: "futurenet" })[0]).toMatch(/must be "testnet", "local" or "mainnet"/);
+  });
+
+  describe("mainnet", () => {
+    const rpcUrl = "https://rpc.example.org";
+
+    it("builds the mainnet configuration with the public passphrase and explorer", () => {
+      const config = parseConfig({ ...validRaw, network: "mainnet", rpcUrl });
+
+      expect(config.network).toBe("mainnet");
+      expect(config.networkPassphrase).toBe("Public Global Stellar Network ; September 2015");
+      expect(config.rpcUrl).toBe(rpcUrl);
+      expect(config.explorerBaseUrl).toBe("https://stellar.expert/explorer/public");
+    });
+
+    it("has no default RPC: the SDF runs none, so a provider must be chosen", () => {
+      expect(issuesOf({ ...validRaw, network: "mainnet" })).toEqual([
+        expect.stringMatching(/NEXT_PUBLIC_SOROBAN_RPC_URL is required on mainnet/),
+      ]);
+    });
+
+    it("requires https for the RPC", () => {
+      expect(issuesOf({ ...validRaw, network: "mainnet", rpcUrl: "http://rpc.example.org" })).toEqual([
+        expect.stringMatching(/must use https on mainnet/),
+      ]);
+    });
+
+    it("does not change the testnet defaults", () => {
+      expect(parseConfig(validRaw).rpcUrl).toBe("https://soroban-testnet.stellar.org");
+    });
   });
 
   it("requires a valid treasury contract address", () => {

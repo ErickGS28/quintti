@@ -218,3 +218,22 @@ export const hiwCopy = {
     open: "Abrir la app",
   },
 } as const;
+
+/**
+ * What changes in the manual when the app is built for mainnet (decision 0018). The testnet texts
+ * above say "no real money", which would be false there.
+ */
+export const hiwMainnetCopy = {
+  trialBody:
+    "Esta es la red principal de Stellar y es una beta sin auditar: las monedas tienen valor y no se pueden recuperar. Usa solo montos simbólicos. Para ver cada papel hace falta una cuenta con ese papel en el contrato.",
+  trialSteps: [
+    "Instala la extensión Freighter y cámbiala a la red principal (Mainnet).",
+    "Usa la cuenta que tenga el papel que quieres probar: administración, consejo o asamblea. Si no estás seguro de cuál es, mira el panel de quién es quién.",
+  ],
+  glossaryTerm: {
+    term: "Red principal",
+    body: "La red real de Stellar. Las monedas tienen valor y las transacciones no se pueden deshacer. Todo lo que ves aquí ocurre ahí.",
+  },
+  limitsFirstItem:
+    "Está en la red principal como beta, sin auditoría. El contrato no se puede actualizar: un error obliga a desplegar otro. Usa solo montos simbólicos.",
+} as const;

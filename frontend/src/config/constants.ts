@@ -1,4 +1,7 @@
-/** Networks the app can talk to. Mainnet is deliberately absent. */
+/**
+ * Networks the app can talk to. Mainnet is opt-in (decision 0018): it has no default RPC URL, so
+ * choosing a provider is a deliberate step, and the app labels it as an unaudited beta.
+ */
 export const NETWORKS = {
   testnet: {
     passphrase: "Test SDF Network ; September 2015",
@@ -9,6 +12,12 @@ export const NETWORKS = {
     passphrase: "Standalone Network ; February 2017",
     defaultRpcUrl: "http://localhost:8000/soroban/rpc",
     explorerBaseUrl: "https://stellar.expert/explorer/testnet",
+  },
+  mainnet: {
+    passphrase: "Public Global Stellar Network ; September 2015",
+    // The SDF runs no public Soroban RPC for mainnet, so there is no default to fall back on.
+    defaultRpcUrl: "",
+    explorerBaseUrl: "https://stellar.expert/explorer/public",
   },
 } as const;
 
