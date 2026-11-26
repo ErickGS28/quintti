@@ -16,6 +16,7 @@
     5. Tries to rotate the council at once (the contract refuses: a delay applies).
     6. Announces a rotation, tries to execute it before the delay (refused), waits, executes it, and
        reads the new council back.
+    7. Announces another rotation and cancels it.
 
   It needs the identities qt-admin and qt-council1..3 from docs/06-getting-started.md, and the built
   WASM (stellar contract build). Safe to rerun: the assembly account is configured only once and each run
@@ -156,6 +157,17 @@ $execute = Invoke-AsAssembly "execute_rotation" @() $signers
 Expect $execute.Accepted "The rotation did not run after the delay:`n$($execute.Output)"
 Remove-Item $newCouncilFile -ErrorAction SilentlyContinue
 Write-Host "  executed: https://stellar.expert/explorer/testnet/tx/$($execute.Hash)"
+
+Write-Host "9. Announcing another rotation and cancelling it"
+$backFile = Write-Json @((Address "qt-council1"), (Address "qt-council2"), (Address "qt-council3"))
+$second = Invoke-AsAssembly "announce_rotation" @("--council-file-path", $backFile, "--threshold", "2") $signers
+Remove-Item $backFile -ErrorAction SilentlyContinue
+Expect $second.Accepted "The second announcement did not go through:`n$($second.Output)"
+$cancel = Invoke-AsAssembly "cancel_rotation" @() $signers
+Expect $cancel.Accepted "The cancellation did not go through:`n$($cancel.Output)"
+Expect ((Read-Contract 'get_pending_rotation') -eq "null") "A rotation is still pending after the cancellation"
+Write-Host "  announced: https://stellar.expert/explorer/testnet/tx/$($second.Hash)"
+Write-Host "  cancelled: https://stellar.expert/explorer/testnet/tx/$($cancel.Hash)"
 
 Write-Host ""
 Write-Host "Done"
