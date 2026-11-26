@@ -51,6 +51,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 | [docs/06-getting-started.md](docs/06-getting-started.md) | Build, test and deploy your own copy on testnet |
 | [docs/07-design-system.md](docs/07-design-system.md) | Visual direction, palette, components and the landing page |
 | [docs/08-demo-walkthrough.md](docs/08-demo-walkthrough.md) | A two-minute walk through one full expense |
+| [docs/09-state-and-next-steps.md](docs/09-state-and-next-steps.md) | Where we are, the gaps between code and demo, and what comes next |
 | [CHANGELOG.md](CHANGELOG.md) | Current state and history of changes |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commit style and the checks to run before pushing |
 | [docs/decisions/](docs/decisions/README.md) | Design decisions and their rationale |

@@ -11,6 +11,7 @@
 | 6 | [06-getting-started.md](06-getting-started.md) | Build, test and deploy your own copy on testnet |
 | 7 | [07-design-system.md](07-design-system.md) | Visual direction, palette, components and the landing page |
 | 8 | [08-demo-walkthrough.md](08-demo-walkthrough.md) | A two-minute walk through one full expense |
+| 9 | [09-state-and-next-steps.md](09-state-and-next-steps.md) | Where we are, the gaps between code and demo, and what comes next |
 | — | [../CHANGELOG.md](../CHANGELOG.md) | Current state and history of changes |
 | — | [decisions/](decisions/README.md) | Design decisions and their rationale |
 
