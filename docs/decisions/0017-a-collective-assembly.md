@@ -1,6 +1,6 @@
 # 0017. A collective assembly: multi-signature first, a delay on rotation second
 
-Status: Proposed. Extends [0004](0004-assembly-role.md), which accepted a single assembly account for the prototype.
+Status: Proposed. Option A verified on testnet (see Verification). Extends [0004](0004-assembly-role.md), which accepted a single assembly account for the prototype.
 
 ## Context
 
@@ -24,9 +24,24 @@ The contract stores the assembly as an `Address` and checks it with `require_aut
 
 Do A and C now, and leave B as the direction.
 
-1. **A. Deploy with a native multi-signature account as the assembly.** The contract needs no change. The work is to build the account (for example 3 representatives, 2 of 3 required), deploy the treasury with it as `assembly`, and show on testnet that a rule change signed by one representative is rejected and one signed by two is accepted. To verify first: that the account's threshold is what Soroban applies to `require_auth()` for the rule-changing calls.
+1. **A. Deploy with a native multi-signature account as the assembly.** The contract needs no change. The work is to build the account (for example 3 representatives, 2 of 3 required), deploy the treasury with it as `assembly`, and show on testnet that a rule change signed by one representative is rejected and one signed by two is accepted. This was verified on testnet (see Verification).
 2. **C. Add a waiting period to `rotate_council` and `set_administrator`.** The assembly announces the change, the contract emits an event with the new members and the time it can run, and a second call executes it after the delay. The assembly can cancel a pending change. Budget and vendor changes stay immediate, because they cannot move money outside the existing limits.
 3. **B stays a later step.** A weighted on-chain vote needs the legal question answered first, and a pilot that tells us how real assemblies decide.
+
+## Verification of option A
+
+[scripts/demo-multisig-assembly.ps1](../../scripts/demo-multisig-assembly.ps1) does it end to end on testnet. It creates a Stellar account with three representatives as signers (weight 1 each), every threshold at 2 and the master key at weight 0, deploys a treasury with that account as the assembly, and changes a budget line:
+
+- Signed by one representative, the network rejects the transaction with `TxBadAuth`.
+- Signed by two, it succeeds, and `get_budget` returns the new limit.
+
+Run on 25 November 2026: the assembly account is `GBPZIFBLEZLMV5ZSWAEMTPDLM6VRUSUZLQOCYXZCVHX74Z65A6L2AN5Y`, the treasury `CAETP2Y63VQR4RGL3RBFTRNYFP3F3FHTCTQXPAYTY3RWCVXDYWC4A6R4` and the accepted transaction [afe93925...3877](https://stellar.expert/explorer/testnet/tx/afe93925062d0a5a59503981bcef1f7bdc870a206e224cc700069034933d3877). The testnet is reset periodically, so these will disappear; rerun the script.
+
+What this does not tell us:
+
+- The rejection happens in the network, when it checks the transaction's signatures, before the contract runs. The result is the same for the user (no single person changes the rules), but the contract is not what refuses.
+- All three thresholds were set to 2, so the test does not show which one Soroban applies to this call. Anyone reusing the setup should keep them equal.
+- The assembly account is the transaction's source, so its signatures are on the transaction itself. Signing the authorization separately, for a transaction sent by someone else, was not tried.
 
 ## Consequences
 

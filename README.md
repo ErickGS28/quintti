@@ -60,7 +60,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 docs/          product, design and architecture documents
 contracts/     Soroban treasury contract (Rust)
 frontend/      web app (Next.js, TypeScript): landing page, the treasury app at /app, the manual at /hiw, the business model and plan at /negocio, and tests
-scripts/       deploys and seeds the demo treasury on testnet (seed-demo.ps1) and holds the demo invoices
+scripts/       deploys and seeds the demo treasury on testnet (seed-demo.ps1), shows a 2-of-3 multi-signature assembly (demo-multisig-assembly.ps1) and holds the demo invoices
 ```
 
 ## Quick start
