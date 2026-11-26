@@ -5,5 +5,6 @@ export const appRoutes = {
   expense: (id: number) => `/app/gastos/${id}`,
   propose: "/app/gastos/nuevo",
   rules: "/app/reglas",
+  deposit: "/app/depositar",
   buildings: "/app/edificios",
 } as const;

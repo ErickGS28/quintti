@@ -183,7 +183,7 @@ export const hiwCopy = {
       "Abre el enlace de la transacción: debe verse en stellar.expert. Eso es la evidencia en la red.",
       "Prueba un rechazo: propone un monto mayor a lo disponible. La lista de reglas lo marca y el contrato lo rechaza.",
     ],
-    deposit: "El saldo se carga depositando en el contrato. En el prototipo eso se hace con la línea de comandos (ver la guía de inicio del repositorio): la app todavía no tiene pantalla de depósito.",
+    deposit: "El saldo se carga depositando en el contrato. Cualquiera con una billetera puede hacerlo desde Depositar fondos, en el Resumen: el monto sale de su cuenta y queda registrado quién lo puso. No hace falta ningún rol.",
   },
 
   glossary: {

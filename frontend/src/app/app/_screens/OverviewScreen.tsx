@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Clock3, Landmark, Plus, ReceiptText, ShieldCheck, Wallet } from "lucide-react";
+import { ArrowRight, Clock3, Coins, Landmark, Plus, ReceiptText, ShieldCheck, Wallet } from "lucide-react";
 import Link from "next/link";
 
 import { buttonStyles } from "@/components/atoms/Button";
@@ -83,12 +83,21 @@ export function OverviewScreen() {
       <PageHeader
         title={treasury.name || appCopy.building.fallbackName}
         actions={
-          permissions.canPropose && (
-            <Link href={href(appRoutes.propose)} className={buttonStyles({ size: "lg", shape: "pill" })}>
-              <Plus className="size-4" aria-hidden="true" />
-              {appCopy.expenses.propose}
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={href(appRoutes.deposit)}
+              className={buttonStyles({ size: "lg", shape: "pill", variant: permissions.canPropose ? "soft" : "primary" })}
+            >
+              <Coins className="size-4" aria-hidden="true" />
+              {appCopy.deposit.action}
             </Link>
-          )
+            {permissions.canPropose && (
+              <Link href={href(appRoutes.propose)} className={buttonStyles({ size: "lg", shape: "pill" })}>
+                <Plus className="size-4" aria-hidden="true" />
+                {appCopy.expenses.propose}
+              </Link>
+            )}
+          </div>
         }
       />
 

@@ -11,10 +11,13 @@
 // a `maintenance` budget of 1,000 XLM, one paid expense of 80 XLM, and a
 // treasury balance of 420 XLM. `QUINTTI_LIVE_ADMIN` is the administrator's address.
 
+import { Keypair, TransactionBuilder } from "@stellar/stellar-sdk";
 import { describe, expect, it } from "vitest";
 
 import { parseConfig } from "@/config/env";
+import { createDepositService } from "@/features/funding/services/deposit-service";
 import { createTreasuryReader } from "@/features/public-view/services/treasury-reader";
+import type { WalletAdapter } from "@/lib/wallet/wallet-adapter";
 
 import { createTreasuryClient } from "@/lib/stellar/treasury-client";
 import { CALL_OPTIONS, readResult, readValue } from "@/lib/stellar/transaction-service";
@@ -121,4 +124,47 @@ describe.skipIf(!live)("treasury on testnet (live)", { timeout: 60_000 }, () => 
       ),
     ).rejects.toMatchObject({ kind: "contract", contractError: "OverBudget" });
   });
-});
+
+  it("reads a deposit that the account cannot afford as the token's error, not as a treasury rule", async () => {
+    const { config } = setup();
+    const payer = process.env.QUINTTI_LIVE_ADMIN;
+    expect(payer, "set QUINTTI_LIVE_ADMIN to an account that exists on the network").toBeTruthy();
+    const wallet: WalletAdapter = {
+      connect: async () => payer!,
+      getAddress: async () => payer!,
+      getNetworkPassphrase: async () => config.networkPassphrase,
+      signTransaction: () => Promise.reject(new Error("must not be asked to sign")),
+      disconnect: async () => {},
+    };
+
+    // 500,000 XLM, far more than the account holds. The token rejects it, and the treasury passes it up.
+    await expect(
+      createDepositService({ config, wallet }).deposit({ amount: 5_000_000_000_000n }),
+    ).rejects.toMatchObject({ kind: "other-contract", foreignCode: 10 });
+  });
+
+  // Signs with a key held in memory instead of a browser wallet, so the whole path can be checked without an
+  // extension. Use an empty treasury as the target: the deposit changes its balance for good.
+  it.skipIf(!process.env.QUINTTI_LIVE_SECRET)("deposits for real and the treasury balance grows by that amount", async () => {
+    const { config, client } = setup();
+    const keypair = Keypair.fromSecret(process.env.QUINTTI_LIVE_SECRET!);
+    const wallet: WalletAdapter = {
+      connect: async () => keypair.publicKey(),
+      getAddress: async () => keypair.publicKey(),
+      getNetworkPassphrase: async () => config.networkPassphrase,
+      signTransaction: async (xdr, options) => {
+        const transaction = TransactionBuilder.fromXDR(xdr, options.networkPassphrase);
+        transaction.sign(keypair);
+        return { signedTxXdr: transaction.toXDR(), signerAddress: keypair.publicKey() };
+      },
+      disconnect: async () => {},
+    };
+    const reader = createTreasuryReader(client);
+    const before = (await reader.snapshot()).balance;
+
+    const receipt = await createDepositService({ config, wallet }).deposit({ amount: 10_000_000n });
+
+    expect(receipt.hash).toMatch(/^[0-9a-f]{64}$/);
+    expect(receipt.explorerUrl).toContain(receipt.hash);
+    expect((await reader.snapshot()).balance).toBe(before + 10_000_000n);
+  });});
