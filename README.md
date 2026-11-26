@@ -52,6 +52,7 @@ Start with [docs/README.md](docs/README.md). Recommended reading order: idea, vi
 | [docs/07-design-system.md](docs/07-design-system.md) | Visual direction, palette, components and the landing page |
 | [docs/08-demo-walkthrough.md](docs/08-demo-walkthrough.md) | A two-minute walk through one full expense |
 | [CHANGELOG.md](CHANGELOG.md) | Current state and history of changes |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commit style and the checks to run before pushing |
 | [docs/decisions/](docs/decisions/README.md) | Design decisions and their rationale |
 
 ## Repository layout
