@@ -12,6 +12,8 @@ export type SidebarItem = {
   count?: number;
   /** Active only on its own page, not on the pages under it (for the overview). */
   exact?: boolean;
+  /** The path that decides whether the item is active, when `href` carries a query (`?edificio=`) that the path does not. */
+  match?: string;
 };
 
 type SidebarProps = {
@@ -32,8 +34,9 @@ type SidebarProps = {
 
 /** An item is active on its own page and, unless it is exact, on the pages under it. */
 function isActive(item: SidebarItem, currentPath: string): boolean {
-  if (currentPath === item.href) return true;
-  return !item.exact && currentPath.startsWith(`${item.href}/`);
+  const target = item.match ?? item.href;
+  if (currentPath === target) return true;
+  return !item.exact && currentPath.startsWith(`${target}/`);
 }
 
 /**
@@ -69,7 +72,7 @@ export function Sidebar({
           {items.map((item) => {
             const active = isActive(item, currentPath);
             return (
-              <li key={item.href}>
+              <li key={item.match ?? item.href}>
                 <Link
                   href={item.href}
                   onClick={onNavigate}

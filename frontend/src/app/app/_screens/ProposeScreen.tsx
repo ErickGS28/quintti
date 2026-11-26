@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/molecules/PageHeader";
 import { appCopy } from "@/copy/app.es";
 import { ProposeExpenseForm } from "@/features/expenses";
 
+import { useBuilding } from "@/lib/buildings/building-context";
 import { appRoutes } from "../_shell/routes";
 import { useSession } from "../_shell/session";
 import { ReadError, ScreenSkeleton } from "./states";
@@ -16,6 +17,7 @@ import { ReadError, ScreenSkeleton } from "./states";
 /** Proposing an expense. The form lives in the expenses feature; this screen only decides who may see it. */
 export function ProposeScreen() {
   const { snapshot, permissions } = useSession();
+  const { href } = useBuilding();
   const { propose: copy } = appCopy;
 
   if (snapshot.isPending) return <ScreenSkeleton rows={1} />;
@@ -24,7 +26,7 @@ export function ProposeScreen() {
   const header = (
     <>
       <Link
-        href={appRoutes.expenses}
+        href={href(appRoutes.expenses)}
         className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft hover:text-royal"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
@@ -56,7 +58,7 @@ export function ProposeScreen() {
         balance={snapshot.data.balance}
         budgets={snapshot.data.budgets}
         vendors={snapshot.data.vendors}
-        expenseHref={appRoutes.expense}
+        expenseHref={(id) => href(appRoutes.expense(id))}
       />
     </div>
   );

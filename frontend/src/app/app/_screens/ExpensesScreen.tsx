@@ -11,6 +11,7 @@ import { PageHeader } from "@/components/molecules/PageHeader";
 import { SegmentedControl } from "@/components/molecules/SegmentedControl";
 import { appCopy } from "@/copy/app.es";
 import { ExpenseList, type ExpenseStatusView } from "@/features/public-view";
+import { useBuilding } from "@/lib/buildings/building-context";
 
 import { appRoutes } from "../_shell/routes";
 import { useSession } from "../_shell/session";
@@ -21,6 +22,7 @@ type Filter = "all" | ExpenseStatusView;
 /** Every expense, newest first, filtered by state. */
 export function ExpensesScreen() {
   const { snapshot, expenses, permissions } = useSession();
+  const { href } = useBuilding();
   const [filter, setFilter] = useState<Filter>("all");
   const { expenses: copy } = appCopy;
 
@@ -38,7 +40,7 @@ export function ExpensesScreen() {
         title={copy.title}
         actions={
           permissions.canPropose && (
-            <Link href={appRoutes.propose} className={buttonStyles({ size: "lg", shape: "pill" })}>
+            <Link href={href(appRoutes.propose)} className={buttonStyles({ size: "lg", shape: "pill" })}>
               <Plus className="size-4" aria-hidden="true" />
               {copy.propose}
             </Link>
@@ -64,7 +66,7 @@ export function ExpensesScreen() {
             expenses={shown}
             council={snapshot.data.council}
             threshold={snapshot.data.threshold}
-            hrefFor={appRoutes.expense}
+            hrefFor={(id) => href(appRoutes.expense(id))}
           />
         ) : (
           <EmptyState

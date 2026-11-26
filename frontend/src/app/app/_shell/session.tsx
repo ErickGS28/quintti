@@ -5,6 +5,7 @@ import { createContext, useCallback, useContext, useMemo, type ReactNode } from 
 import { appCopy } from "@/copy/app.es";
 import { useExpenses, useTreasurySnapshot } from "@/features/public-view";
 import { useWalletSession } from "@/features/wallet-session";
+import { useBuilding } from "@/lib/buildings/building-context";
 import { permissionsOf, rolesOf, type Permissions, type TreasuryRole } from "@/lib/treasury/roles";
 
 /**
@@ -27,11 +28,16 @@ const SessionContext = createContext<Session | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
   const { state } = useWalletSession();
+  const { trusted } = useBuilding();
   const snapshot = useTreasurySnapshot();
   const expenses = useExpenses();
 
   const address = state.status === "connected" ? state.address : null;
-  const roles = useMemo(() => (snapshot.data ? rolesOf(address, snapshot.data) : []), [address, snapshot.data]);
+  // A building opened from a link and not saved is read-only: whatever it says about roles is not believed.
+  const roles = useMemo(
+    () => (trusted && snapshot.data ? rolesOf(address, snapshot.data) : []),
+    [trusted, address, snapshot.data],
+  );
 
   const nameFor = useCallback(
     (candidate: string) => {

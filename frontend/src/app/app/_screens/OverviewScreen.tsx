@@ -13,6 +13,7 @@ import { StatCard } from "@/components/molecules/StatCard";
 import { getConfig } from "@/config/env";
 import { appCopy } from "@/copy/app.es";
 import { ExpenseList } from "@/features/public-view";
+import { useBuilding } from "@/lib/buildings/building-context";
 import { formatTokenAmount } from "@/lib/format/token";
 import { accountUrl } from "@/lib/stellar/explorer";
 import { spentShare } from "@/lib/treasury/approvals";
@@ -26,14 +27,15 @@ const RECENT = 5;
 /** What the connected account can do here, and the shortest way to do it. */
 function RolePanel() {
   const { address, permissions } = useSession();
+  const { href } = useBuilding();
   const { role } = appCopy;
 
   const content = permissions.canManageRules
-    ? { ...role.assembly, href: appRoutes.rules }
+    ? { ...role.assembly, href: href(appRoutes.rules) }
     : permissions.canPropose
-      ? { ...role.administrator, href: appRoutes.propose }
+      ? { ...role.administrator, href: href(appRoutes.propose) }
       : permissions.canApprove
-        ? { ...role.council, href: appRoutes.expenses }
+        ? { ...role.council, href: href(appRoutes.expenses) }
         : address
           ? { ...role.connectedResident, href: null, action: null }
           : { ...role.visitor, href: null, action: null };
@@ -60,6 +62,7 @@ function RolePanel() {
 /** The building at a glance: money, what waits for signatures, the latest expenses and who decides. */
 export function OverviewScreen() {
   const { snapshot, expenses, permissions, nameFor } = useSession();
+  const { href } = useBuilding();
   const { overview, roles, address: addressCopy } = appCopy;
   const config = getConfig();
 
@@ -81,7 +84,7 @@ export function OverviewScreen() {
         title={treasury.name || appCopy.building.fallbackName}
         actions={
           permissions.canPropose && (
-            <Link href={appRoutes.propose} className={buttonStyles({ size: "lg", shape: "pill" })}>
+            <Link href={href(appRoutes.propose)} className={buttonStyles({ size: "lg", shape: "pill" })}>
               <Plus className="size-4" aria-hidden="true" />
               {appCopy.expenses.propose}
             </Link>
@@ -114,7 +117,7 @@ export function OverviewScreen() {
           action={
             list.length > 0 && (
               <Link
-                href={appRoutes.expenses}
+                href={href(appRoutes.expenses)}
                 className="inline-flex items-center gap-1 text-sm font-semibold text-royal hover:underline"
               >
                 {overview.recentLink}
@@ -128,7 +131,7 @@ export function OverviewScreen() {
               expenses={recent}
               council={treasury.council}
               threshold={treasury.threshold}
-              hrefFor={appRoutes.expense}
+              hrefFor={(id) => href(appRoutes.expense(id))}
             />
           ) : (
             <EmptyState

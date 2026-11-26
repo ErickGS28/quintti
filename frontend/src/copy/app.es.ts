@@ -13,6 +13,7 @@ export const appCopy = {
   skip: "Saltar al contenido",
 
   nav: {
+    buildings: "Mis edificios",
     label: "Secciones",
     overview: "Resumen",
     expenses: "Gastos",
@@ -24,6 +25,44 @@ export const appCopy = {
 
   building: {
     fallbackName: "Cuenta del edificio",
+    switch: "Mis edificios",
+    share: "Copiar enlace",
+    shared: "Enlace copiado",
+    shareFailed: "No se pudo copiar. Selecciona el enlace y cópialo a mano.",
+    invalidTitle: "Ese enlace no abre ningún edificio",
+    invalidBody: "La dirección del edificio no es válida. Pídele a la administración que te envíe el enlace de nuevo.",
+    invalidAction: "Ir al edificio principal",
+    untrusted: {
+      title: "Abriste este edificio desde un enlace",
+      body: "Puedes ver todo, pero no firmar. Antes de guardarlo, confirma con la administración que esta es la dirección de su cuenta: un enlace puede apuntar a una cuenta que solo se parece a un edificio.",
+      address: "Dirección de la cuenta",
+      save: "Es la correcta, guardar",
+      saved: "Edificio guardado",
+      notReadable: "No pudimos leer este edificio, así que no se puede guardar.",
+    },
+  },
+
+  buildings: {
+    title: "Mis edificios",
+    description: "Los edificios que guardaste en este navegador. La lista no sale de aquí: nadie más la ve.",
+    current: "Estás aquí",
+    main: "Principal",
+    open: "Abrir",
+    remove: "Quitar",
+    removeLabel: (name: string) => `Quitar ${name} de mi lista`,
+    removed: "Edificio quitado de la lista",
+    unreadable: "No se pudo leer",
+    loadingName: "Leyendo…",
+    addTitle: "Agregar un edificio",
+    addBody: "Pega el enlace que te dio la administración, o la dirección de la cuenta (empieza con C).",
+    addLabel: "Enlace o dirección",
+    addPlaceholder: "https://…  o  C…",
+    addSubmit: "Agregar",
+    adding: "Comprobando…",
+    notABuilding: "Eso no parece un enlace ni una dirección de edificio.",
+    notFound: "No encontramos un edificio de Quintti con esa dirección en esta red.",
+    alreadySaved: "Ese edificio ya está en tu lista.",
+    privacy: "Se guarda solo en este navegador. Si lo borras o cambias de equipo, tendrás que agregarlos de nuevo.",
   },
 
   network: {

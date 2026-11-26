@@ -13,6 +13,7 @@ import { appCopy } from "@/copy/app.es";
 import { ApproveExpenseButton, CancelExpenseButton } from "@/features/expenses";
 import { InvoiceCheck } from "@/features/invoice-check";
 import { ApprovalTrack, ExpenseStatusBadge } from "@/features/public-view";
+import { useBuilding } from "@/lib/buildings/building-context";
 import { categoryLabel } from "@/lib/format/category";
 import { safeHttpUrl } from "@/lib/format/safe-url";
 import { formatLedgerTime } from "@/lib/format/date";
@@ -24,9 +25,10 @@ import { useSession } from "../_shell/session";
 import { ReadError, ScreenSkeleton } from "./states";
 
 function BackLink() {
+  const { href } = useBuilding();
   return (
     <Link
-      href={appRoutes.expenses}
+      href={href(appRoutes.expenses)}
       className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft hover:text-royal"
     >
       <ArrowLeft className="size-4" aria-hidden="true" />
