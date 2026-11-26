@@ -22,6 +22,7 @@ One decision per file, short and with its rationale. If a decision changes, a ne
 | [0016](0016-a-smaller-app.md) | A smaller app: three screens and fewer words | Accepted |
 | [0017](0017-a-collective-assembly.md) | A collective assembly: multi-signature first, a delay on rotation second | Accepted |
 | [0018](0018-mainnet-as-an-opt-in-beta.md) | Mainnet as an opt-in beta with symbolic funds | Proposed |
+| [0019](0019-buildings-by-link-without-a-backend.md) | Several buildings in one app, chosen by the link, with no backend | Accepted, amends 0016 |
 
 ## Template
 

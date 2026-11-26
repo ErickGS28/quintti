@@ -14,6 +14,7 @@
 | 9 | [09-state-and-next-steps.md](09-state-and-next-steps.md) | Where we are, the gaps between code and demo, and what comes next |
 | 10 | [10-mainnet-launch.md](10-mainnet-launch.md) | Putting a treasury on mainnet as an unaudited beta, step by step |
 | 11 | [11-shipit-mainnet-plan.md](11-shipit-mainnet-plan.md) | The plan to launch on mainnet for the Ship It challenge only. Optional, not decided |
+| 12 | [12-buildings-and-links.md](12-buildings-and-links.md) | How a building is created, shared and opened, with no server |
 | — | [../CHANGELOG.md](../CHANGELOG.md) | Current state and history of changes |
 | — | [decisions/](decisions/README.md) | Design decisions and their rationale |
 

@@ -1,6 +1,6 @@
 # 0016. A smaller app: three screens and fewer words
 
-Status: Accepted. Amends [0012](0012-one-role-aware-app-with-a-sidebar.md): still one role-aware app, with fewer screens.
+Status: Accepted. Amends [0012](0012-one-role-aware-app-with-a-sidebar.md): still one role-aware app, with fewer screens. Amended by [0019](0019-buildings-by-link-without-a-backend.md): one more screen, "Mis edificios", reached from the building card and not from the menu.
 
 ## Context
 

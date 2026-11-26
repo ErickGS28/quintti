@@ -48,7 +48,7 @@ quintti/
 │   ├── scripts/                   generate-bindings.mjs
 │   └── src/
 │       ├── app/                   routes, composition only
-│       │   ├── app/               the treasury app: _shell (session, sidebar) and _screens, one per route
+│       │   ├── app/               the treasury app: _shell (session, sidebar, the notice for an unsaved building) and _screens, one per route
 │       │   ├── hiw/               the manual at /hiw: roles and flow, not linked from anywhere
 │       │   └── negocio/           business model and plan at /negocio, not linked from anywhere
 │       ├── features/              one folder per capability, each with an index.ts
@@ -61,6 +61,7 @@ quintti/
 │       ├── components/            atoms, molecules, organisms and templates shared by every screen
 │       ├── copy/                  Spanish user-facing text (landing, app and error messages), isolated from logic
 │       ├── lib/
+│       │   ├── buildings/         which building is on screen: the link, the saved list, who may sign (decision 0019)
 │       │   ├── errors/            AppError, the one error type that leaves lib
 │       │   ├── stellar/           treasury client, transaction service, error mapping, explorer links
 │       │   ├── wallet/            wallet adapter, Wallets Kit implementation, network check
@@ -102,7 +103,7 @@ component → hook → feature service → executeWrite → connectedSigner (wal
 
 ### One error type
 
-Everything that leaves `lib/` is an `AppError` with a `kind`: `contract`, `invalid-input`, `wallet-rejected`, `wallet-unavailable`, `wallet-network`, `network`, `timeout`, `state-expired` or `unknown`. Screens never inspect SDK or wallet errors. For `contract` errors, `contractError` holds the name of the rule (for example `OverBudget`), and `copy/errors.es.ts` has a Spanish message for each of the 19. A test compares the list of names with the generated bindings, and the message table is typed as `Record<ContractErrorName, string>`, so a new contract error cannot be added without a message.
+Everything that leaves `lib/` is an `AppError` with a `kind`: `contract`, `invalid-input`, `wallet-rejected`, `wallet-unavailable`, `wallet-network`, `network`, `timeout`, `state-expired`, `untrusted-building` or `unknown`. Screens never inspect SDK or wallet errors. For `contract` errors, `contractError` holds the name of the rule (for example `OverBudget`), and `copy/errors.es.ts` has a Spanish message for each of the 25. A test compares the list of names with the generated bindings, and the message table is typed as `Record<ContractErrorName, string>`, so a new contract error cannot be added without a message.
 
 See [decisions/0008](decisions/0008-read-simulation-errors-directly.md) for why the simulation error is read directly.
 
