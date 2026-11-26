@@ -1,9 +1,23 @@
 import { describe, expect, it } from "vitest";
 
-import { INVOICE_MAX_BYTES, MAX_AMOUNT } from "@/config/constants";
+import {
+  DESCRIPTION_MAX_BYTES,
+  INVOICE_MAX_BYTES,
+  INVOICE_URI_MAX_BYTES,
+  MAX_AMOUNT,
+  NAME_MAX_BYTES,
+} from "@/config/constants";
 import { OTHER_ADDRESS } from "@/test-support/fakes";
 
-import { validateAddress, validateAmount, validateCategory, validateInvoice } from "./input";
+import {
+  validateAddress,
+  validateAmount,
+  validateCategory,
+  validateDescription,
+  validateInvoice,
+  validateInvoiceUri,
+  validateName,
+} from "./input";
 
 function failure(run: () => unknown) {
   try {
@@ -80,5 +94,64 @@ describe("validateInvoice", () => {
     const tooBig = { size: INVOICE_MAX_BYTES + 1 } as Blob;
 
     expect(failure(() => validateInvoice(tooBig))).toMatchObject({ kind: "invalid-input", field: "invoice" });
+  });
+});
+
+describe("validateName", () => {
+  it("trims the name and accepts the whole limit", () => {
+    expect(validateName("  Torres del Parque  ")).toBe("Torres del Parque");
+    expect(validateName("a".repeat(NAME_MAX_BYTES))).toHaveLength(NAME_MAX_BYTES);
+  });
+
+  it("rejects an empty name and one over the limit", () => {
+    for (const text of ["", "   ", "a".repeat(NAME_MAX_BYTES + 1)]) {
+      expect(failure(() => validateName(text))).toMatchObject({ kind: "invalid-input", field: "name" });
+    }
+  });
+
+  it("counts bytes, not letters: an accented letter takes two", () => {
+    expect(() => validateName("\u00f1".repeat(NAME_MAX_BYTES / 2))).not.toThrow();
+    expect(failure(() => validateName("\u00f1".repeat(NAME_MAX_BYTES / 2 + 1)))).toMatchObject({ field: "name" });
+  });
+});
+
+describe("validateDescription", () => {
+  it("trims the text and accepts the whole limit", () => {
+    expect(validateDescription("  Mantenimiento del ascensor ")).toBe("Mantenimiento del ascensor");
+    expect(validateDescription("a".repeat(DESCRIPTION_MAX_BYTES))).toHaveLength(DESCRIPTION_MAX_BYTES);
+  });
+
+  it("rejects a missing or too long description, naming the field", () => {
+    for (const text of ["", "  \n ", "a".repeat(DESCRIPTION_MAX_BYTES + 1)]) {
+      expect(failure(() => validateDescription(text))).toMatchObject({ kind: "invalid-input", field: "description" });
+    }
+  });
+
+  it("counts bytes, so 101 accented letters are too many", () => {
+    expect(() => validateDescription("\u00f1".repeat(100))).not.toThrow();
+    expect(failure(() => validateDescription("\u00f1".repeat(101)))).toMatchObject({ field: "description" });
+  });
+});
+
+describe("validateInvoiceUri", () => {
+  it("lets the link be empty", () => {
+    expect(validateInvoiceUri("")).toBe("");
+    expect(validateInvoiceUri("   ")).toBe("");
+  });
+
+  it("accepts http and https addresses and trims them", () => {
+    expect(validateInvoiceUri(" https://example.org/facturas/0042.pdf ")).toBe("https://example.org/facturas/0042.pdf");
+    expect(validateInvoiceUri("http://example.org/a")).toBe("http://example.org/a");
+  });
+
+  it("rejects other protocols and things that are not addresses", () => {
+    for (const text of ["ftp://example.org/a.pdf", "javascript:alert(1)", "data:text/html,x", "file:///c/a.pdf", "not a link", "example.org/a.pdf"]) {
+      expect(failure(() => validateInvoiceUri(text))).toMatchObject({ kind: "invalid-input", field: "invoiceUri" });
+    }
+  });
+
+  it("rejects a link longer than the limit", () => {
+    const long = "https://example.org/" + "a".repeat(INVOICE_URI_MAX_BYTES);
+    expect(failure(() => validateInvoiceUri(long))).toMatchObject({ field: "invoiceUri" });
   });
 });

@@ -17,6 +17,7 @@ function setup(methods: Partial<Record<"propose_expense" | "approve_expense" | "
 }
 
 const invoice = new Blob(["factura-ascensor-0001"]);
+const description = "Mantenimiento mensual del ascensor";
 
 describe("propose", () => {
   it("sends the invoice fingerprint, not the file, and returns the new expense id", async () => {
@@ -28,6 +29,8 @@ describe("propose", () => {
       vendor: OTHER_ADDRESS,
       amount: 800_000_000n,
       invoice,
+      description: "  Mantenimiento mensual del ascensor  ",
+      invoiceUri: " https://example.org/facturas/0001.pdf ",
     });
 
     const [args] = propose_expense.mock.calls[0];
@@ -35,7 +38,18 @@ describe("propose", () => {
     expect(args.vendor).toBe(OTHER_ADDRESS);
     expect(args.amount).toBe(800_000_000n);
     expect(toHex(args.invoice_hash)).toBe(SAMPLE_HASH);
+    expect(args.description).toBe(description);
+    expect(args.invoice_uri).toBe("https://example.org/facturas/0001.pdf");
     expect(receipt).toMatchObject({ hash: "proposed", value: 4 });
+  });
+
+  it("sends an empty link when none is given", async () => {
+    const propose_expense = vi.fn().mockResolvedValue(confirmedTransaction(0, "proposed"));
+    const { service } = setup({ propose_expense });
+
+    await service.propose({ category: "maintenance", vendor: OTHER_ADDRESS, amount: 1n, invoice, description });
+
+    expect(propose_expense.mock.calls[0][0].invoice_uri).toBe("");
   });
 
   it("rejects bad input before touching the wallet or the network", async () => {
@@ -43,10 +57,14 @@ describe("propose", () => {
     const { service, wallet, createClient } = setup({ propose_expense });
 
     for (const input of [
-      { category: "bad name", vendor: OTHER_ADDRESS, amount: 1n, invoice },
-      { category: "maintenance", vendor: "nope", amount: 1n, invoice },
-      { category: "maintenance", vendor: OTHER_ADDRESS, amount: 0n, invoice },
-      { category: "maintenance", vendor: OTHER_ADDRESS, amount: 1n, invoice: new Blob([]) },
+      { category: "bad name", vendor: OTHER_ADDRESS, amount: 1n, invoice, description },
+      { category: "maintenance", vendor: "nope", amount: 1n, invoice, description },
+      { category: "maintenance", vendor: OTHER_ADDRESS, amount: 0n, invoice, description },
+      { category: "maintenance", vendor: OTHER_ADDRESS, amount: 1n, invoice: new Blob([]), description },
+      { category: "maintenance", vendor: OTHER_ADDRESS, amount: 1n, invoice, description: "   " },
+      { category: "maintenance", vendor: OTHER_ADDRESS, amount: 1n, invoice, description: "x".repeat(201) },
+      { category: "maintenance", vendor: OTHER_ADDRESS, amount: 1n, invoice, description, invoiceUri: "ftp://example.org/a.pdf" },
+      { category: "maintenance", vendor: OTHER_ADDRESS, amount: 1n, invoice, description, invoiceUri: "not a link" },
     ]) {
       await expect(service.propose(input)).rejects.toMatchObject({ kind: "invalid-input" });
     }

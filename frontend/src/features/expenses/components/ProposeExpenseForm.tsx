@@ -11,6 +11,7 @@ import { Select } from "@/components/atoms/Select";
 import { FileDrop } from "@/components/molecules/FileDrop";
 import { FormField } from "@/components/molecules/FormField";
 import { TxFeedback } from "@/components/molecules/TxFeedback";
+import { DESCRIPTION_MAX_BYTES } from "@/config/constants";
 import { appCopy } from "@/copy/app.es";
 import { describeAnyError } from "@/copy/errors.es";
 import { shortenAddress } from "@/lib/format/address";
@@ -18,7 +19,7 @@ import { AmountFormatError, parseAmount } from "@/lib/format/amount";
 import { categoryLabel } from "@/lib/format/category";
 import { formatTokenAmount, tokenDecimals, tokenSymbol } from "@/lib/format/token";
 import { hashFile, toHex } from "@/lib/hash/sha256";
-import { validateInvoice } from "@/lib/treasury/input";
+import { validateDescription, validateInvoice, validateInvoiceUri } from "@/lib/treasury/input";
 import { classNames } from "@/lib/ui/class-names";
 import { toasts } from "@/lib/ui/toast-store";
 import { txFeedbackFor } from "@/lib/ui/tx-feedback";
@@ -33,7 +34,7 @@ type ProposeExpenseFormProps = {
   expenseHref: (id: number) => string;
 };
 
-type Errors = Partial<Record<"category" | "vendor" | "amount" | "invoice", string>>;
+type Errors = Partial<Record<"category" | "vendor" | "amount" | "description" | "invoiceUri" | "invoice", string>>;
 
 const ACCEPT = "application/pdf,image/png,image/jpeg,image/webp";
 
@@ -58,6 +59,8 @@ export function ProposeExpenseForm({ balance, budgets, vendors, expenseHref }: P
   const [category, setCategory] = useState("");
   const [vendor, setVendor] = useState("");
   const [amountText, setAmountText] = useState("");
+  const [description, setDescription] = useState("");
+  const [invoiceUri, setInvoiceUri] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [fingerprint, setFingerprint] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
@@ -86,6 +89,16 @@ export function ProposeExpenseForm({ balance, budgets, vendors, expenseHref }: P
     if (amount === null || amount <= 0n) found.amount = copy.amountHint;
     else if (fits === false) found.amount = copy.overBudget;
     else if (funded === false) found.amount = copy.noFunds;
+    try {
+      validateDescription(description);
+    } catch (error) {
+      found.description = description.trim() ? describeAnyError(error) : copy.descriptionRequired;
+    }
+    try {
+      validateInvoiceUri(invoiceUri);
+    } catch (error) {
+      found.invoiceUri = describeAnyError(error);
+    }
     if (!file) found.invoice = copy.invoicePrompt;
     return found;
   }
@@ -96,7 +109,7 @@ export function ProposeExpenseForm({ balance, budgets, vendors, expenseHref }: P
     setErrors(found);
     if (Object.keys(found).length > 0 || !file || amount === null) return;
 
-    const receipt = await propose.mutateAsync({ category, vendor, amount, invoice: file }).catch(() => null);
+    const receipt = await propose.mutateAsync({ category, vendor, amount, invoice: file, description, invoiceUri }).catch(() => null);
     if (!receipt) return;
     toasts.show({
       tone: "success",
@@ -110,6 +123,8 @@ export function ProposeExpenseForm({ balance, budgets, vendors, expenseHref }: P
     setCategory("");
     setVendor("");
     setAmountText("");
+    setDescription("");
+    setInvoiceUri("");
     setFile(null);
     setFingerprint(null);
     setErrors({});
@@ -213,6 +228,19 @@ export function ProposeExpenseForm({ balance, budgets, vendors, expenseHref }: P
           )}
         </FormField>
 
+        <FormField label={copy.description} error={errors.description} hint={copy.descriptionHint}>
+          {(control) => (
+            <Input
+              {...control}
+              autoComplete="off"
+              maxLength={DESCRIPTION_MAX_BYTES}
+              placeholder={copy.descriptionPlaceholder}
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+            />
+          )}
+        </FormField>
+
         <FormField label={copy.invoice} error={errors.invoice}>
           {(control) => (
             <FileDrop
@@ -228,6 +256,20 @@ export function ProposeExpenseForm({ balance, budgets, vendors, expenseHref }: P
                   {fingerprint ? `${copy.fingerprint} ${fingerprint.slice(0, 16)}…${fingerprint.slice(-8)}` : copy.hashing}
                 </span>
               }
+            />
+          )}
+        </FormField>
+
+        <FormField label={copy.invoiceUri} error={errors.invoiceUri} hint={copy.invoiceUriHint}>
+          {(control) => (
+            <Input
+              {...control}
+              type="url"
+              inputMode="url"
+              autoComplete="off"
+              placeholder={copy.invoiceUriPlaceholder}
+              value={invoiceUri}
+              onChange={(event) => setInvoiceUri(event.target.value)}
             />
           )}
         </FormField>

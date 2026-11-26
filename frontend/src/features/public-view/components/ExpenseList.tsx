@@ -47,10 +47,10 @@ export function ExpenseList({ expenses, council, threshold, hrefFor }: ExpenseLi
               </span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[0.9375rem] font-semibold text-ink group-hover:text-royal">
-                  {categoryLabel(expense.category)}
+                  {expense.description || categoryLabel(expense.category)}
                 </p>
                 <p className="mt-0.5 truncate text-sm text-ink-faint">
-                  <span className="font-mono">#{expense.id}</span> · {vendor} · {formatLedgerTime(expense.createdAt)}
+                  <span className="font-mono">#{expense.id}</span> · {categoryLabel(expense.category)} · {vendor} · {formatLedgerTime(expense.createdAt)}
                 </p>
               </div>
               <div className="shrink-0 text-right">

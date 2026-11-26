@@ -15,6 +15,8 @@ function expense(id: number, overrides: Partial<Expense> = {}): Expense {
     vendor: OTHER_ADDRESS,
     amount: 100n,
     invoice_hash: hash,
+    description: "Mantenimiento del ascensor",
+    invoice_uri: "https://example.org/f.pdf",
     approvals: [TEST_ADDRESS],
     status: { tag: "Pending", values: undefined },
     created_at: 1_000n,
@@ -25,6 +27,7 @@ function expense(id: number, overrides: Partial<Expense> = {}): Expense {
 
 function fakeClient(overrides: Record<string, unknown> = {}): Client {
   return {
+    get_name: vi.fn().mockResolvedValue(plainReadOf("Torres del Parque")),
     get_config: vi.fn().mockResolvedValue(
       readOf({ token: "CTOKEN", assembly: "GASSEMBLY", administrator: "GADMIN", threshold: 2 }),
     ),
@@ -45,6 +48,7 @@ describe("snapshot", () => {
     const snapshot = await createTreasuryReader(fakeClient()).snapshot();
 
     expect(snapshot).toEqual({
+      name: "Torres del Parque",
       token: "CTOKEN",
       assembly: "GASSEMBLY",
       administrator: "GADMIN",
@@ -96,6 +100,8 @@ describe("expenses", () => {
     expect(result.map((item) => item.status)).toEqual(["paid", "cancelled", "pending"]);
     expect(result[0]).toMatchObject({ id: 0, amount: 100n, paidAt: 2_000n, createdAt: 1_000n });
     expect(result[0].invoiceHash).toBe("ab".repeat(32));
+    expect(result[0].description).toBe("Mantenimiento del ascensor");
+    expect(result[0].invoiceUri).toBe("https://example.org/f.pdf");
     expect(result[2].paidAt).toBeNull();
   });
 

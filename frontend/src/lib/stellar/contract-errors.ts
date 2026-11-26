@@ -1,6 +1,6 @@
 /**
  * Names of the errors the treasury contract can return, in the order of their
- * numeric codes (1 to 19). A test checks this list against the generated
+ * numeric codes (1 to 25). A test checks this list against the generated
  * bindings, so a change in the contract cannot go unnoticed.
  */
 export const CONTRACT_ERROR_NAMES = [
@@ -23,6 +23,12 @@ export const CONTRACT_ERROR_NAMES = [
   "NotAuthorized",
   "InsufficientBalance",
   "Overflow",
+  "RotationDelayRequired",
+  "RotationAlreadyPending",
+  "NoPendingRotation",
+  "RotationNotReady",
+  "TextTooLong",
+  "EmptyText",
 ] as const;
 
 export type ContractErrorName = (typeof CONTRACT_ERROR_NAMES)[number];

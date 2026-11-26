@@ -78,7 +78,7 @@ export function OverviewScreen() {
   return (
     <div className="grid gap-8">
       <PageHeader
-        title={appCopy.building.fallbackName}
+        title={treasury.name || appCopy.building.fallbackName}
         actions={
           permissions.canPropose && (
             <Link href={appRoutes.propose} className={buttonStyles({ size: "lg", shape: "pill" })}>

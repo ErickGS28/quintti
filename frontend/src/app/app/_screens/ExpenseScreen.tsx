@@ -14,6 +14,7 @@ import { ApproveExpenseButton, CancelExpenseButton } from "@/features/expenses";
 import { InvoiceCheck } from "@/features/invoice-check";
 import { ApprovalTrack, ExpenseStatusBadge } from "@/features/public-view";
 import { categoryLabel } from "@/lib/format/category";
+import { safeHttpUrl } from "@/lib/format/safe-url";
 import { formatLedgerTime } from "@/lib/format/date";
 import { formatTokenAmount } from "@/lib/format/token";
 import { accountUrl } from "@/lib/stellar/explorer";
@@ -61,6 +62,7 @@ export function ExpenseScreen({ idText }: { idText: string }) {
   const treasury = snapshot.data;
   const pending = expense.status === "pending";
   const signed = address !== null && expense.approvals.includes(address);
+  const invoiceHref = safeHttpUrl(expense.invoiceUri);
 
   return (
     <div className="grid gap-8">
@@ -73,7 +75,7 @@ export function ExpenseScreen({ idText }: { idText: string }) {
             <ExpenseStatusBadge status={expense.status} />
           </div>
           <h1 className="mt-3 text-[length:clamp(1.75rem,3vw,2.375rem)] leading-tight font-semibold tracking-[-0.03em] text-pretty text-ink">
-            {categoryLabel(expense.category)}
+            {expense.description || categoryLabel(expense.category)}
           </h1>
         </div>
         <p
@@ -105,6 +107,23 @@ export function ExpenseScreen({ idText }: { idText: string }) {
                   ),
                 },
                 { label: copy.proposedAt, value: formatLedgerTime(expense.createdAt) },
+                ...(invoiceHref
+                  ? [
+                      {
+                        label: copy.invoiceRow,
+                        value: (
+                          <a
+                            href={invoiceHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-royal underline-offset-4 hover:underline"
+                          >
+                            {copy.invoiceLink}
+                          </a>
+                        ),
+                      },
+                    ]
+                  : []),
                 {
                   label: copy.paidAt,
                   value: expense.paidAt ? formatLedgerTime(expense.paidAt) : appCopy.states.notYet,

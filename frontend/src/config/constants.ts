@@ -41,5 +41,14 @@ export const QUERY_STALE_TIME_MS = 5_000;
 /** Largest invoice file accepted. The file is hashed in the browser, so this bounds memory. */
 export const INVOICE_MAX_BYTES = 20 * 1024 * 1024;
 
+/** Longest building name, in UTF-8 bytes. Matches the contract's `MAX_NAME_BYTES`. */
+export const NAME_MAX_BYTES = 80;
+
+/** Longest expense description, in UTF-8 bytes. Matches the contract's `MAX_DESCRIPTION_BYTES`. */
+export const DESCRIPTION_MAX_BYTES = 200;
+
+/** Longest invoice link, in UTF-8 bytes. Matches the contract's `MAX_URI_BYTES`. */
+export const INVOICE_URI_MAX_BYTES = 200;
+
 /** Largest value the contract accepts for an amount (`i128`). */
 export const MAX_AMOUNT = 2n ** 127n - 1n;

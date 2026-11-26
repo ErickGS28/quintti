@@ -21,9 +21,10 @@ const ICON = "size-[1.125rem]";
 
 function BuildingCard() {
   const network = getConfig().network;
+  const { snapshot } = useSession();
   return (
     <div className="rounded-card bg-mist px-4 py-3.5">
-      <p className="truncate text-[0.9375rem] font-semibold text-ink">{appCopy.building.fallbackName}</p>
+      <p className="truncate text-[0.9375rem] font-semibold text-ink">{snapshot.data?.name || appCopy.building.fallbackName}</p>
       <div className="mt-2.5 text-royal">
         <Eyebrow dot="live" className="text-[0.625rem]">
           {appCopy.network.short[network]}

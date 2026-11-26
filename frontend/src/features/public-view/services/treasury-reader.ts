@@ -12,6 +12,8 @@ function toExpenseView(expense: Expense): ExpenseView {
     vendor: expense.vendor,
     amount: expense.amount,
     invoiceHash: toHex(expense.invoice_hash),
+    description: expense.description,
+    invoiceUri: expense.invoice_uri,
     approvals: expense.approvals,
     status: expense.status.tag === "Paid" ? "paid" : expense.status.tag === "Cancelled" ? "cancelled" : "pending",
     createdAt: expense.created_at,
@@ -35,7 +37,8 @@ export function createTreasuryReader(client: Client) {
   return {
     /** Roles, council, balance, budget lines and approved vendors. */
     async snapshot(): Promise<TreasurySnapshot> {
-      const [config, council, balance, categories, vendors, expenseCount] = await Promise.all([
+      const [name, config, council, balance, categories, vendors, expenseCount] = await Promise.all([
+        readValue(() => client.get_name(CALL_OPTIONS)),
         readResult(() => client.get_config(CALL_OPTIONS)),
         readValue(() => client.get_council(CALL_OPTIONS)),
         readResult(() => client.balance(CALL_OPTIONS)),
@@ -48,6 +51,7 @@ export function createTreasuryReader(client: Client) {
       );
 
       return {
+        name,
         token: config.token,
         assembly: config.assembly,
         administrator: config.administrator,

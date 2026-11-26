@@ -7,7 +7,9 @@ import {
   validateAddress,
   validateAmount,
   validateCategory,
+  validateDescription,
   validateInvoice,
+  validateInvoiceUri,
   validateWholeNumber,
 } from "@/lib/treasury/input";
 
@@ -19,6 +21,10 @@ export interface ProposeExpenseInput {
   amount: bigint;
   /** The invoice file. Only its SHA-256 fingerprint leaves the browser. */
   invoice: Blob;
+  /** What the expense is for. Public and permanent. */
+  description: string;
+  /** Optional link to where the invoice file can be fetched. Empty for none. */
+  invoiceUri?: string;
 }
 
 /**
@@ -39,10 +45,15 @@ export function createExpenseService(deps: WriteDependencies) {
       const vendor = validateAddress(input.vendor, "vendor");
       const amount = validateAmount(input.amount);
       const invoice = validateInvoice(input.invoice);
+      const description = validateDescription(input.description);
+      const invoiceUri = validateInvoiceUri(input.invoiceUri ?? "");
       const invoiceHash = Buffer.from(await hashFile(invoice));
 
       return executeWrite(deps, (client) =>
-        client.propose_expense({ category, vendor, amount, invoice_hash: invoiceHash }, CALL_OPTIONS),
+        client.propose_expense(
+          { category, vendor, amount, invoice_hash: invoiceHash, description, invoice_uri: invoiceUri },
+          CALL_OPTIONS,
+        ),
       );
     },
 

@@ -10,6 +10,8 @@ export interface BudgetLineView {
 
 /** Everything about the treasury that is not the expense history. */
 export interface TreasurySnapshot {
+  /** The building's name, set when the contract was deployed. */
+  name: string;
   token: string;
   assembly: string;
   administrator: string;
@@ -30,6 +32,10 @@ export interface ExpenseView {
   amount: bigint;
   /** SHA-256 of the invoice file, in hexadecimal. */
   invoiceHash: string;
+  /** What the expense is for, in the administrator's words. */
+  description: string;
+  /** Where the invoice file can be fetched, or empty. A convenience: the fingerprint is the proof. */
+  invoiceUri: string;
   /** Council members who approved, in order. Some may have left the council since. */
   approvals: string[];
   status: ExpenseStatusView;

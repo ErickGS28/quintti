@@ -1,6 +1,12 @@
 import { StrKey } from "@stellar/stellar-sdk";
 
-import { INVOICE_MAX_BYTES, MAX_AMOUNT } from "@/config/constants";
+import {
+  DESCRIPTION_MAX_BYTES,
+  INVOICE_MAX_BYTES,
+  INVOICE_URI_MAX_BYTES,
+  MAX_AMOUNT,
+  NAME_MAX_BYTES,
+} from "@/config/constants";
 import { AppError } from "@/lib/errors/app-error";
 
 function invalid(field: string, message: string): AppError {
@@ -71,6 +77,57 @@ const MAX_U32 = 4_294_967_295;
 export function validateWholeNumber(value: number, field: string): number {
   if (!Number.isInteger(value) || value < 0 || value > MAX_U32) {
     throw invalid(field, "Expected a whole number from 0 to 4,294,967,295");
+  }
+  return value;
+}
+
+const utf8Bytes = (text: string) => new TextEncoder().encode(text).length;
+
+/** A text the contract needs: not empty and within `max` UTF-8 bytes (an accented letter takes two). */
+function validateRequiredText(text: string, field: string, max: number, empty: string): string {
+  const value = text.trim();
+  if (!value) throw invalid(field, empty);
+  if (utf8Bytes(value) > max) throw invalid(field, `Too long: at most ${max} bytes`);
+  return value;
+}
+
+/**
+ * The building's name.
+ *
+ * Errors: `AppError` of kind `invalid-input`, field `name`.
+ */
+export function validateName(text: string): string {
+  return validateRequiredText(text, "name", NAME_MAX_BYTES, "The building needs a name");
+}
+
+/**
+ * What an expense is for.
+ *
+ * Errors: `AppError` of kind `invalid-input`, field `description`.
+ */
+export function validateDescription(text: string): string {
+  return validateRequiredText(text, "description", DESCRIPTION_MAX_BYTES, "Say what the expense is for");
+}
+
+/**
+ * An optional link to the invoice file: empty, or an http(s) address that fits on-chain.
+ *
+ * Errors: `AppError` of kind `invalid-input`, field `invoiceUri`.
+ */
+export function validateInvoiceUri(text: string): string {
+  const value = text.trim();
+  if (!value) return "";
+  if (utf8Bytes(value) > INVOICE_URI_MAX_BYTES) {
+    throw invalid("invoiceUri", `The link is too long: at most ${INVOICE_URI_MAX_BYTES} bytes`);
+  }
+  let protocol: string;
+  try {
+    protocol = new URL(value).protocol;
+  } catch {
+    throw invalid("invoiceUri", "The link is not a valid address");
+  }
+  if (protocol !== "http:" && protocol !== "https:") {
+    throw invalid("invoiceUri", "The link must start with http:// or https://");
   }
   return value;
 }

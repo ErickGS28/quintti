@@ -23,7 +23,7 @@ describe("contract error names", () => {
     expect(contractErrorName(12)).toBe("OverBudget");
     expect(contractErrorName(15)).toBe("NotCouncilMember");
     expect(contractErrorName(0)).toBeUndefined();
-    expect(contractErrorName(20)).toBeUndefined();
+    expect(contractErrorName(26)).toBeUndefined();
   });
 
   it("recognize a valid name", () => {

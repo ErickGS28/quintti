@@ -3,6 +3,10 @@
 //
 //   QUINTTI_LIVE=1 NEXT_PUBLIC_TREASURY_CONTRACT_ID=C... npm test
 //
+// Only "reads the building's name and the words of the first expense" works against any seeded
+// treasury, such as the one `scripts/seed-demo.ps1` creates (Spanish categories). The others expect the
+// hand-made scenario below, with an English category, and need `QUINTTI_LIVE_VENDOR`.
+//
 // The contract must have the state described in docs/06-getting-started.md:
 // a `maintenance` budget of 1,000 XLM, one paid expense of 80 XLM, and a
 // treasury balance of 420 XLM. `QUINTTI_LIVE_ADMIN` is the administrator's address.
@@ -77,6 +81,17 @@ describe.skipIf(!live)("treasury on testnet (live)", { timeout: 60_000 }, () => 
     expect(expenses[0].paidAt).not.toBeNull();
   });
 
+  it("reads the building's name and the words of the first expense", async () => {
+    const { client } = setup();
+    const reader = createTreasuryReader(client);
+
+    const snapshot = await reader.snapshot();
+    const expense = await reader.expense(0);
+
+    expect(snapshot.name.length).toBeGreaterThan(0);
+    expect(expense.description.length).toBeGreaterThan(0);
+    expect(typeof expense.invoiceUri).toBe("string");
+  });
   it("reports an unknown expense as a contract error", async () => {
     const { client } = setup();
 
@@ -100,7 +115,7 @@ describe.skipIf(!live)("treasury on testnet (live)", { timeout: 60_000 }, () => 
     await expect(
       readResult(() =>
         adminClient.propose_expense(
-          { category: "maintenance", vendor: vendor!, amount: 9_500_000_000n, invoice_hash: Buffer.alloc(32, 7) },
+          { category: "maintenance", vendor: vendor!, amount: 9_500_000_000n, description: "Prueba en vivo", invoice_uri: "", invoice_hash: Buffer.alloc(32, 7) },
           CALL_OPTIONS,
         ),
       ),

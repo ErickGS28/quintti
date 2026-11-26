@@ -24,6 +24,13 @@ export const contractErrorMessages: Record<ContractErrorName, string> = {
   NotAuthorized: "No tienes permiso para hacer esto.",
   InsufficientBalance: "La cuenta del edificio no tiene saldo suficiente para este pago.",
   Overflow: "El monto es demasiado grande.",
+  RotationDelayRequired:
+    "Esta cuenta exige un tiempo de espera para cambiar el consejo: primero se anuncia el cambio y luego se ejecuta.",
+  RotationAlreadyPending: "Ya hay un cambio de consejo anunciado. Cancélalo antes de anunciar otro.",
+  NoPendingRotation: "No hay ningún cambio de consejo anunciado.",
+  RotationNotReady: "Todavía no pasó el tiempo de espera de ese cambio de consejo.",
+  TextTooLong: "El texto es demasiado largo.",
+  EmptyText: "Falta un texto obligatorio: el nombre del edificio o la descripción del gasto.",
 };
 
 /** What a person sees for failures that do not come from a contract rule. */
