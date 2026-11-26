@@ -35,6 +35,16 @@ export function createTreasuryReader(client: Client) {
   };
 
   return {
+    /**
+     * Only the building's name. A cheap read that doubles as a check that the address is a compatible
+     * Quintti treasury: any other contract fails here.
+     *
+     * Errors: `AppError` when the contract has no `get_name` or the network cannot be reached.
+     */
+    async name(): Promise<string> {
+      return readValue(() => client.get_name(CALL_OPTIONS));
+    },
+
     /** Roles, council, balance, budget lines and approved vendors. */
     async snapshot(): Promise<TreasurySnapshot> {
       const [name, config, council, balance, categories, vendors, expenseCount] = await Promise.all([

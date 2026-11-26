@@ -45,6 +45,8 @@ export const appErrorMessages: Record<Exclude<AppErrorKind, "contract">, string>
   timeout:
     "La transacción se envió pero aún no se confirma. Revísala en el explorador antes de repetirla.",
   "state-expired": "Algunos datos de la cuenta caducaron y hay que restaurarlos antes de continuar.",
+  "untrusted-building":
+    "Este edificio lo abriste desde un enlace y todavía no lo guardaste. Confirma su dirección con la administración y guárdalo antes de firmar.",
   unknown: "Ocurrió un error inesperado.",
 };
 

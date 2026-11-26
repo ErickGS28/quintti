@@ -4,6 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 import { getConfig } from "@/config/env";
+import { assertTrusted } from "@/lib/buildings/assert-trusted";
+import { useBuilding } from "@/lib/buildings/building-context";
 import type { AppError } from "@/lib/errors/app-error";
 import type { WriteReceipt } from "@/lib/stellar/transaction-service";
 import { treasuryKeys } from "@/lib/treasury/query-keys";
@@ -17,27 +19,36 @@ import { createGovernanceService } from "../services/governance-service";
  */
 export function useGovernanceActions() {
   const queryClient = useQueryClient();
+  const building = useBuilding();
   const service = useMemo(
-    () => createGovernanceService({ config: getConfig(), wallet: getWalletAdapter() }),
-    [],
+    () =>
+      createGovernanceService({
+        config: { ...getConfig(), treasuryContractId: building.contractId },
+        wallet: getWalletAdapter(),
+      }),
+    [building.contractId],
   );
+  const guarded = <T,>(run: () => Promise<T>) => {
+    assertTrusted(building);
+    return run();
+  };
   const onSuccess = () => queryClient.invalidateQueries({ queryKey: treasuryKeys.all });
 
   return {
     setBudget: useMutation<WriteReceipt<void>, AppError, { category: string; limit: bigint }>({
-      mutationFn: (input) => service.setBudget(input),
+      mutationFn: async (input) => guarded(() => service.setBudget(input)),
       onSuccess,
     }),
     setVendor: useMutation<WriteReceipt<void>, AppError, { vendor: string; allowed: boolean }>({
-      mutationFn: (input) => service.setVendor(input),
+      mutationFn: async (input) => guarded(() => service.setVendor(input)),
       onSuccess,
     }),
     setAdministrator: useMutation<WriteReceipt<void>, AppError, string>({
-      mutationFn: (administrator) => service.setAdministrator(administrator),
+      mutationFn: async (administrator) => guarded(() => service.setAdministrator(administrator)),
       onSuccess,
     }),
     rotateCouncil: useMutation<WriteReceipt<void>, AppError, { council: string[]; threshold: number }>({
-      mutationFn: (input) => service.rotateCouncil(input),
+      mutationFn: async (input) => guarded(() => service.rotateCouncil(input)),
       onSuccess,
     }),
   };
