@@ -1,4 +1,4 @@
-import type { contract } from "@stellar/stellar-sdk";
+import { StrKey, nativeToScVal, xdr, type contract } from "@stellar/stellar-sdk";
 import { describe, expect, it, vi } from "vitest";
 
 import type { AppConfig } from "@/config/env";
@@ -165,5 +165,64 @@ describe("sendAndConfirm", () => {
     await expect(sendAndConfirm(config, async () => fakeTransaction(signAndSend))).rejects.toMatchObject({
       kind: "unknown",
     });
+  });
+});
+
+describe("a simulation that failed", () => {
+  const TREASURY = config.treasuryContractId;
+  const TOKEN = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
+  const symbol = (text: string) => nativeToScVal(text, { type: "symbol" });
+  const contractError = (code: number) => xdr.ScVal.scvError(xdr.ScError.sceContract(code));
+  const event = (contractId: string, ...topics: xdr.ScVal[]) => ({
+    event: { contractId: { toBytes: () => StrKey.decodeContract(contractId) }, body: { v0: { topics } } },
+  });
+
+  /** A call to the treasury whose simulation the network rejected, with the events it sent. */
+  function failedCall(code: number, raisedBy: string, passedUpBy: string = TREASURY) {
+    return {
+      options: { contractId: TREASURY },
+      simulation: {
+        error: `HostError: Error(Contract, #${code})`,
+        events: [event(raisedBy, symbol("error"), contractError(code)), event(passedUpBy, symbol("error"), contractError(code))],
+        latestLedger: 1,
+        id: "1",
+        _parsed: true,
+      },
+      result: ok(undefined),
+      signAndSend: vi.fn(),
+    } as unknown as contract.AssembledTransaction<contract.Result<void>>;
+  }
+
+  it("blames the treasury's rule when the treasury raised the error", async () => {
+    // #12 is OverBudget in the treasury's table.
+    await expect(readResult(async () => failedCall(12, TREASURY))).rejects.toMatchObject({
+      kind: "contract",
+      contractError: "OverBudget",
+    });
+  });
+
+  it("does not read a token's error with the treasury's table", async () => {
+    // The token raised #10 and the treasury passed it up. In the treasury's table #10 is VendorNotApproved.
+    const rejection = readResult(async () => failedCall(10, TOKEN));
+
+    await expect(rejection).rejects.toMatchObject({ kind: "other-contract", foreignCode: 10 });
+    await expect(rejection).rejects.not.toMatchObject({ contractError: "VendorNotApproved" });
+  });
+
+  it("keeps the code of the other contract, and never asks for a signature", async () => {
+    const call = failedCall(12, TOKEN);
+
+    await expect(sendAndConfirm(config, async () => call)).rejects.toMatchObject({
+      kind: "other-contract",
+      foreignCode: 12,
+    });
+    expect(call.signAndSend).not.toHaveBeenCalled();
+  });
+
+  it("falls back to the treasury's table when the events say nothing", async () => {
+    const call = failedCall(12, TREASURY);
+    (call.simulation as unknown as { events: unknown }).events = [];
+
+    await expect(readResult(async () => call)).rejects.toMatchObject({ kind: "contract", contractError: "OverBudget" });
   });
 });

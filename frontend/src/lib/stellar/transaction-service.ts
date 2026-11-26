@@ -4,6 +4,8 @@ import type { AppConfig } from "@/config/env";
 import { TRANSACTION_TIMEOUT_SECONDS } from "@/config/constants";
 import { AppError } from "@/lib/errors/app-error";
 
+import { findContractErrorCode } from "./contract-errors";
+import { failingContract } from "./error-origin";
 import { transactionUrl } from "./explorer";
 import { fromContractResultError, toAppError } from "./to-app-error";
 
@@ -28,10 +30,20 @@ export interface WriteReceipt<T> {
  * error's documentation text and drops its code, and `sendAndConfirm` would
  * go on to ask for a signature. The original message holds
  * `Error(Contract, #n)`, which `toAppError` reads.
+ *
+ * An error code only means something for the contract that raised it. When the call failed inside another
+ * contract (a deposit from an account with too little money fails in the token), the code is not one of the
+ * treasury's, and reading it with the treasury's table would blame the wrong rule. That case becomes an
+ * `other-contract` error that keeps the code.
  */
 function assertSimulationSucceeded(assembled: contract.AssembledTransaction<unknown>): void {
   const { simulation } = assembled;
   if (simulation && rpc.Api.isSimulationError(simulation)) {
+    const raisedBy = failingContract(simulation.events);
+    const target = assembled.options?.contractId;
+    if (raisedBy && target && raisedBy !== target) {
+      throw new AppError("other-contract", simulation.error, { foreignCode: findContractErrorCode(simulation.error) });
+    }
     throw new Error(simulation.error);
   }
 }

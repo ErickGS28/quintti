@@ -45,6 +45,7 @@ export const appErrorMessages: Record<Exclude<AppErrorKind, "contract">, string>
   timeout:
     "La transacción se envió pero aún no se confirma. Revísala en el explorador antes de repetirla.",
   "state-expired": "Algunos datos de la cuenta caducaron y hay que restaurarlos antes de continuar.",
+  "other-contract": "Otro contrato rechazó la operación.",
   "untrusted-building":
     "Este edificio lo abriste desde un enlace y todavía no lo guardaste. Confirma su dirección con la administración y guárdalo antes de firmar.",
   unknown: "Ocurrió un error inesperado.",
@@ -52,8 +53,22 @@ export const appErrorMessages: Record<Exclude<AppErrorKind, "contract">, string>
 
 const UNKNOWN_CONTRACT_ERROR = "El contrato rechazó la operación.";
 
+/**
+ * What a contract that is not the treasury says, by its error code. Only the codes seen on the network are
+ * named: the token of a building is a Stellar Asset Contract, and on testnet 10 is what it returns when the
+ * account holds too little and 12 when the amount overflows. Any other code, or another kind of token, falls
+ * back to a general message instead of a guess.
+ */
+const otherContractMessages: Record<number, string> = {
+  10: "Tu cuenta no tiene saldo suficiente para esta operación. Deja unos centavos para la reserva y las comisiones.",
+  12: "El monto es demasiado grande.",
+};
+
 /** The message to show for any `AppError`. */
 export function describeError(error: AppError): string {
+  if (error.kind === "other-contract") {
+    return (error.foreignCode !== undefined && otherContractMessages[error.foreignCode]) || appErrorMessages["other-contract"];
+  }
   if (error.kind !== "contract") {
     return appErrorMessages[error.kind];
   }

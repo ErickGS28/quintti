@@ -21,6 +21,11 @@ export type AppErrorKind =
   | "state-expired"
   /** The building was opened from a link and not saved, so nothing may be signed on it yet. */
   | "untrusted-building"
+  /**
+   * A contract other than the treasury rejected the call, most often the token (for example a deposit from an
+   * account that holds too little). `foreignCode` is its error code, which only that contract can explain.
+   */
+  | "other-contract"
   | "unknown";
 
 export class AppError extends Error {
@@ -32,6 +37,8 @@ export class AppError extends Error {
       contractError?: string;
       /** Name of the input, when `kind` is `"invalid-input"`. */
       field?: string;
+      /** Error code of the other contract, when `kind` is `"other-contract"`. */
+      foreignCode?: number;
       cause?: unknown;
     } = {},
   ) {
@@ -39,8 +46,10 @@ export class AppError extends Error {
     this.name = "AppError";
     this.contractError = options.contractError;
     this.field = options.field;
+    this.foreignCode = options.foreignCode;
   }
 
   readonly contractError: string | undefined;
   readonly field: string | undefined;
+  readonly foreignCode: number | undefined;
 }
