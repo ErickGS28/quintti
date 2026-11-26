@@ -24,6 +24,9 @@
 .PARAMETER Source
   Stellar CLI identity that pays for and signs the deployment (stellar keys generate <name>).
 
+.PARAMETER Name
+  The building's name, shown to every resident (up to 80 bytes; an accented letter takes two).
+
 .PARAMETER Assembly
   Address that sets the rules: budget, vendors, council. A G account, which can be a multi-signature account.
 
@@ -43,15 +46,16 @@
   Actually deploy.
 
 .EXAMPLE
-  ./scripts/deploy-treasury.ps1 -Network testnet -Source qt-admin -Assembly G... -Administrator G... -Council G...,G...,G... -Threshold 2
+  ./scripts/deploy-treasury.ps1 -Network testnet -Source qt-admin -Name "Torres del Parque" -Assembly G... -Administrator G... -Council G...,G...,G... -Threshold 2
 
 .EXAMPLE
-  ./scripts/deploy-treasury.ps1 -RpcUrl https://soroban-rpc.mainnet.stellar.gateway.fm -Source qm-deployer -Assembly G... -Administrator G... -Council G...,G...,G... -Threshold 2 -Execute
+  ./scripts/deploy-treasury.ps1 -RpcUrl https://soroban-rpc.mainnet.stellar.gateway.fm -Source qm-deployer -Name "Torres del Parque" -Assembly G... -Administrator G... -Council G...,G...,G... -Threshold 2 -Execute
 #>
 param(
   [ValidateSet("mainnet", "testnet")][string]$Network = "mainnet",
   [string]$RpcUrl = "",
   [Parameter(Mandatory = $true)][string]$Source,
+  [Parameter(Mandatory = $true)][string]$Name,
   [Parameter(Mandatory = $true)][string]$Assembly,
   [Parameter(Mandatory = $true)][string]$Administrator,
   [Parameter(Mandatory = $true)][string[]]$Council,
@@ -82,6 +86,8 @@ foreach ($pair in @(@("Assembly", $Assembly), @("Administrator", $Administrator)
   if ($pair[1] -notmatch $account) { Fail "-$($pair[0]) is not a Stellar account address (it must start with G and have 56 characters)." }
 }
 foreach ($member in $Council) { if ($member -notmatch $account) { Fail "A council address is not a Stellar account address: $member" } }
+if (-not $Name.Trim()) { Fail "-Name is empty." }
+if ([Text.Encoding]::UTF8.GetByteCount($Name) -gt 80) { Fail "-Name is longer than 80 bytes." }
 if ($Council.Count -lt 1 -or $Council.Count -gt 7) { Fail "The council needs between 1 and 7 members (the contract's MAX_COUNCIL)." }
 if (@($Council | Select-Object -Unique).Count -ne $Council.Count) { Fail "The council has a repeated address." }
 if ($Threshold -lt 1 -or $Threshold -gt $Council.Count) { Fail "-Threshold must be between 1 and the council size ($($Council.Count))." }
@@ -99,6 +105,7 @@ if ($token -notmatch "^C[A-Z2-7]{55}$") { Fail "Could not work out the native to
 Write-Host ""
 Write-Host "Plan: deploy a Quintti treasury on $($Network.ToUpper())"
 Write-Host "  RPC:            $RpcUrl"
+Write-Host "  Building:       $Name"
 Write-Host "  Paid by:        $Source ($sourceAddress)"
 Write-Host "  Token:          native XLM, $token"
 Write-Host "  Assembly:       $Assembly"
@@ -155,7 +162,7 @@ $councilFile = Join-Path ([IO.Path]::GetTempPath()) ("quintti-council-" + [guid]
 try {
   Write-Host ""
   Write-Host "Deploying..."
-  $output = (& stellar contract deploy --wasm $wasm --source-account $Source --rpc-url $RpcUrl --network-passphrase $passphrase -- --token $token --assembly $Assembly --administrator $Administrator --council-file-path $councilFile --threshold $Threshold --rotation_delay $RotationDelay 2>&1 | Out-String)
+  $output = (& stellar contract deploy --wasm $wasm --source-account $Source --rpc-url $RpcUrl --network-passphrase $passphrase -- --token $token --assembly $Assembly --administrator $Administrator --council-file-path $councilFile --threshold $Threshold --rotation_delay $RotationDelay --name $Name 2>&1 | Out-String)
 } finally {
   Remove-Item $councilFile -ErrorAction SilentlyContinue
 }

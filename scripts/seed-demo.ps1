@@ -32,7 +32,12 @@ $budgets = @(
   @{ Category = "aseo"; Limit = 300 }
 )
 $deposit = 500
-$firstExpense = @{ Category = "mantenimiento"; Amount = 80 }
+$firstExpense = @{
+  Category = "mantenimiento"
+  Amount = 80
+  Description = "Mantenimiento mensual del ascensor"
+  InvoiceUri = "https://raw.githubusercontent.com/ErickGS28/quintti/main/scripts/demo/factura-ascensor.pdf"
+}
 
 $evidence = New-Object System.Collections.Generic.List[object]
 
@@ -71,7 +76,7 @@ $token = (& stellar contract id asset --asset native --network $network).Trim()
 $deployOutput = Invoke-Stellar "deploy" @(
   "contract", "deploy", "--wasm", $wasm, "--source", "qt-admin", "--network", $network, "--alias", $Alias,
   "--", "--token", $token, "--assembly", (Address "qt-assembly"), "--administrator", (Address "qt-admin"),
-  "--council-file-path", $councilFile, "--threshold", "2", "--rotation_delay", "0"
+  "--council-file-path", $councilFile, "--threshold", "2", "--rotation_delay", "0", "--name", "Torres del Parque (demo)"
 )
 $contractId = [regex]::Match($deployOutput, "C[A-Z2-7]{55}").Value
 if (-not $contractId) { throw "Could not read the contract id from:`n$deployOutput" }
@@ -85,7 +90,8 @@ Call-Contract "approve the vendor" "qt-assembly" @("set_vendor", "--vendor", (Ad
 Call-Contract "deposit $deposit XLM" "qt-assembly" @("deposit", "--from", (Address "qt-assembly"), "--amount", ([string]($deposit * $stroops)))
 Call-Contract "propose $($firstExpense.Amount) XLM" "qt-admin" @(
   "propose_expense", "--category", $firstExpense.Category, "--vendor", (Address "qt-vendor"),
-  "--amount", ([string]($firstExpense.Amount * $stroops)), "--invoice_hash", (Sha256Hex $invoice)
+  "--amount", ([string]($firstExpense.Amount * $stroops)), "--invoice_hash", (Sha256Hex $invoice),
+  "--description", $firstExpense.Description, "--invoice_uri", $firstExpense.InvoiceUri
 )
 Call-Contract "first approval (stays pending)" "qt-council1" @("approve_expense", "--approver", (Address "qt-council1"), "--id", "0")
 Call-Contract "second approval (pays the vendor)" "qt-council2" @("approve_expense", "--approver", (Address "qt-council2"), "--id", "0")

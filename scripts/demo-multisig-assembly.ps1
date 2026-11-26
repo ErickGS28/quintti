@@ -115,7 +115,7 @@ Write-Host "3. Deploying a treasury with that account as the assembly and a $Rot
 $token = (& stellar contract id asset --asset native --network $network).Trim()
 $councilFile = Write-Json @((Address "qt-council1"), (Address "qt-council2"), (Address "qt-council3"))
 & stellar contract alias remove $Alias 2>&1 | Out-Null
-$deploy = (& stellar contract deploy --wasm $wasm --source qt-admin --network $network --alias $Alias -- --token $token --assembly $assembly --administrator (Address "qt-admin") --council-file-path $councilFile --threshold 2 --rotation_delay $RotationDelay 2>&1 | Out-String)
+$deploy = (& stellar contract deploy --wasm $wasm --source qt-admin --network $network --alias $Alias -- --token $token --assembly $assembly --administrator (Address "qt-admin") --council-file-path $councilFile --threshold 2 --rotation_delay $RotationDelay --name "Demo asamblea multifirma" 2>&1 | Out-String)
 Remove-Item $councilFile -ErrorAction SilentlyContinue
 $contractId = [regex]::Match($deploy, "C[A-Z2-7]{55}").Value
 Expect ([bool]$contractId) "Could not read the contract id from:`n$deploy"
