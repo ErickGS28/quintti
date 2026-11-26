@@ -45,5 +45,8 @@ jobs:
         run: npm run typecheck
       - name: Test
         run: npm test
+      # .env.local is not in the repo. The example holds the public demo configuration, nothing secret.
+      - name: Use the demo configuration
+        run: cp .env.example .env.local
       - name: Build the static export
         run: npm run build
