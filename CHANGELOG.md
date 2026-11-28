@@ -1,6 +1,6 @@
 # Changelog
 
-Notable changes to Quintti, newest first. The project has no versioned releases yet, so entries are grouped by date. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Notable changes to Quintti, newest first. The first release is v1.0.0, a semi-stable beta on testnet. Earlier entries are grouped by date. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Current state
 
@@ -33,7 +33,7 @@ Known limits are in [docs/05-risks-and-limits.md](docs/05-risks-and-limits.md). 
 Demo deployment (temporary, the testnet is reset periodically; its transactions are linked from the README):
 `CA7DWVPW2JWFZ7KSVGLCLFDXD7HZOY7HL7274UZW4ZQZBJCQSHQ4U237`.
 
-## Unreleased
+## v1.0.0 (2026-11-27)
 
 ### Changed
 - The constructor takes a seventh argument, `name`, and `propose_expense` two more. `seed-demo.ps1`, `deploy-treasury.ps1` (which now needs `-Name`) and `demo-multisig-assembly.ps1` pass them. The treasury the Netlify demo site was built against has the previous interface; it keeps working until the site is rebuilt, and then it must be rebuilt against the new treasury.
